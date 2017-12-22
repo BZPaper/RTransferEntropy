@@ -27,7 +27,6 @@ CodeSample <- function(Data,
   nam <- colnames(Data)
   setnames(CodeData, colnames(CodeData), "TS")
   
-  
   if (Type == "bins") {
     UB <- max(CodeData)
     LB <- min(CodeData)
