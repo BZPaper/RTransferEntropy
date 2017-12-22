@@ -1,4 +1,4 @@
-#' CodeSample:
+#' code_sample:
 #' Code the sample by assigning data to bins that are, for example, based on 
 #' the quantiles of the empirical distribution of the sample.
 #'
@@ -16,12 +16,12 @@
 #'
 #' @examples
 #' 
-CodeSample <- function(Data, 
+code_sample <- function(Data, 
                        Type = "quantiles", 
                        Quantile = c(5, 95), 
                        Bins = NULL, 
                        Limits = NULL, 
-                       Scale = 1e6) {
+                       Scale = 1e10) {
   
   CodeData <- copy(Data)
   nam <- colnames(Data)
