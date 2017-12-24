@@ -23,8 +23,8 @@ code_sample <- function(Data,
                        Scale = 1e10) {
 
   CodeData <- copy(Data)
-  nam <- colnames(Data)
-  setnames(CodeData, colnames(CodeData), "TS")
+  nam <- copy(colnames(Data))
+  setnames(CodeData, nam, "TS")
 
   if (Type == "bins") {
     UB <- max(CodeData)
@@ -40,7 +40,7 @@ code_sample <- function(Data,
     UB <- max(CodeData)
     LB <- min(CodeData)
     Limits <- sort(Limits)
-    OSeq <- c(LB,Limits,UB)
+    OSeq <- c(LB, Limits, UB)
     OSeq[length(OSeq)] <- UB + 1
 
     for (j in 1:(length(OSeq)-1)) {
@@ -48,8 +48,8 @@ code_sample <- function(Data,
     }
 
   } else if (Type == "quantiles") {
-    Qtl <- quantile(CodeData[, TS], type = 8, probs=Quantile/100)
-    Qtl <- c(Qtl,max(CodeData))
+    Qtl <- quantile(CodeData[, TS], type = 8, probs = Quantile/100)
+    Qtl <- c(Qtl, max(CodeData))
     Qlength <- length(Qtl)
 
     for (j in 1:Qlength){
