@@ -1,3 +1,5 @@
+#' Codes a vector into different bins
+#'
 #' Codes the sample by assigning data to bins that are, for example, based on
 #' the quantiles of the empirical distribution of the sample.
 #'
