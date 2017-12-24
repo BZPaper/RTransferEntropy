@@ -3,61 +3,66 @@
 #' Codes the sample by assigning data to bins that are, for example, based on
 #' the quantiles of the empirical distribution of the sample.
 #'
-#' @param Data Column of a data table
-#' @param Type Assign a certain number of bins, limits or use quantiles of
-#'             empirical distribution to tansform data into discrete form
-#' @param Quantile Define the quantiles to use for discretization
-#' @param Bins Define the number of bins with equal width used for
-#'             discretization
-#' @param Limits Define limits used for discretization explicitly
-#' @param Scale a scale parameter
+#' @param x a vector of numerical values
+#' @param type a number of bins, limits or use quantiles of empirical
+#'              distribution to tansform data into discrete form
+#' @param quantiles quantiles to use for discretization
+#' @param bins the number of bins with equal width used for discretization
+#' @param limits limits used for discretization explicitly
+#' @param scale a scale parameter
 #'
-#' @return Function returns a data table column
+#' @return returns a numerical vector
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#'  set.seed(42)
+#'  x <- rnorm(100)
+#'  code_sample(x)
 #'
-code_sample <- function(Data,
-                        Type = "quantiles",
-                        Quantile = c(5, 95),
-                        Bins = NULL,
-                        Limits = NULL,
-                        Scale = 1e10) {
+#'  # or coming from a data.table framework:
+#'  set.seed(42)
+#'  dt <- data.table(x = rnorm(100))
+#'  dt[, sample := code_sample(dt$x)]
+#' }
+code_sample <- function(x,
+                        type = "quantiles",
+                        quantiles = c(5, 95),
+                        bins = NULL,
+                        limits = NULL,
+                        scale = 1e10) {
 
-  CodeData <- copy(Data)
-  nam <- copy(colnames(Data))
-  setnames(CodeData, nam, "TS")
-
-  if (Type %in% c("bins", "limits")) {
-    UB <- max(CodeData)
-    LB <- min(CodeData)
+  if (type %in% c("bins", "limits")) {
+    UB <- max(x)
+    LB <- min(x)
 
     # find the respective OSeq for the time series
-    if (Type == "bins") {
-      OSeq <- LB + ((UB - LB) / Bins) * (0:(Bins))
+    if (type == "bins") {
+      OSeq <- LB + ((UB - LB) / bins) * (0:(bins))
     } else {
-      Limits <- sort(Limits)
-      OSeq <- c(LB, Limits, UB)
+      limits <- sort(limits)
+      OSeq <- c(LB, limits, UB)
     }
 
     OSeq[length(OSeq)] <- UB + 1
 
     for (j in 1:(length(OSeq) - 1)) {
-      CodeData <- CodeData[TS >= OSeq[j] & TS < OSeq[j + 1], TS := j * Scale]
+      x[x >= OSeq[j] & x < OSeq[j + i]] <- j * scale
     }
-  } else if (Type == "quantiles") {
-    Qtl <- quantile(CodeData[, TS], type = 8, probs = Quantile/100)
-    Qtl <- c(Qtl, max(CodeData))
+  } else if (type == "quantiles") {
+    Qtl <- quantile(x, type = 8, probs = quantiles/100)
+    Qtl <- c(Qtl, max(x))
     Qlength <- length(Qtl)
 
     for (j in 1:Qlength){
-      CodeData <- CodeData[TS <= Qtl[j], TS := j * Scale]
+      x[x <= Qtl[j]] <- j * scale
     }
   }
+  x <- x / scale
 
-  CodeData <- CodeData[, TS := TS / Scale]
-  CodeData <- CodeData[order(TS)]
-  setnames(CodeData, "TS", nam)
+  # still unsure if this is appropriate here...
+  # see the above example code using the data.table approach...
+  x <- x[order(x)]
 
-  return(CodeData)
+  return(x)
 }
