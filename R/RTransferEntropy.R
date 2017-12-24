@@ -1,2 +1,2 @@
-#' imports data.table
+#' @import data.table
 NULL

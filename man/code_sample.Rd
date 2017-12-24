@@ -2,34 +2,41 @@
 % Please edit documentation in R/code_sample.R
 \name{code_sample}
 \alias{code_sample}
-\title{Codes the sample by assigning data to bins that are, for example, based on 
-the quantiles of the empirical distribution of the sample.}
+\title{Codes a vector into different bins}
 \usage{
-code_sample(Data, Type = "quantiles", Quantile = c(5, 95), Bins = NULL,
-  Limits = NULL, Scale = 1e+10)
+code_sample(x, type = "quantiles", quantiles = c(5, 95), bins = NULL,
+  limits = NULL, scale = 1e+10)
 }
 \arguments{
-\item{Data}{Column of a data table}
+\item{x}{a vector of numerical values}
 
-\item{Type}{Assign a certain number of bins, limits or use quantiles of 
-empirical distribution to tansform data into discrete form}
+\item{type}{a number of bins, limits or use quantiles of empirical
+distribution to tansform data into discrete form}
 
-\item{Quantile}{Define the quantiles to use for discretization}
+\item{quantiles}{quantiles to use for discretization}
 
-\item{Bins}{Define the number of bins with equal width used for 
-discretization}
+\item{bins}{the number of bins with equal width used for discretization}
 
-\item{Limits}{Define limits used for discretization explicitly}
+\item{limits}{limits used for discretization explicitly}
 
-\item{Scale}{}
+\item{scale}{a scale parameter}
 }
 \value{
-Function returns a data table column
+returns a numerical vector
 }
 \description{
-Codes the sample by assigning data to bins that are, for example, based on 
+Codes the sample by assigning data to bins that are, for example, based on
 the quantiles of the empirical distribution of the sample.
 }
 \examples{
+\dontrun{
+ set.seed(42)
+ x <- rnorm(100)
+ code_sample(x)
 
+ # or coming from a data.table framework:
+ set.seed(42)
+ dt <- data.table(x = rnorm(100))
+ dt[, sample := code_sample(dt$x)]
+}
 }
