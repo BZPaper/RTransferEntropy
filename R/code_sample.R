@@ -16,37 +16,33 @@
 #' @examples
 #'
 code_sample <- function(Data,
-                       Type = "quantiles",
-                       Quantile = c(5, 95),
-                       Bins = NULL,
-                       Limits = NULL,
-                       Scale = 1e10) {
+                        Type = "quantiles",
+                        Quantile = c(5, 95),
+                        Bins = NULL,
+                        Limits = NULL,
+                        Scale = 1e10) {
 
   CodeData <- copy(Data)
   nam <- copy(colnames(Data))
   setnames(CodeData, nam, "TS")
 
-  if (Type == "bins") {
+  if (Type %in% c("bins", "limits")) {
     UB <- max(CodeData)
     LB <- min(CodeData)
-    OSeq <- LB + ((UB - LB) / Bins) * (0:(Bins))
-    OSeq[length(OSeq)] <- UB + 1
 
-    for (j in 1:(length(OSeq)-1)) {
-      CodeData <- CodeData[TS >= OSeq[j] & TS < OSeq[j + 1], TS := j * Scale]
+    # find the respective OSeq for the time series
+    if (Type == "bins") {
+      OSeq <- LB + ((UB - LB) / Bins) * (0:(Bins))
+    } else {
+      Limits <- sort(Limits)
+      OSeq <- c(LB, Limits, UB)
     }
 
-  } else if (Type == "limits") {
-    UB <- max(CodeData)
-    LB <- min(CodeData)
-    Limits <- sort(Limits)
-    OSeq <- c(LB, Limits, UB)
     OSeq[length(OSeq)] <- UB + 1
 
-    for (j in 1:(length(OSeq)-1)) {
+    for (j in 1:(length(OSeq) - 1)) {
       CodeData <- CodeData[TS >= OSeq[j] & TS < OSeq[j + 1], TS := j * Scale]
     }
-
   } else if (Type == "quantiles") {
     Qtl <- quantile(CodeData[, TS], type = 8, probs = Quantile/100)
     Qtl <- c(Qtl, max(CodeData))
@@ -55,7 +51,6 @@ code_sample <- function(Data,
     for (j in 1:Qlength){
       CodeData <- CodeData[TS <= Qtl[j], TS := j * Scale]
     }
-
   }
 
   CodeData <- CodeData[, TS := TS / Scale]
