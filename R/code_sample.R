@@ -60,9 +60,5 @@ code_sample <- function(x,
   }
   x <- x / scale
 
-  # still unsure if this is appropriate here...
-  # see the above example code using the data.table approach...
-  x <- x[order(x)]
-
   return(x)
 }
