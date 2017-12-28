@@ -1,6 +1,4 @@
-#' Function that generates clusters and calculates frequencies for each cluster. 
-#' Time series x and y are assumed to follow a Markov process of order k and j, 
-#' respectively.
+#' Function that generates clusters and calculates frequencies for each cluster.
 #'
 #' @param x a vector of coded values
 #' @param y a vector of coded values
