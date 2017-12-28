@@ -4,8 +4,8 @@
 #'
 #' @param x a vector of coded values
 #' @param y a vector of coded values
-#' @param lx x(t)
-#' @param ly y(t)
+#' @param lx x(k)
+#' @param ly y(j)
 #'
 #' @return returns a list
 #' @export
