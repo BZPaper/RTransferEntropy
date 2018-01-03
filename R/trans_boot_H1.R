@@ -61,8 +61,8 @@ trans_boot_H1 <- function(x,
                                         ly = lx)
     }
   } else {
-    #Transfer entropy of bootstrapped process (without shuffling)
-    #Lead = x
+    # Transfer entropy of bootstrapped process (without shuffling)
+    # Lead = x
     dtex <- transfer_entropy(dmat[, 1], dmat[, 2], lx = lx, 
                              ly = ly)$transentropy
     # Lead = y
