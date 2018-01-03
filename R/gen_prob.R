@@ -14,7 +14,7 @@ gen_prob <- function(x,
   n <- length(x)
   
   # Without lags
-  px <- table(x)/n
+  px <- table(x)
   
   # With lags
   nclust <- n - lx
@@ -25,12 +25,12 @@ gen_prob <- function(x,
   }
   
   clust <- unlist(lapply(clustlist, function(x) paste(x, collapse = "")))
-  mprob <- table(clust)/n
+  mprob <- table(clust)
   nprob <- length(mprob)
   
   values <- names(mprob)
   pvec <- numeric(nprob)
-  names(pvec)   <- values
+  names(pvec) <- values
   
   for (i in 1:nprob) {
     p1 <- mprob[i]
@@ -38,7 +38,7 @@ gen_prob <- function(x,
     pvec[i] <- p1/p2
   }
   
-  transprob <-  split(pvec, substr(values, 1, 1))
+  transprob <- split(pvec, substr(values, 1, 1))
   
   return(list(px = px, transprob = transprob))
 }
