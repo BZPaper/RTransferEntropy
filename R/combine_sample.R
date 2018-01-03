@@ -1,6 +1,6 @@
 #' Function that combines the given time series.
 #'
-#' @param x a vector of coded vales
+#' @param x a vector of coded values
 #' @param y a vector of coded values
 #'
 #' @return returns a list
@@ -33,5 +33,5 @@ combine_sample <- function(x, y) {
     }
   }
   
-  return(list(valuestab, csample))
+  return(list(valuestab = valuestab, csample = csample))
 }
