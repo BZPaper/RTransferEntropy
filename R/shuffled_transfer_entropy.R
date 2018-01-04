@@ -33,8 +33,6 @@ shuffled_transfer_entropy <- function(nrep = 10,
   numcores <- detectCores() - 1
   cl <- makeCluster(numcores)
 
-  set.seed(123)
-
   for (i in 1:shuffles) {
     shuffle[[i]] <- replicate(nreps,
                               transfer_entropy(x = x,
