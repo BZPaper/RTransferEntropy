@@ -28,17 +28,17 @@ shuffled_transfer_entropy <- function(nrep = 10,
 
   n <- length(x)
   nreps <- round((nrep + 1) / shuffles)
-  shuffle <- list()
 
   numcores <- detectCores() - 1
   cl <- makeCluster(numcores)
 
-  for (i in 1:shuffles) {
-    shuffle[[i]] <- replicate(nreps,
-                              transfer_entropy(x = x,
-                                               y = sample(y, n, replace = TRUE),
-                                               lx = lx, ly = ly)$transentropy)
-  }
+  shuffle <- parallel::parLapply(cl, 1:shuffles, function(i) {
+    res <- replicate(nreps,
+                     transfer_entropy(x = x,
+                                      y = sample(y, n, replace = TRUE),
+                                      lx = lx, ly = ly)$transentropy)
+    return(res)
+  })
 
   stopCluster(cl)
 
