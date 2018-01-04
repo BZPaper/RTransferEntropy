@@ -31,6 +31,9 @@ shuffled_transfer_entropy <- function(nrep = 10,
 
   numcores <- detectCores() - 1
   cl <- makeCluster(numcores)
+  on.exit({
+    stopCluster(cl)
+  })
 
   shuffle <- parallel::parLapply(cl, 1:shuffles, function(i) {
     res <- replicate(nreps,
@@ -39,8 +42,6 @@ shuffled_transfer_entropy <- function(nrep = 10,
                                       lx = lx, ly = ly)$transentropy)
     return(res)
   })
-
-  stopCluster(cl)
 
   ste <- mean(as.numeric(as.character(unlist(shuffle))))
 
