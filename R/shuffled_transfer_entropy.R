@@ -10,6 +10,7 @@
 #' @param lx x(k)
 #' @param y a vector of coded values
 #' @param ly y(j)
+#' @param ncores the number of cores
 #'
 #' @return returns a numeric scalar
 #' @export
@@ -22,17 +23,15 @@ shuffled_transfer_entropy <- function(nrep = 10,
                                       x,
                                       lx,
                                       y,
-                                      ly) {
-
-  require(parallel)
+                                      ly,
+                                      ncores = parallel::detectCores() - 1) {
 
   n <- length(x)
   nreps <- round((nrep + 1) / shuffles)
 
-  numcores <- detectCores() - 1
-  cl <- makeCluster(numcores)
+  cl <- parallel::makeCluster(ncores)
   on.exit({
-    stopCluster(cl)
+    parallel::stopCluster(cl)
   })
 
   shuffle <- parallel::parLapply(cl, 1:shuffles, function(i) {
