@@ -6,17 +6,17 @@
 #' @param lx x(k)
 #' @param ly y(j)
 #' @param const if TRUE, then shuffle is constant for all bootstraps
-#' @param constx 
-#' @param consty 
-#' @param nrep 
-#' @param shuffles 
+#' @param constx
+#' @param consty
+#' @param nrep
+#' @param shuffles
 #'
 #' @return returns a vector
 #' @export
 #'
 #' @examples
-#' 
-trans_boot_H0 <- function(x, 
+#'
+trans_boot_H0 <- function(x,
                           y,
                           shuffle = TRUE,
                           lx,
@@ -26,10 +26,10 @@ trans_boot_H0 <- function(x,
                           consty = NULL,
                           nrep = 10,
                           shuffles = 6) {
-  
+
   bootx <- Markov_boot_step(x, lx)
   booty <- Markov_boot_step(y, ly)
-  
+
   if (shuffle) {
     if (const) {
       # Lead = x
@@ -37,21 +37,21 @@ trans_boot_H0 <- function(x,
       # Lead = y
       dtey <- transfer_entropy(booty, x, lx = ly, ly = lx)$transentropy - consty
     } else {
-      constx <- shuffled_transfer_entropy(nrep, 
+      constx <- shuffled_transfer_entropy(nrep,
                                           shuffles,
                                           diff = TRUE,
-                                          bootx, 
-                                          lx = lx, 
-                                          y, 
+                                          bootx,
+                                          lx = lx,
+                                          y,
                                           ly = ly)
-      consty <- shuffled_transfer_entropy(nrep, 
+      consty <- shuffled_transfer_entropy(nrep,
                                           shuffles,
-                                          diff = TRUE, 
-                                          booty, 
-                                          lx = ly, 
-                                          x, 
+                                          diff = TRUE,
+                                          booty,
+                                          lx = ly,
+                                          x,
                                           ly = lx)
-      
+
       # Lead = x
       dtex <- transfer_entropy(bootx, y, lx = lx, ly = ly)$transentropy - constx
       # Lead = y
@@ -63,9 +63,9 @@ trans_boot_H0 <- function(x,
     # Lead = y
     dtey <- transfer_entropy(X=BootY,Y=X,lX=ly,lY=lx)$transentropy
   }
-  
-  teboot <- c(dtex, dtey) 
+
+  teboot <- c(dtex, dtey)
   names(teboot) <- c("dtex", "dtey")
-  
+
   return(teboot)
 }
