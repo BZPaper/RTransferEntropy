@@ -2,8 +2,8 @@
 #' difference between the transfer entropy calculated from a sample and the
 #' respective shuffled transfer entropy.
 #'
-#' @param nrep
-#' @param shuffles
+#' @param nreps number of replications per shuffle
+#' @param shuffles number of shuffles
 #' @param diff if TRUE, the effective transfer entropy is calculated, otherwise
 #' only the shuffled transfer entropy is returned
 #' @param x a vector of coded values
@@ -17,7 +17,7 @@
 #'
 #' @examples
 #'
-shuffled_transfer_entropy <- function(nrep = 10,
+shuffled_transfer_entropy <- function(nreps = 2,
                                       shuffles = 6,
                                       diff = TRUE,
                                       x,
@@ -27,7 +27,6 @@ shuffled_transfer_entropy <- function(nrep = 10,
                                       ncores = parallel::detectCores() - 1) {
 
   n <- length(x)
-  nreps <- round((nrep + 1) / shuffles)
 
   cl <- parallel::makeCluster(ncores)
   on.exit({

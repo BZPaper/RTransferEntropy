@@ -8,7 +8,7 @@
 #' @param const if TRUE, then shuffle is constant for all bootstraps
 #' @param constx
 #' @param consty
-#' @param nrep
+#' @param nreps
 #' @param shuffles
 #'
 #' @return returns a vector
@@ -24,7 +24,7 @@ trans_boot_H0 <- function(x,
                           const = FALSE,
                           constx = NULL,
                           consty = NULL,
-                          nrep = 10,
+                          nreps = 2,
                           shuffles = 6) {
 
   bootx <- Markov_boot_step(x, lx)
@@ -37,14 +37,14 @@ trans_boot_H0 <- function(x,
       # Lead = y
       dtey <- transfer_entropy(booty, x, lx = ly, ly = lx)$transentropy - consty
     } else {
-      constx <- shuffled_transfer_entropy(nrep,
+      constx <- shuffled_transfer_entropy(nreps,
                                           shuffles,
                                           diff = TRUE,
                                           bootx,
                                           lx = lx,
                                           y,
                                           ly = ly)
-      consty <- shuffled_transfer_entropy(nrep,
+      consty <- shuffled_transfer_entropy(nreps,
                                           shuffles,
                                           diff = TRUE,
                                           booty,

@@ -4,7 +4,7 @@
 #' @param y
 #' @param lx
 #' @param ly
-#' @param nrep
+#' @param nreps
 #' @param shuffles
 #' @param const
 #' @param shuffle
@@ -21,7 +21,7 @@ Shannon_transfer_entopy <- function(x,
                                     y,
                                     lx,
                                     ly,
-                                    nrep = 10,
+                                    nreps = 2,
                                     shuffles = 6,
                                     const = FALSE,
                                     shuffle = TRUE,
@@ -40,7 +40,7 @@ Shannon_transfer_entopy <- function(x,
   tey <- transfer_entropy(y, x, lx = ly, ly = lx)$transentropy
 
   # Calculate transfer entropy (withour shuffling)
-  constx <- shuffled_transfer_entropy(nrep,
+  constx <- shuffled_transfer_entropy(nreps,
                                       shuffles,
                                       diff = FALSE,
                                       x,
@@ -48,7 +48,7 @@ Shannon_transfer_entopy <- function(x,
                                       y,
                                       ly = ly)
 
-  consty <- shuffled_transfer_entropy(nrep,
+  consty <- shuffled_transfer_entropy(nreps,
                                       shuffles,
                                       diff = FALSE,
                                       y,
@@ -71,7 +71,7 @@ Shannon_transfer_entopy <- function(x,
                                    const = TRUE,
                                    constx = 0,
                                    consty = 0,
-                                   nrep,
+                                   nreps,
                                    shuffles))
 
   # Combine sample
@@ -88,7 +88,7 @@ Shannon_transfer_entopy <- function(x,
                                    const = TRUE,
                                    constx = mean(boot["dtex",]),
                                    consty = mean(boot["dtey",]),
-                                   nrep,
+                                   nreps,
                                    shuffles))
 
   return(list(tex   = tex ,
