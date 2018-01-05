@@ -29,7 +29,7 @@ combine_sample <- function(x, y) {
     stop
   } else {
     for (i in 1:numvalues){
-      csample <- ifelse(csample == values[i], pool[i], csample)
+      csample <- ifelse(newsample == values[i], pool[i], csample)
     }
   }
 
