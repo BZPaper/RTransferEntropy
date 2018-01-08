@@ -18,13 +18,14 @@
 #' @examples
 #'
 Shannon_transfer_entopy <- function(x,
-                                    y,
                                     lx,
+                                    y,
                                     ly,
+                                    shuffle = TRUE,
+                                    const = FALSE,
                                     nreps = 2,
                                     shuffles = 6,
-                                    const = FALSE,
-                                    shuffle = TRUE,
+                                    ncores = parallel::detectCores() - 1,
                                     bins,
                                     quantiles,
                                     nboot) {
@@ -35,26 +36,28 @@ Shannon_transfer_entopy <- function(x,
 
   # Calculate transfer entropy (withour shuffling)
   # Lead = x
-  tex <- transfer_entropy(x, y, lx = lx, ly = ly)$transentropy
+  tex <- transfer_entropy(x, lx = lx, y, ly = ly)$transentropy
   # Lead = y
-  tey <- transfer_entropy(y, x, lx = ly, ly = lx)$transentropy
+  tey <- transfer_entropy(y, lx = ly, x, ly = lx)$transentropy
 
   # Calculate transfer entropy (withour shuffling)
-  constx <- shuffled_transfer_entropy(nreps,
-                                      shuffles,
-                                      diff = FALSE,
-                                      x,
+  constx <- shuffled_transfer_entropy(x,
                                       lx = lx,
                                       y,
-                                      ly = ly)
-
-  consty <- shuffled_transfer_entropy(nreps,
+                                      ly = ly,
+                                      nreps,
                                       shuffles,
                                       diff = FALSE,
-                                      y,
+                                      ncores)
+
+  consty <- shuffled_transfer_entropy(y,
                                       lx = ly,
                                       x,
-                                      ly = lx)
+                                      ly = lx
+                                      nreps,
+                                      shuffles,
+                                      diff = FALSE,
+                                      ncores)
 
   # Lead = x
   stex <- tex - constx
@@ -64,34 +67,36 @@ Shannon_transfer_entopy <- function(x,
   # Bootstrap
   boot1 <- replicate(nboot,
                      trans_boot_H0(x,
-                                   y,
-                                   shuffle,
                                    lx = lx,
+                                   y,
                                    ly = ly,
+                                   shuffle,
                                    const = TRUE,
                                    constx = 0,
                                    consty = 0,
                                    nreps,
-                                   shuffles))
+                                   shuffles,
+                                   ncores))
 
   # Combine sample
   collapse <- combine_sample(x, y)
   collxy <- collapse$csample
 
-  # Calculate frequencies
+  # Bootstrap
   boot2 <- replicate(nboot,
                      trans_boot_H1(collxy,
-                                   collapse$valuestab,
-                                   shuffle,
                                    lx = lx,
                                    ly = ly,
+                                   collapse$valuestab,
+                                   shuffle,
                                    const = TRUE,
                                    constx = mean(boot["dtex",]),
                                    consty = mean(boot["dtey",]),
                                    nreps,
-                                   shuffles))
+                                   shuffles,
+                                   ncores))
 
-  return(list(tex   = tex ,
+  return(list(tex   = tex,
               tey   = tey,
               S_tex = S_tex,
               S_tey = S_tey,

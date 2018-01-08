@@ -17,15 +17,16 @@
 #' @examples
 #'
 trans_boot_H1 <- function(x,
-                          valuestab,
-                          shuffle = TRUE,
                           lx,
                           ly,
+                          valuestab,
+                          shuffle = TRUE,
                           const = FALSE,
                           constx = NULL,
                           consty = NULL,
                           nreps = 2,
-                          shuffles = 6) {
+                          shuffles = 6,
+                          ncores = parallel::detectCores() - 1) {
 
   # Bootstrap
   bootx <-  Markov_boot_step(x, lx)
@@ -37,36 +38,38 @@ trans_boot_H1 <- function(x,
   if (shuffle) {
     if (const) {
       # Lead = x
-      dtex <- transfer_entropy(dmat[, 1], dmat[, 2], lx = lx,
+      dtex <- transfer_entropy(dmat[, 1], lx = lx, dmat[, 2],
                                ly = ly)$transentropy - constx
       # Lead = y
-      dtey <- transfer_entropy(dmat[, 2], dmat[, 1], lx = ly,
+      dtey <- transfer_entropy(dmat[, 2], lx = ly, dmat[, 1],
                                ly = lx)$transentropy - consty
     } else {
       # Lead = x
-      dtex <- shuffled_transfer_entropy(nreps,
-                                        shuffles,
-                                        diff = TRUE,
-                                        dmat[, 1],
+      dtex <- shuffled_transfer_entropy(dmat[, 1],
                                         lx = lx,
                                         dmat[, 2],
-                                        ly = ly)
-      # Lead = y
-      dtey <- shuffled_transfer_entropy(nreps,
+                                        ly = ly,
+                                        nreps,
                                         shuffles,
                                         diff = TRUE,
-                                        dmat[, 2],
+                                        ncores)
+      # Lead = y
+      dtey <- shuffled_transfer_entropy(dmat[, 2],
                                         lx = ly,
                                         dmat[, 1],
-                                        ly = lx)
+                                        ly = lx,
+                                        nreps,
+                                        shuffles,
+                                        diff = TRUE,
+                                        ncores)
     }
   } else {
     # Transfer entropy of bootstrapped process (without shuffling)
     # Lead = x
-    dtex <- transfer_entropy(dmat[, 1], dmat[, 2], lx = lx,
+    dtex <- transfer_entropy(dmat[, 1], lx = lx, dmat[, 2],
                              ly = ly)$transentropy
     # Lead = y
-    dtey <- transfer_entropy(dmat[, 2], dmat[, 1], lx = ly,
+    dtey <- transfer_entropy(dmat[, 2], lx = ly, dmat[, 1],
                              ly = lx)$transentropy
   }
 
