@@ -37,7 +37,10 @@ shuffled_transfer_entropy <- function(x,
   parallel::clusterExport(cl, c("nreps", "x", "y", "n", "lx", "ly"),
                           envir = environment())
 
-  shuffle <- parallel::parLapply(cl, seq(shuffles), function(i) {
+  seeds <- rnorm(shuffles)
+
+  shuffle <- parallel::parLapply(cl, seeds, function(seed) {
+    set.seed(seed)
     res <- replicate(nreps,
                      transfer_entropy(x = x,
                                       y = sample(y, n, replace = TRUE),
