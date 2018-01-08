@@ -28,7 +28,8 @@ i.e. one time series is lag of the other plus noise. In this case, one expects s
 and none from y to x.
 
 ``` r
-n<- 100000
+set.seed(20170108)
+n <- 100000
 x <- rep(0, n + 1)
 y <- rep(0, n + 1)
 
@@ -39,3 +40,4 @@ for (i in seq(n)) {
 
 x <- x[-1]
 y <- y[-1]
+```
