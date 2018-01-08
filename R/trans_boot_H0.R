@@ -17,15 +17,16 @@
 #' @examples
 #'
 trans_boot_H0 <- function(x,
-                          y,
-                          shuffle = TRUE,
                           lx,
+                          y,
                           ly,
+                          shuffle = TRUE,
                           const = FALSE,
                           constx = NULL,
                           consty = NULL,
                           nreps = 2,
-                          shuffles = 6) {
+                          shuffles = 6,
+                          ncores = parallel::detectCores() - 1) {
 
   bootx <- Markov_boot_step(x, lx)
   booty <- Markov_boot_step(y, ly)
@@ -33,35 +34,37 @@ trans_boot_H0 <- function(x,
   if (shuffle) {
     if (const) {
       # Lead = x
-      dtex <- transfer_entropy(bootx, y, lx = lx, ly = ly)$transentropy - constx
+      dtex <- transfer_entropy(bootx, lx = lx, y, ly = ly)$transentropy - constx
       # Lead = y
-      dtey <- transfer_entropy(booty, x, lx = ly, ly = lx)$transentropy - consty
+      dtey <- transfer_entropy(booty, lx = ly, x, ly = lx)$transentropy - consty
     } else {
-      constx <- shuffled_transfer_entropy(nreps,
-                                          shuffles,
-                                          diff = TRUE,
-                                          bootx,
+      constx <- shuffled_transfer_entropy(bootx,
                                           lx = lx,
                                           y,
-                                          ly = ly)
-      consty <- shuffled_transfer_entropy(nreps,
+                                          ly = ly
+                                          nreps,
                                           shuffles,
                                           diff = TRUE,
-                                          booty,
+                                          ncores)
+      consty <- shuffled_transfer_entropy(booty,
                                           lx = ly,
                                           x,
-                                          ly = lx)
+                                          ly = lx
+                                          nreps,
+                                          shuffles,
+                                          diff = TRUE,
+                                          ncores)
 
       # Lead = x
-      dtex <- transfer_entropy(bootx, y, lx = lx, ly = ly)$transentropy - constx
+      dtex <- transfer_entropy(bootx, lx = lx, y, ly = ly)$transentropy - constx
       # Lead = y
-      dtey <- transfer_entropy(booty, x, lx = ly, ly = lx)$transentropy - consty
+      dtey <- transfer_entropy(booty, lx = ly, x, ly = lx)$transentropy - consty
     }
   } else {
     # Lead = x
-    dtex <- transfer_entropy(X=BootX,Y=Y,lX=lx,lY=ly)$transentropy
+    dtex <- transfer_entropy(bootx, lx = lx, y, ly = ly)$transentropy
     # Lead = y
-    dtey <- transfer_entropy(X=BootY,Y=X,lX=ly,lY=lx)$transentropy
+    dtey <- transfer_entropy(booty, lx = ly, x, ly = lx)$transentropy
   }
 
   teboot <- c(dtex, dtey)

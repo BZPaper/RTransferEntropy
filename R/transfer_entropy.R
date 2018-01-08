@@ -12,12 +12,15 @@
 #'
 #' @examples
 #'
-transfer_entropy <- function(x, y, lx, ly){
+transfer_entropy <- function(x,
+                             lx,
+                             y,
+                             ly){
 
   # Frequencies
   #------------------------------
   # x(k+1) and y(j)
-  k1_j <- cluster_gen(x, y, lx = lx, ly = ly)$frequency
+  k1_j <- cluster_gen(x, lx = lx, y, ly = ly)$frequency
   nck1_j <- length(k1_j)
 
   # x(k+1)
@@ -25,7 +28,7 @@ transfer_entropy <- function(x, y, lx, ly){
   nck1 <- length(k1)
 
   # x(k) and y(j)
-  k_j <- cluster_gen(x, y, lx = lx, ly = ly, prog = FALSE)$frequency
+  k_j <- cluster_gen(x, lx = lx, y, ly = ly, prog = FALSE)$frequency
   nck_j <- length(k_j)
 
   # x(k)

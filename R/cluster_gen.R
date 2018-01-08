@@ -12,8 +12,8 @@
 #' @examples
 #'
 cluster_gen <- function(x,
-                        y = NULL,
                         lx,
+                        y = NULL,
                         ly =NULL,
                         prog = TRUE) {
 
