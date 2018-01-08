@@ -218,5 +218,5 @@ shuffled_transfer_entropy <- function(nreps = 2,
 
 x <- code_sample(x)
 y <- code_sample(y)
-shuffled_transfer_entropy(x, y, 1, 1)
+shuffled_transfer_entropy(x, lx = 1, y, ly = 1)
 ```
