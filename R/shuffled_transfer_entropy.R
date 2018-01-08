@@ -34,7 +34,8 @@ shuffled_transfer_entropy <- function(x,
     parallel::stopCluster(cl)
   })
 
-  parallel::clusterExport(cl, "nreps")
+  parallel::clusterExport(cl, c("nreps", "x", "y", "n", "lx", "ly"),
+                          envir = environment())
 
   shuffle <- parallel::parLapply(cl, seq(shuffles), function(i) {
     res <- replicate(nreps,
@@ -44,7 +45,7 @@ shuffled_transfer_entropy <- function(x,
     return(res)
   })
 
-  ste <- mean(as.numeric(as.character(unlist(shuffle))))
+  ste <- mean(unlist(shuffle))
 
   if (diff) {
     te <- transfer_entropy(x = x, y = y, lx = lx, ly = ly)$transentropy - ste
