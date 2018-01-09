@@ -1,7 +1,6 @@
 #' Function for bootstrapping transfer entropy under H0.
 #'
 #' @param x a vector of coded values
-#' @param valuestab table of codes and associated values
 #' @param shuffle if TRUE, shuffled transfer entropy is calculated
 #' @param lx x(k)
 #' @param ly y(j)
@@ -10,6 +9,8 @@
 #' @param consty
 #' @param nreps
 #' @param shuffles
+#' @param y a vector of coded values
+#' @param ncores
 #'
 #' @return returns a vector
 #' @export
