@@ -10,7 +10,7 @@
 #'
 #' @examples
 #'
-Markov_Boot_step <- function (x,
+Markov_boot_step <- function (x,
                               lx,
                               burn = 50) {
 
