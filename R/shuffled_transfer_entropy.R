@@ -34,7 +34,8 @@ shuffled_transfer_entropy <- function(x,
     parallel::stopCluster(cl)
   })
 
-  parallel::clusterExport(cl, c("nreps", "x", "y", "n", "lx", "ly"),
+  parallel::clusterExport(cl, c("nreps", "x", "y", "n", "lx", "ly",
+                                "transfer_entropy", "cluster_gen"),
                           envir = environment())
 
   seeds <- rnorm(shuffles)
