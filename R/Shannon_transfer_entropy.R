@@ -26,21 +26,22 @@ Shannon_transfer_entopy <- function(x,
                                     nreps = 2,
                                     shuffles = 6,
                                     ncores = parallel::detectCores() - 1,
-                                    bins,
-                                    quantiles,
+                                    quantiles = c(5, 95),
+                                    bins = NULL,
+                                    limits = NULL,
                                     nboot) {
 
   # Code time series
-  x <- code_sample(x, type = "quantiles", quantiles)
-  y <- code_sample(y, type = "quantiles", quantiles)
+  x <- code_sample(x, type = "quantiles", quantiles, bins, limits)
+  y <- code_sample(y, type = "quantiles", quantiles, bins, limits)
 
-  # Calculate transfer entropy (withour shuffling)
+  # Calculate transfer entropy (without shuffling)
   # Lead = x
   tex <- transfer_entropy(x, lx = lx, y, ly = ly)$transentropy
   # Lead = y
   tey <- transfer_entropy(y, lx = ly, x, ly = lx)$transentropy
 
-  # Calculate transfer entropy (withour shuffling)
+  # Calculate transfer entropy (with shuffling)
   constx <- shuffled_transfer_entropy(x,
                                       lx = lx,
                                       y,
@@ -53,7 +54,7 @@ Shannon_transfer_entopy <- function(x,
   consty <- shuffled_transfer_entropy(y,
                                       lx = ly,
                                       x,
-                                      ly = lx
+                                      ly = lx,
                                       nreps,
                                       shuffles,
                                       diff = FALSE,
