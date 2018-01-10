@@ -12,9 +12,9 @@ combine_sample <- function(x, y) {
 
   n <- length(x)
   csample <- cbind(x, y)
-  csample <- apply(newsample, 1, function(x) paste(x, collapse = ""))
+  csample <- apply(csample, 1, function(x) paste(x, collapse = ""))
 
-  valuestab <- sort(unique(newsample))
+  valuestab <- sort(unique(csample))
   names(valuestab) <- valuestab
 
   return(list(valuestab = valuestab, csample = csample))

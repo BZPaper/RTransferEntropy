@@ -43,8 +43,9 @@ shuffled_transfer_entropy <- function(x,
     set.seed(seed)
     res <- replicate(nreps,
                      transfer_entropy(x = x,
+                                      lx = lx,
                                       y = sample(y, n, replace = TRUE),
-                                      lx = lx, ly = ly)$transentropy)
+                                      ly = ly)$transentropy)
     return(res)
   })
 
