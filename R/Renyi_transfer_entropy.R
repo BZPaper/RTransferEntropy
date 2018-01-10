@@ -81,7 +81,11 @@ Renyi_transfer_entopy <- function(x,
 
   parallel::clusterExport(cl, c("x", "y", "n", "lx", "ly", "q", "nreps",
                                 "nboot", "shuffle", "const", "constx",
-                                "consty"),
+                                "consty", "trans_boot_H0_ren",
+                                "Markov_boot_step", "gen_prob",
+                                "transfer_entropy_ren",
+                                "shuffled_transfer_entropy_ren",
+                                "cluster_gen"),
                           envir = environment())
 
   seeds <- rnorm(boots)
