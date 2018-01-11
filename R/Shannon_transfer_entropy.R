@@ -66,7 +66,7 @@ Shannon_transfer_entopy <- function(x,
   stey <- tey - consty
 
   # Bootstrap
-  boot1 <- replicate(nboot,
+  boot <- replicate(nboot,
                      trans_boot_H0(x,
                                    lx = lx,
                                    y,
@@ -79,27 +79,9 @@ Shannon_transfer_entopy <- function(x,
                                    shuffles,
                                    ncores))
 
-  # Combine sample
-  collapse <- combine_sample(x, y)
-  collxy <- collapse$csample
-
-  # Bootstrap
-  boot2 <- replicate(nboot,
-                     trans_boot_H1(collxy,
-                                   lx = lx,
-                                   ly = ly,
-                                   collapse$valuestab,
-                                   shuffle,
-                                   const = TRUE,
-                                   constx = mean(boot["dtex",]),
-                                   consty = mean(boot["dtey",]),
-                                   nreps,
-                                   shuffles,
-                                   ncores))
-
   return(list(tex   = tex,
               tey   = tey,
               S_tex = S_tex,
               S_tey = S_tey,
-              bootstrap_H0 = boot1))
+              bootstrap_H0 = boot))
 }

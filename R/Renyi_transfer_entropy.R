@@ -34,7 +34,6 @@ Renyi_transfer_entopy <- function(x,
                                   quantiles = c(5, 95),
                                   bins = NULL,
                                   limits = NULL,
-                                  boots,
                                   nboot){
 
   # Code time series
@@ -74,37 +73,17 @@ Renyi_transfer_entopy <- function(x,
   stey <- tey - consty
 
   # Bootstrap
-  cl <- parallel::makeCluster(ncores)
-  on.exit({
-    parallel::stopCluster(cl)
-  })
-
-  parallel::clusterExport(cl, c("x", "y", "n", "lx", "ly", "q", "nreps",
-                                "nboot", "shuffle", "const", "constx",
-                                "consty", "trans_boot_H0_ren",
-                                "Markov_boot_step", "gen_prob",
-                                "transfer_entropy_ren",
-                                "shuffled_transfer_entropy_ren",
-                                "cluster_gen"),
-                          envir = environment())
-
-  seeds <- rnorm(boots)
-
-  boot <- parallel::parLapply(cl, seeds, function(seed) {
-    set.seed(seed)
-    res <- replicate(nboot,
-                     trans_boot_H0_ren(x,
-                                       lx,
-                                       y,
-                                       ly,
-                                       q,
-                                       shuffle = TRUE,
-                                       const = TRUE,
-                                       constx = 0,
-                                       consty = 0,
-                                       nreps))
-    return(res)
-  })
+  boot <- replicate(nboot,
+                   trans_boot_H0_ren(x,
+                                     lx,
+                                     y,
+                                     ly,
+                                     q,
+                                     shuffle,
+                                     const = TRUE,
+                                     constx = 0,
+                                     consty = 0,
+                                     nreps))
 
   ste <- mean(unlist(boot))
 
