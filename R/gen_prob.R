@@ -25,7 +25,7 @@ gen_prob <- function(x,
   }
 
   clust <- unlist(lapply(clustlist, function(x) paste(x, collapse = "")))
-  mprob <- table(clust)/n
+  mprob <- table(clust)/nclust
   nprob <- length(mprob)
 
   values <- names(mprob)
@@ -34,7 +34,8 @@ gen_prob <- function(x,
 
   for (i in 1:nprob) {
     p1 <- mprob[i]
-    p2 <- px[substr(values[i], 1, 1)]
+    select <- substr(values[i], 1, 1)
+    p2 <- sum(mprob[grep(paste("^", select, sep = ""), values, value = TRUE)])
     pvec[i] <- p1/p2
   }
 
