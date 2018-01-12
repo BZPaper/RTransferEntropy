@@ -19,6 +19,7 @@ Markov_boot_step <- function (x,
 
   # First draw
   probs <- gen_prob(x, lx)
+  set.seed(n)
   fdraw <- sample(names(probs$px), 1, prob = probs$px)
   bootlist[[1]] <- fdraw
 
@@ -27,6 +28,7 @@ Markov_boot_step <- function (x,
   for (i in 2:(lx + 1)) {
     probs <- gen_prob(x, lx = i - 1)
     tprob <- probs$transprob
+    set.seed(n)
     draw <- ifelse(length(names(tprob[[bootlist[[i - 1]]]])) == 1,
                    names(tprob[[bootlist[[i - 1]]]]),
                    sample(names(tprob[[bootlist[[i - 1]]]]), 1,
@@ -37,6 +39,7 @@ Markov_boot_step <- function (x,
   tprob <- gen_prob(x, lx)$transprob
 
   for (i in (lx + 2):n) {
+    set.seed(n)
     draw <- ifelse(length(names(tprob[[bootlist[[i - 1]]]])) == 1,
                    names(tprob[[bootlist[[i - 1]]]]),
                    sample(names(tprob[[bootlist[[i - 1]]]]), 1,
