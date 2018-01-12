@@ -1,14 +1,12 @@
-#' Codes a vector into different bins
-#'
 #' Codes the sample by assigning data to bins that are, for example, based on
 #' the quantiles of the empirical distribution of the sample.
 #'
 #' @param x a vector of numerical values
-#' @param type a number of bins, limits or use quantiles of empirical
-#'              distribution to tansform data into discrete form
+#' @param type bins, limits or quantiles of empirical distribution to discretize
+#' the data
 #' @param quantiles quantiles to use for discretization
 #' @param bins the number of bins with equal width used for discretization
-#' @param limits limits used for discretization explicitly
+#' @param limits limits used for discretization
 #' @param scale a scale parameter
 #'
 #' @return returns a numerical vector

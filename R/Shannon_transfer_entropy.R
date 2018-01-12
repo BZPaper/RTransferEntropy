@@ -1,16 +1,24 @@
 #' Function to implement Shannon transfer entropy.
 #'
-#' @param x
-#' @param y
-#' @param lx
-#' @param ly
-#' @param nreps
-#' @param shuffles
-#' @param const
-#' @param shuffle
-#' @param bins
-#' @param quantiles
-#' @param nboot
+#' @param x a vector of coded values
+#' @param lx Markov order of x
+#' @param y a vector of coded values
+#' @param ly Markov order of y
+#' @param const if TRUE, then shuffle is constant for all bootstraps
+#' @param constx constant value substracted from transfer entropy measure
+#' @param consty constant value substracted from transfer entropy measure
+#' @param shuffle if TRUE, shuffled transfer entropy is calculated
+#' @param nreps number of replications for each shuffle
+#' @param shuffles number of shuffles
+#' @param ncores number of cores in parallel computation
+#' @param type bins, limits or quantiles of empirical distribution to discretize
+#' the data
+#' @param quantiles quantiles to use for discretization
+#' @param bins the number of bins with equal width used for discretization
+#' @param limits limits used for discretization
+#' @param nboot number of bootstrap replications
+#' @param burn number of observations that are dropped from the beginning of
+#' the bootstrapped Markov chain
 #'
 #' @return returns a list
 #' @export
@@ -23,17 +31,21 @@ Shannon_transfer_entopy <- function(x,
                                     ly,
                                     shuffle = TRUE,
                                     const = FALSE,
+                                    constx = 0,
+                                    consty = 0,
                                     nreps = 2,
                                     shuffles = 6,
                                     ncores = parallel::detectCores() - 1,
+                                    type = "quantiles",
                                     quantiles = c(5, 95),
                                     bins = NULL,
                                     limits = NULL,
-                                    nboot) {
+                                    nboot,
+                                    burn = 50) {
 
   # Code time series
-  x <- code_sample(x, type = "quantiles", quantiles, bins, limits)
-  y <- code_sample(y, type = "quantiles", quantiles, bins, limits)
+  x <- code_sample(x, type, quantiles, bins, limits)
+  y <- code_sample(y, type, quantiles, bins, limits)
 
   # Calculate transfer entropy (without shuffling)
   # Lead = x
@@ -71,10 +83,11 @@ Shannon_transfer_entopy <- function(x,
                                    lx = lx,
                                    y,
                                    ly = ly,
+                                   burn,
                                    shuffle,
-                                   const = TRUE,
-                                   constx = 0,
-                                   consty = 0,
+                                   const,
+                                   constx,
+                                   consty,
                                    nreps,
                                    shuffles,
                                    ncores))

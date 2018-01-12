@@ -1,16 +1,19 @@
-#' Function for bootstrapping transfer entropy under H0.
+#' Function for bootstrapping Shannon transfer entropy under H0 of independence
+#' between time series x and y.
 #'
 #' @param x a vector of coded values
-#' @param shuffle if TRUE, shuffled transfer entropy is calculated
-#' @param lx x(k)
-#' @param ly y(j)
-#' @param const if TRUE, then shuffle is constant for all bootstraps
-#' @param constx
-#' @param consty
-#' @param nreps
-#' @param shuffles
+#' @param lx Markov order of x
 #' @param y a vector of coded values
-#' @param ncores
+#' @param ly Markov order of y
+#' @param burn number of observations that are dropped from the beginning of
+#' the bootstrapped Markov chain
+#' @param shuffle if TRUE, shuffled transfer entropy is calculated
+#' @param const if TRUE, then shuffle is constant for all bootstraps
+#' @param constx constant value substracted from transfer entropy measure
+#' @param consty constant value substracted from transfer entropy measure
+#' @param nreps number of replications for each shuffle
+#' @param shuffles number of shuffles
+#' @param ncores number of cores in parallel computation
 #'
 #' @return returns a vector
 #' @export
@@ -21,6 +24,7 @@ trans_boot_H0 <- function(x,
                           lx,
                           y,
                           ly,
+                          burn = 50,
                           shuffle = TRUE,
                           const = FALSE,
                           constx = NULL,
@@ -29,8 +33,8 @@ trans_boot_H0 <- function(x,
                           shuffles = 6,
                           ncores = parallel::detectCores() - 1) {
 
-  bootx <- Markov_boot_step(x, lx)
-  booty <- Markov_boot_step(y, ly)
+  bootx <- Markov_boot_step(x, lx, burn)
+  booty <- Markov_boot_step(y, ly, burn)
 
   if (shuffle) {
     if (const) {

@@ -1,10 +1,11 @@
-#' Function that generates clusters and calculates frequencies for each cluster.
+#' Function that generates clusters of states and calculates frequencies for
+#' each cluster.
 #'
 #' @param x a vector of coded values
 #' @param y a vector of coded values
-#' @param prog if TRUE, x(k+1)
-#' @param lx x(k)
-#' @param ly y(j)
+#' @param prog if TRUE, lag of x (Markov order) is increased by one
+#' @param lx Markov order of x
+#' @param ly Markov order of y
 #'
 #' @return returns a list with clusters and associated frequencies
 #' @export

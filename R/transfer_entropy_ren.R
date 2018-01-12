@@ -5,8 +5,8 @@
 #'
 #' @param x a vector of coded values
 #' @param y a vector of coded values
-#' @param lx x(k)
-#' @param ly y(j)
+#' @param lx Markov order of x
+#' @param ly Markov order of y
 #' @param q weighting parameter in Rényi transfer entropy
 #'
 #' @return returns a list

@@ -1,7 +1,8 @@
-#' Function generates probabilities for step-wise markov bootstrap.
+#' Function generates state and transition probabilities for
+#' step-wise markov bootstrap.
 #'
 #' @param x a vector of coded values
-#' @param lx x(k)
+#' @param lx Markov order of x
 #'
 #' @return returns a list
 #' @export
@@ -13,10 +14,10 @@ gen_prob <- function(x,
 
   n <- length(x)
 
-  # Without lags
+  # Calculate state probabilities
   px <- table(x)/n
 
-  # With lags
+  # Calculate transition probabilities
   nclust <- n - lx
   clustlist <- list()
 
@@ -39,6 +40,7 @@ gen_prob <- function(x,
     pvec[i] <- p1/p2
   }
 
+  # Collect transition probabilities
   transprob <- split(pvec, substr(values, 1, 1))
 
   return(list(px = px, transprob = transprob))
