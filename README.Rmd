@@ -1,28 +1,38 @@
+---
+output: github_document
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-RTransferEntropy
-================
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+# RTransferEntropy
 
 The goal of RTransferEntropy is to implement transfer entropy for the Shannon and the Renyi-methodology.
 
-Installation
-------------
+## Installation
 
 You can install RTransferEntropy from github with:
 
-``` r
+```{r gh-installation, eval = FALSE}
 # install.packages("devtools")
 devtools::install_github("BZPaper/Transfer-Entropy")
 ```
 
-Example using simulated data
-----------------------------
+## Example using simulated data
 
-Simulate a simple model to obtain two time series that are not independent (see simulation study in Dimpfl and Peter (2013)), i.e. one time series is lag of the other plus noise. In this case, one expects significant information flow from x to y and none from y to x.
+Simulate a simple model to obtain two time series that are not independent (see simulation study in Dimpfl and Peter (2013)),
+i.e. one time series is lag of the other plus noise. In this case, one expects significant information flow from x to y 
+and none from y to x.
 
 ### Simulating a Time-Series
-
-``` r
+```{r}
 library(RTransferEntropy)
 set.seed(20180108)
 n <- 100000
@@ -39,8 +49,7 @@ y <- y[-1]
 ```
 
 ### Visualisation
-
-``` r
+```{r}
 library(data.table)
 library(ggplot2)
 library(latex2exp)
@@ -58,21 +67,15 @@ ggplot(df, aes(x = x, y = y, color = grp)) +
   labs(x = TeX("Left: x_t Right: x_{t-1}"), y = TeX("y_t"), 
        title = "Scatterplot of the Time-Series") +
   scale_color_brewer(palette = "Set1", guide = F)
-#> `geom_smooth()` using method = 'gam'
-#> Warning: Removed 1 rows containing non-finite values (stat_smooth).
-#> Warning: Removed 1 rows containing missing values (geom_point).
 ```
 
-![](README-unnamed-chunk-3-1.png)
-
 ### Shuffled Transfer Entropy
-
-``` r
+```{r}
 x_code <- code_sample(x)
 y_code <- code_sample(y)
 
 set.seed(20180108 + 1)
 (shuffled_TE <- shuffled_transfer_entropy(x = x_code, lx = 1,
                                           y = y_code, ly = 1))
-#> [1] 4.387012e-05
 ```
+
