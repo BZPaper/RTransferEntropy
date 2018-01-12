@@ -29,7 +29,7 @@ and none from y to x.
 
 ``` r
 library(RTransferEntropy)
-set.seed(20170108)
+set.seed(20180108)
 n <- 100000
 x <- rep(0, n + 1)
 y <- rep(0, n + 1)
@@ -45,20 +45,21 @@ y <- y[-1]
 plot(x, y, main = "Contemporaneous Effect")
 ```
 
-![](https://i.imgur.com/M9ybLS1.png)
+![](https://i.imgur.com/02HiWy4.png)
 
 ``` r
 plot(x[c(NA, 1:(n -1))], y, main = "Lagged Effect")
 ```
 
-![](https://i.imgur.com/x4Vz8PN.png)
+![](https://i.imgur.com/MNdQri7.png)
 
 ``` r
 
 x_code <- code_sample(x)
 y_code <- code_sample(y)
 
+set.seed(20180108 + 1)
 (shuffled_TE <- shuffled_transfer_entropy(x = x_code, lx = 1,
                                           y = y_code, ly = 1))
-#> [1] 7.413648e-05
+#> [1] 4.387012e-05
 ```
