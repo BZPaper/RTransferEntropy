@@ -94,7 +94,7 @@ Shannon_transfer_entopy <- function(x,
 
   return(list(tex   = tex,
               tey   = tey,
-              S_tex = S_tex,
-              S_tey = S_tey,
+              stex = stex,
+              stey = stey,
               bootstrap_H0 = boot))
 }

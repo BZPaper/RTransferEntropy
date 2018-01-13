@@ -27,7 +27,7 @@
 #' @examples
 #'
 Renyi_transfer_entopy <- function(x,
-                                  lx1,
+                                  lx,
                                   y,
                                   ly,
                                   q,
@@ -43,7 +43,7 @@ Renyi_transfer_entopy <- function(x,
                                   bins = NULL,
                                   limits = NULL,
                                   nboot,
-                                  burn = 50){
+                                  burn = 50) {
 
   # Code time series
   x <- code_sample(x, type, quantiles, bins, limits)
@@ -99,7 +99,7 @@ Renyi_transfer_entopy <- function(x,
 
   return(list(tex   = tex,
               tey   = tey,
-              S_tex = S_tex,
-              S_tey = S_tey,
+              stex = stex,
+              stey = stey,
               bootstrap_H0 = boot))
 }
