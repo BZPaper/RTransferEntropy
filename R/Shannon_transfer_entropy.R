@@ -16,7 +16,7 @@
 #' @param quantiles quantiles to use for discretization
 #' @param bins the number of bins with equal width used for discretization
 #' @param limits limits used for discretization
-#' @param parcalc "yes" if parallel computations for the bootstrap funtion
+#' @param parcalc "yes" if parallel computations for the Markov chain bootstrap
 #' @param boots number of bootstrap samples
 #' @param nboot number of bootstrap replications
 #' @param burn number of observations that are dropped from the beginning of
