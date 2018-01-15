@@ -16,6 +16,8 @@
 #' @param quantiles quantiles to use for discretization
 #' @param bins the number of bins with equal width used for discretization
 #' @param limits limits used for discretization
+#' @param parcalc "yes" if parallel computations for the bootstrap funtion
+#' @param boots number of bootstrap samples
 #' @param nboot number of bootstrap replications
 #' @param burn number of observations that are dropped from the beginning of
 #' the bootstrapped Markov chain
@@ -40,6 +42,8 @@ Shannon_transfer_entopy <- function(x,
                                     quantiles = c(5, 95),
                                     bins = NULL,
                                     limits = NULL,
+                                    parcalc = "yes",
+                                    boots = 1,
                                     nboot,
                                     burn = 50) {
 
@@ -78,19 +82,54 @@ Shannon_transfer_entopy <- function(x,
   stey <- tey - consty
 
   # Bootstrap
-  boot <- replicate(nboot,
-                     trans_boot_H0(x,
-                                   lx = lx,
-                                   y,
-                                   ly = ly,
-                                   burn,
-                                   shuffle,
-                                   const,
-                                   constx,
-                                   consty,
-                                   nreps,
-                                   shuffles,
-                                   ncores))
+  if (parcalc == "yes") {
+    cl <- parallel::makeCluster(ncores)
+    on.exit({
+      parallel::stopCluster(cl)
+    })
+
+    parallel::clusterExport(cl, c("nreps", "x", "y", "n", "lx", "ly",
+                                  "code_sample", "cluster_gen",
+                                  "transfer_entropy",
+                                  "shuffled_transfer_entropy", "gen_prob",
+                                  "Markov_boot_step", "trans_boot_H0"),
+                            envir = environment())
+
+    seeds <- rnorm(boots)
+
+    boot <- parallel::parLapply(cl, seeds, function(seed) {
+      set.seed(seed)
+      res <- replicate(nboot,
+                       trans_boot_H0(x,
+                                     lx = lx,
+                                     y,
+                                     ly = ly,
+                                     burn,
+                                     shuffle,
+                                     const,
+                                     constx,
+                                     consty,
+                                     nreps,
+                                     shuffles,
+                                     ncores))
+      return(res)
+    })
+  } else {
+    boot <- replicate(nboot,
+                      trans_boot_H0(x,
+                                    lx = lx,
+                                    y,
+                                    ly = ly,
+                                    burn,
+                                    shuffle,
+                                    const,
+                                    constx,
+                                    consty,
+                                    nreps,
+                                    shuffles,
+                                    ncores))
+  }
+
 
   return(list(tex   = tex,
               tey   = tey,
