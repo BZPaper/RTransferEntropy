@@ -36,8 +36,16 @@ code_sample <- function(x,
 
     # find the respective OSeq for the time series
     if (type == "bins") {
+      if(is.null(bins)) {
+        stop(cat(paste("Warning: Bins not defined", "\n",
+                       "Execution halted","\n")))
+      }
       OSeq <- LB + ((UB - LB) / bins) * (0:(bins))
     } else {
+      if(is.null(limits)) {
+        stop(cat(paste("Warning: Limits not defined", "\n",
+                       "Execution halted","\n")))
+      }
       limits <- sort(limits)
       OSeq <- c(LB, limits, UB)
     }
@@ -45,7 +53,7 @@ code_sample <- function(x,
     OSeq[length(OSeq)] <- UB + 1
 
     for (j in 1:(length(OSeq) - 1)) {
-      x[x >= OSeq[j] & x < OSeq[j + i]] <- j * scale
+      x[x >= OSeq[j] & x < OSeq[j + 1]] <- j * scale
     }
   } else if (type == "quantiles") {
     Qtl <- quantile(x, type = 8, probs = quantiles/100)
