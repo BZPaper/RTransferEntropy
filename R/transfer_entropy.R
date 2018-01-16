@@ -22,18 +22,22 @@ transfer_entropy <- function(x,
   #------------------------------
   # x(k+1) and y(j)
   k1_j <- cluster_gen(x, lx = lx, y, ly = ly)$frequency
+  dimnames(k1_j) <- list(gsub(" ", "", names(k1_j), fixed = TRUE))
   nck1_j <- length(k1_j)
 
   # x(k+1)
   k1 <- cluster_gen(x, lx = lx)$frequency
+  dimnames(k1) <- list(gsub(" ", "", names(k1), fixed = TRUE))
   nck1 <- length(k1)
 
   # x(k) and y(j)
   k_j <- cluster_gen(x, lx = lx, y, ly = ly, prog = FALSE)$frequency
+  dimnames(k_j) <- list(gsub(" ", "", names(k_j), fixed = TRUE))
   nck_j <- length(k_j)
 
   # x(k)
   k <- cluster_gen(x, lx = lx, prog = FALSE)$frequency
+  dimnames(k) <- list(gsub(" ", "", names(k), fixed = TRUE))
   nck <- length(k)
 
   # Transfer entropy
