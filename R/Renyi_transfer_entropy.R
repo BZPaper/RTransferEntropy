@@ -28,7 +28,7 @@
 #'
 #' @examples
 #'
-Renyi_transfer_entopy <- function(x,
+Renyi_transfer_entropy <- function(x,
                                   lx,
                                   y,
                                   ly,

@@ -27,7 +27,7 @@
 #'
 #' @examples
 #'
-Shannon_transfer_entopy <- function(x,
+Shannon_transfer_entropy <- function(x,
                                     lx,
                                     y,
                                     ly,
