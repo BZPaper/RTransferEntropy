@@ -40,10 +40,12 @@ transfer_entropy <- function(x,
   #------------------------------
   entropy <- numeric(nck1_j)
   for(i in 1:nck1_j){
-    p1 <- k1[substr(names(k1_j[i]), 1, (lx + 1))]
-    p2 <- k_j[paste(unlist(strsplit(names(k1_j[i]), split = NULL))[-(lx + 1)],
-                    collapse = "")]
-    p3 <- k[substr(names(k1_j[i]), 1, lx)]
+    p1 <- k1[paste(strsplit(names(k1_j[i]), " ")[[1]][1:(lx + 1)],
+                   collapse = " ")]
+    ps <- k_j[paste(strsplit(names(k1_j[i]), " ")[[1]][-(lx + 1)],
+                    collapse = " ")]
+    p3 <- k[paste(strsplit(names(k1_j[i]), " ")[[1]][1:lx],
+                  collapse = " ")]
     entropy[i] <- k1_j[i] * log2((k1_j[i] * p3) / (p2 * p1))
   }
 
