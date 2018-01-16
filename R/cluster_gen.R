@@ -67,7 +67,7 @@ cluster_gen <- function(x,
   }
 
   numclust <- unlist(lapply(clustlist, function(x) paste(x, collapse = " ")))
-  freq <- table(numclust)/n
+  freq <- table(numclust)/length(numclust)
 
   return(list(cluster = numclust,
               frequency = freq))
