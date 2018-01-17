@@ -28,26 +28,151 @@
 #'
 #' @examples
 #'
+# Renyi_transfer_entropy <- function(x,
+#                                   lx,
+#                                   y,
+#                                   ly,
+#                                   q,
+#                                   shuffle = TRUE,
+#                                   const = FALSE,
+#                                   constx = 0,
+#                                   consty = 0,
+#                                   nreps = 2,
+#                                   shuffles = 6,
+#                                   ncores = parallel::detectCores() - 1,
+#                                   type = "quantiles",
+#                                   quantiles = c(5, 95),
+#                                   bins = NULL,
+#                                   limits = NULL,
+#                                   parcalc = "yes",
+#                                   boots = 1,
+#                                   nboot,
+#                                   burn = 50) {
+#
+#   # Code time series
+#   x <- code_sample(x, type, quantiles, bins, limits)
+#   y <- code_sample(y, type, quantiles, bins, limits)
+#
+#   # Calculate transfer entropy (withour shuffling)
+#   # Lead = x
+#   tex <- transfer_entropy_ren(x, lx = lx, y, ly = ly, q)$transentropy
+#   # Lead = y
+#   tey <- transfer_entropy_ren(y, lx = ly, x, ly = lx, q)$transentropy
+#
+#   # Calculate transfer entropy (with shuffling)
+#   constx <- shuffled_transfer_entropy_ren(x,
+#                                           lx = lx,
+#                                           y,
+#                                           ly = ly,
+#                                           q,
+#                                           nreps,
+#                                           shuffles,
+#                                           diff = FALSE,
+#                                           ncores)
+#
+#   consty <- shuffled_transfer_entropy_ren(y,
+#                                           lx = ly,
+#                                           x,
+#                                           ly = lx,
+#                                           q,
+#                                           nreps,
+#                                           shuffles,
+#                                           diff = FALSE,
+#                                           ncores)
+#
+#   # Lead = x
+#   stex <- tex - constx
+#   # Lead = y
+#   stey <- tey - consty
+#
+#   # Bootstrap
+#   boot <- replicate(nboot,
+#                    trans_boot_H0_ren(x,
+#                                      lx,
+#                                      y,
+#                                      ly,
+#                                      q,
+#                                      burn,
+#                                      shuffle,
+#                                      const,
+#                                      constx,
+#                                      consty,
+#                                      nreps))
+#
+#   # Bootstrap
+#   if (parcalc == "yes") {
+#     cl <- parallel::makeCluster(ncores)
+#     on.exit({
+#       parallel::stopCluster(cl)
+#     })
+#
+#     parallel::clusterExport(cl, c("nreps", "x", "y", "n", "lx", "ly", "q",
+#                                   "code_sample", "cluster_gen",
+#                                   "transfer_entropy_ren",
+#                                   "shuffled_transfer_entropy_ren", "gen_prob",
+#                                   "Markov_boot_step", "trans_boot_H0_ren"),
+#                             envir = environment())
+#
+#     seeds <- rnorm(boots)
+#
+#     boot <- parallel::parLapply(cl, seeds, function(seed) {
+#       set.seed(seed)
+#       res <- replicate(nboot,
+#                        trans_boot_H0_ren(x,
+#                                          lx = lx,
+#                                          y,
+#                                          ly = ly,
+#                                          q,
+#                                          burn,
+#                                          shuffle,
+#                                          const,
+#                                          constx,
+#                                          consty,
+#                                          nreps,
+#                                          shuffles,
+#                                          ncores))
+#       return(res)
+#     })
+#   } else {
+#     boot <- replicate(nboot,
+#                       trans_boot_H0_ren(x,
+#                                         lx = lx,
+#                                         y,
+#                                         ly = ly,
+#                                         q,
+#                                         burn,
+#                                         shuffle,
+#                                         const,
+#                                         constx,
+#                                         consty,
+#                                         nreps))
+#   }
+#
+#   return(list(tex   = tex,
+#               tey   = tey,
+#               stex = stex,
+#               stey = stey,
+#               bootstrap_H0 = boot))
+# }
+
 Renyi_transfer_entropy <- function(x,
-                                  lx,
-                                  y,
-                                  ly,
-                                  q,
-                                  shuffle = TRUE,
-                                  const = FALSE,
-                                  constx = 0,
-                                  consty = 0,
-                                  nreps = 2,
-                                  shuffles = 6,
-                                  ncores = parallel::detectCores() - 1,
-                                  type = "quantiles",
-                                  quantiles = c(5, 95),
-                                  bins = NULL,
-                                  limits = NULL,
-                                  parcalc = "yes",
-                                  boots = 1,
-                                  nboot,
-                                  burn = 50) {
+                                   lx,
+                                   y,
+                                   ly,
+                                   q,
+                                   shuffle = TRUE,
+                                   const = FALSE,
+                                   constx = 0,
+                                   consty = 0,
+                                   nreps = 2,
+                                   shuffles = 6,
+                                   ncores = parallel::detectCores() - 1,
+                                   type = "quantiles",
+                                   quantiles = c(5, 95),
+                                   bins = NULL,
+                                   limits = NULL,
+                                   nboot,
+                                   burn = 50) {
 
   # Code time series
   x <- code_sample(x, type, quantiles, bins, limits)
@@ -87,66 +212,31 @@ Renyi_transfer_entropy <- function(x,
 
   # Bootstrap
   boot <- replicate(nboot,
-                   trans_boot_H0_ren(x,
-                                     lx,
-                                     y,
-                                     ly,
-                                     q,
-                                     burn,
-                                     shuffle,
-                                     const,
-                                     constx,
-                                     consty,
-                                     nreps))
+                    trans_boot_H0_ren(x,
+                                      lx,
+                                      y,
+                                      ly,
+                                      q,
+                                      burn,
+                                      shuffle,
+                                      const,
+                                      constx,
+                                      consty,
+                                      nreps))
 
   # Bootstrap
-  if (parcalc == "yes") {
-    cl <- parallel::makeCluster(ncores)
-    on.exit({
-      parallel::stopCluster(cl)
-    })
-
-    parallel::clusterExport(cl, c("nreps", "x", "y", "n", "lx", "ly", "q",
-                                  "code_sample", "cluster_gen",
-                                  "transfer_entropy_ren",
-                                  "shuffled_transfer_entropy_ren", "gen_prob",
-                                  "Markov_boot_step", "trans_boot_H0_ren"),
-                            envir = environment())
-
-    seeds <- rnorm(boots)
-
-    boot <- parallel::parLapply(cl, seeds, function(seed) {
-      set.seed(seed)
-      res <- replicate(nboot,
-                       trans_boot_H0_ren(x,
-                                         lx = lx,
-                                         y,
-                                         ly = ly,
-                                         q,
-                                         burn,
-                                         shuffle,
-                                         const,
-                                         constx,
-                                         consty,
-                                         nreps,
-                                         shuffles,
-                                         ncores))
-      return(res)
-    })
-  } else {
-    boot <- replicate(nboot,
-                      trans_boot_H0_ren(x,
-                                        lx = lx,
-                                        y,
-                                        ly = ly,
-                                        q,
-                                        burn,
-                                        shuffle,
-                                        const,
-                                        constx,
-                                        consty,
-                                        nreps))
-  }
+  boot <- replicate(nboot,
+                    trans_boot_H0_ren(x,
+                                      lx = lx,
+                                      y,
+                                      ly = ly,
+                                      q,
+                                      burn,
+                                      shuffle,
+                                      const,
+                                      constx,
+                                      consty,
+                                      nreps))
 
   return(list(tex   = tex,
               tey   = tey,
