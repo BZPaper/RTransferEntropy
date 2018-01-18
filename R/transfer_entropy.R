@@ -42,7 +42,7 @@ transfer_entropy <- function(x,
   for(i in 1:nck1_j){
     p1 <- k1[paste(strsplit(names(k1_j[i]), " ")[[1]][1:(lx + 1)],
                    collapse = " ")]
-    ps <- k_j[paste(strsplit(names(k1_j[i]), " ")[[1]][-(lx + 1)],
+    p2 <- k_j[paste(strsplit(names(k1_j[i]), " ")[[1]][-(lx + 1)],
                     collapse = " ")]
     p3 <- k[paste(strsplit(names(k1_j[i]), " ")[[1]][1:lx],
                   collapse = " ")]
