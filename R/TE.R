@@ -103,7 +103,14 @@ TE <- function(x,
                    "\n", "Execution halted")))
   }
 
-  if (nboot != 0) {
+  if (is.null(dim(te$bootstrap_H0))) {
+    # Inference (standard errors, p-values)
+    setex <- 0
+    setey <- 0
+
+    pstex <- 0
+    pstey <- 0
+  } else {
     # Inference (standard errors, p-values)
     setex <- sd(te$bootstrap_H0[1, ])
     setey <- sd(te$bootstrap_H0[2, ])
@@ -111,13 +118,6 @@ TE <- function(x,
     pval <- function(x, est) {length(x[x > est])/length(x)}
     pstex <- pval(te$bootstrap_H0[1, ], te$stex)
     pstey <- pval(te$bootstrap_H0[2, ], te$stey)
-  } else {
-    # Inference (standard errors, p-values)
-    setex <- 0
-    setey <- 0
-
-    pstex <- 0
-    pstey <- 0
   }
 
   # Output
