@@ -77,5 +77,57 @@ y_code <- code_sample(y)
 set.seed(20180108 + 1)
 (shuffled_TE <- shuffled_transfer_entropy(x = x_code, lx = 1,
                                           y = y_code, ly = 1))
+
+# [1] 4.387056e-05 
 ```
 
+### Shannon Transfer Entropy
+```{r}
+set.seed(20180108 + 1)
+(Shannon_TE <- TE(x = x_code,
+                  lx = 1,
+                  y = y_code,
+                  ly = 1,
+                  q = 0.5,
+                  entropy = "Shannon",
+                  shuffle = TRUE,
+                  const = FALSE,
+                  constx = 0,
+                  consty = 0,
+                  nreps = 2,
+                  shuffles = 6,
+                  ncores = parallel::detectCores() - 1,
+                  type = "quantiles",
+                  quantiles = c(5, 95),
+                  bins = NULL,
+                  limits = NULL,
+                  nboot = 10,
+                  burn = 50))
+
+# $TE_YX
+# [1] 0.0001059127
+# 
+# $TE_XY
+# [1] 0.09686025
+# 
+# $ETE_YX
+# [1] 4.387056e-05
+# 
+# $ETE_XY
+# [1] 0.09678774
+# 
+# $SETE_YX
+# [1] 2.143451e-05
+# 
+# $SETE_XY
+# [1] 1.88639e-05
+# 
+# $PETE_YX
+# [1] 1
+# 
+# $PETE_XY
+# [1] 0
+# 
+# $tsobs
+# [1] 100000 
+```
