@@ -96,19 +96,6 @@ Renyi_transfer_entropy <- function(x,
                                       consty,
                                       nreps))
 
-  # Bootstrap
-  boot <- replicate(nboot,
-                    trans_boot_H0_ren(x,
-                                      lx = lx,
-                                      y,
-                                      ly = ly,
-                                      q,
-                                      burn,
-                                      shuffle,
-                                      const,
-                                      constx,
-                                      consty,
-                                      nreps))
 
   return(list(tex   = tex,
               tey   = tey,
