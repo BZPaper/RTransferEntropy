@@ -35,8 +35,8 @@ trans_boot_H0_ren <- function(x,
                               shuffles = 6,
                               ncores = parallel::detectCores() - 1) {
 
-  bootx <- Markov_boot_step(x, lx, burn)
-  booty <- Markov_boot_step(y, ly, burn)
+  bootx <- markov_boot_step(x, lx, burn)
+  booty <- markov_boot_step(y, ly, burn)
 
   if (shuffle) {
     if (const) {
