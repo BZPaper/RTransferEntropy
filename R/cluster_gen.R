@@ -19,46 +19,26 @@ cluster_gen <- function(x,
                         ly = NULL,
                         prog = TRUE) {
 
-  n <- length(x)
-
-  difflag <- ly - lx
-
-  nclust <- n - max(lx, ly)
+  nclust <- length(x) - max(lx, ly)
   clustlist <- list()
 
+  x_pre  <- if (is.null(x)) 0 else max(ly - lx, 0)
+  x_post <- lx + if (is.null(x)) 0 else max(ly - lx, 0)
+  x_post <- x_post - if (!prog) 1 else 0
+  y_pre  <- max(lx - ly, 0)
+  y_post <- max(lx, ly) - 1
+
+  x_selector <- x_pre:x_post
+  y_selector <- y_pre:y_post
+
   if (is.null(y)) {
-    if (prog) {
-      for (i in 1:nclust) {
-        clustlist[[i]] <- x[i:(i + lx)]
-      }
-    } else {
-      for (i in 1:nclust) {
-        clustlist[[i]] <- x[i:(i + lx - 1)]
-      }
+    for (i in 1:nclust) {
+      clustlist[[i]] <- x[x_selector + i]
     }
   } else {
-    if (lx >= ly) {
-      if (prog) {
-        for (i in 1:nclust) {
-          clustlist[[i]] <- c(x[i:(i + lx)], y[(i + lx - ly):(i + lx - 1)])
-        }
-      } else {
-        for (i in 1:nclust) {
-          clustlist[[i]] <- c(x[i:(i + lx - 1)], y[(i + lx - ly):(i + lx - 1)])
-        }
-      }
-    } else {
-      if (prog) {
-        for (i in 1:nclust) {
-          clustlist[[i]] <- c(x[(i + difflag):(i + difflag + lx)],
-                              y[i:(i + ly - 1)])
-        }
-      } else {
-        for (i in 1:nclust) {
-          clustlist[[i]] <- c(x[(i + difflag):(i + difflag + lx - 1)],
-                              y[i:(i + ly - 1)])
-        }
-      }
+    for (i in 1:nclust) {
+      clustlist[[i]] <- c(x[x_selector + i],
+                          y[y_selector + i])
     }
   }
 
