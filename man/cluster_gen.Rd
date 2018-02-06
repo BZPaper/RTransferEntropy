@@ -28,3 +28,4 @@ each cluster.
 \examples{
 
 }
+\keyword{internal}

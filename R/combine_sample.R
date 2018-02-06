@@ -4,6 +4,7 @@
 #' @param y a vector of coded values
 #'
 #' @return returns a list
+#' @keywords internal
 #' @export
 #'
 #' @examples

@@ -41,3 +41,4 @@ the quantiles of the empirical distribution of the sample.
  dt[, sample := code_sample(dt$x)]
 }
 }
+\keyword{internal}

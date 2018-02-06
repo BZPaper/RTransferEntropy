@@ -16,6 +16,7 @@
 #' @param ncores number of cores in parallel computation
 #'
 #' @return returns a vector
+#' @keywords internal
 #' @export
 #'
 #' @examples

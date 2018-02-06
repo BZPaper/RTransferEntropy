@@ -40,3 +40,4 @@ the respective shuffled transfer entropy.
 \examples{
 
 }
+\keyword{internal}

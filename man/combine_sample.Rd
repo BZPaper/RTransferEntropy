@@ -20,3 +20,4 @@ Function that combines the given time series.
 \examples{
 
 }
+\keyword{internal}

@@ -10,6 +10,7 @@
 #' @param scale a scale parameter
 #'
 #' @return returns a numerical vector
+#' @keywords internal
 #' @export
 #'
 #' @examples

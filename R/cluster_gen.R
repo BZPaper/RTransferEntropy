@@ -8,6 +8,7 @@
 #' @param ly Markov order of y
 #'
 #' @return returns a list with clusters and associated frequencies
+#' @keywords internal
 #' @export
 #'
 #' @examples

@@ -45,3 +45,4 @@ between time series x and y.
 \examples{
 
 }
+\keyword{internal}

@@ -13,6 +13,7 @@
 #' @param ncores number of cores in parallel computation
 #'
 #' @return returns a numeric scalar
+#' @keywords internal
 #' @export
 #'
 #' @examples
