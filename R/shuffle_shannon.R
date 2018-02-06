@@ -17,14 +17,14 @@
 #'
 #' @examples
 #'
-shuffled_transfer_entropy <- function(x,
-                                      lx,
-                                      y,
-                                      ly,
-                                      nreps = 2,
-                                      shuffles = 6,
-                                      diff = TRUE,
-                                      ncores = parallel::detectCores() - 1) {
+shuffle_shannon <- function(x,
+                            lx,
+                            y,
+                            ly,
+                            nreps = 2,
+                            shuffles = 6,
+                            diff = TRUE,
+                            ncores = parallel::detectCores() - 1) {
 
   n <- length(x)
 
@@ -43,11 +43,11 @@ shuffled_transfer_entropy <- function(x,
     set.seed(seed)
     res <- replicate(nreps,
                      calc_te_shannon(
-                      x = x,
-                      lx = lx,
-                      y = sample(y, n, replace = TRUE),
-                      ly = ly)$transentropy
-                     )
+                       x = x,
+                       lx = lx,
+                       y = sample(y, n, replace = TRUE),
+                       ly = ly)$transentropy
+    )
     return(res)
   })
 
