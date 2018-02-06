@@ -4,18 +4,19 @@
 \alias{transfer_entropy}
 \title{Function that calculates the transfer entropy between two time series x and
 y. The information flow from y to x is measured. Change x and y in function
-call to infer the dominant direction of the information flow.}
+call to infer the dominant direction of the information flow. Calculated
+transfer entropy measure is Shannon transfer entropy.}
 \usage{
-transfer_entropy(x, y, lx, ly)
+transfer_entropy(x, lx, y, ly)
 }
 \arguments{
 \item{x}{a vector of coded values}
 
+\item{lx}{Markov order of x}
+
 \item{y}{a vector of coded values}
 
-\item{lx}{x(k)}
-
-\item{ly}{y(j)}
+\item{ly}{Markov order of y}
 }
 \value{
 returns a list
@@ -23,7 +24,8 @@ returns a list
 \description{
 Function that calculates the transfer entropy between two time series x and
 y. The information flow from y to x is measured. Change x and y in function
-call to infer the dominant direction of the information flow.
+call to infer the dominant direction of the information flow. Calculated
+transfer entropy measure is Shannon transfer entropy.
 }
 \examples{
 

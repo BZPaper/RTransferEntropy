@@ -3,33 +3,37 @@
 \name{shuffled_transfer_entropy}
 \alias{shuffled_transfer_entropy}
 \title{Function to calculate the effective transfer entropy, as given by the
-difference between the transfer entropy calculated from a sample and the
-respective shuffled transfer entropy.}
+difference between the Shannon transfer entropy calculated from a sample and
+the respective shuffled transfer entropy.}
 \usage{
-shuffled_transfer_entropy(nrep = 10, shuffles = 6, diff = TRUE, x, lx, y,
-  ly, ncores = parallel::detectCores() - 1)
+shuffled_transfer_entropy(x, lx, y, ly, nreps = 2, shuffles = 6,
+  diff = TRUE, ncores = parallel::detectCores() - 1)
 }
 \arguments{
-\item{diff}{if TRUE, the effective transfer entropy is calculated, otherwise
-only the shuffled transfer entropy is returned}
-
 \item{x}{a vector of coded values}
 
-\item{lx}{x(k)}
+\item{lx}{Markov order of x}
 
 \item{y}{a vector of coded values}
 
-\item{ly}{y(j)}
+\item{ly}{Markov order of y}
 
-\item{ncores}{the number of cores}
+\item{nreps}{number of replications for each shuffle}
+
+\item{shuffles}{number of shuffles}
+
+\item{diff}{if TRUE, the effective transfer entropy is calculated, otherwise
+only the shuffled transfer entropy is returned}
+
+\item{ncores}{number of cores in parallel computation}
 }
 \value{
 returns a numeric scalar
 }
 \description{
 Function to calculate the effective transfer entropy, as given by the
-difference between the transfer entropy calculated from a sample and the
-respective shuffled transfer entropy.
+difference between the Shannon transfer entropy calculated from a sample and
+the respective shuffled transfer entropy.
 }
 \examples{
 

@@ -2,31 +2,45 @@
 % Please edit documentation in R/trans_boot_H0.R
 \name{trans_boot_H0}
 \alias{trans_boot_H0}
-\title{Function for bootstrapping transfer entropy under H0.}
+\title{Function for bootstrapping Shannon transfer entropy under H0 of independence
+between time series x and y.}
 \usage{
-trans_boot_H0(x, y, shuffle = TRUE, lx, ly, const = FALSE, constx = NULL,
-  consty = NULL, nrep = 10, shuffles = 6)
+trans_boot_H0(x, lx, y, ly, burn = 50, shuffle = TRUE, const = FALSE,
+  constx = NULL, consty = NULL, nreps = 2, shuffles = 6,
+  ncores = parallel::detectCores() - 1)
 }
 \arguments{
 \item{x}{a vector of coded values}
 
+\item{lx}{Markov order of x}
+
+\item{y}{a vector of coded values}
+
+\item{ly}{Markov order of y}
+
+\item{burn}{number of observations that are dropped from the beginning of
+the bootstrapped Markov chain}
+
 \item{shuffle}{if TRUE, shuffled transfer entropy is calculated}
-
-\item{lx}{x(k)}
-
-\item{ly}{y(j)}
 
 \item{const}{if TRUE, then shuffle is constant for all bootstraps}
 
-\item{shuffles}{}
+\item{constx}{constant value substracted from transfer entropy measure}
 
-\item{valuestab}{table of codes and associated values}
+\item{consty}{constant value substracted from transfer entropy measure}
+
+\item{nreps}{number of replications for each shuffle}
+
+\item{shuffles}{number of shuffles}
+
+\item{ncores}{number of cores in parallel computation}
 }
 \value{
 returns a vector
 }
 \description{
-Function for bootstrapping transfer entropy under H0.
+Function for bootstrapping Shannon transfer entropy under H0 of independence
+between time series x and y.
 }
 \examples{
 

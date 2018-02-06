@@ -2,20 +2,22 @@
 % Please edit documentation in R/gen_prob.R
 \name{gen_prob}
 \alias{gen_prob}
-\title{Function generates probabilities for step-wise markov bootstrap.}
+\title{Function generates state and transition probabilities for
+step-wise markov bootstrap.}
 \usage{
 gen_prob(x, lx)
 }
 \arguments{
 \item{x}{a vector of coded values}
 
-\item{lx}{x(k)}
+\item{lx}{Markov order of x}
 }
 \value{
 returns a list
 }
 \description{
-Function generates probabilities for step-wise markov bootstrap.
+Function generates state and transition probabilities for
+step-wise markov bootstrap.
 }
 \examples{
 

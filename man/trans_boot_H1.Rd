@@ -4,19 +4,20 @@
 \alias{trans_boot_H1}
 \title{Function for bootstrapping transfer entropy under H1.}
 \usage{
-trans_boot_H1(x, valuestab, shuffle = TRUE, lx, ly, const = FALSE,
-  constx = NULL, consty = NULL, nrep = 10, shuffles = 6)
+trans_boot_H1(x, lx, ly, valuestab, shuffle = TRUE, const = FALSE,
+  constx = NULL, consty = NULL, nreps = 2, shuffles = 6,
+  ncores = parallel::detectCores() - 1)
 }
 \arguments{
 \item{x}{a vector of coded values}
 
-\item{valuestab}{table of codes and associated values}
-
-\item{shuffle}{if TRUE, shuffled transfer entropy is calculated}
-
 \item{lx}{x(k)}
 
 \item{ly}{y(j)}
+
+\item{valuestab}{table of codes and associated values}
+
+\item{shuffle}{if TRUE, shuffled transfer entropy is calculated}
 
 \item{const}{if TRUE, then shuffle is constant for all bootstraps}
 

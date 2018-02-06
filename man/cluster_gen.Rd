@@ -2,26 +2,28 @@
 % Please edit documentation in R/cluster_gen.R
 \name{cluster_gen}
 \alias{cluster_gen}
-\title{Function that generates clusters and calculates frequencies for each cluster.}
+\title{Function that generates clusters of states and calculates frequencies for
+each cluster.}
 \usage{
-cluster_gen(x, y = NULL, lx, ly = NULL, prog = TRUE)
+cluster_gen(x, lx, y = NULL, ly = NULL, prog = TRUE)
 }
 \arguments{
 \item{x}{a vector of coded values}
 
+\item{lx}{Markov order of x}
+
 \item{y}{a vector of coded values}
 
-\item{lx}{x(k)}
+\item{ly}{Markov order of y}
 
-\item{ly}{y(j)}
-
-\item{prog}{if TRUE, x(k+1)}
+\item{prog}{if TRUE, lag of x (Markov order) is increased by one}
 }
 \value{
 returns a list with clusters and associated frequencies
 }
 \description{
-Function that generates clusters and calculates frequencies for each cluster.
+Function that generates clusters of states and calculates frequencies for
+each cluster.
 }
 \examples{
 

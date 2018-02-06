@@ -2,7 +2,8 @@
 % Please edit documentation in R/code_sample.R
 \name{code_sample}
 \alias{code_sample}
-\title{Codes a vector into different bins}
+\title{Codes the sample by assigning data to bins that are, for example, based on
+the quantiles of the empirical distribution of the sample.}
 \usage{
 code_sample(x, type = "quantiles", quantiles = c(5, 95), bins = NULL,
   limits = NULL, scale = 1e+10)
@@ -10,14 +11,14 @@ code_sample(x, type = "quantiles", quantiles = c(5, 95), bins = NULL,
 \arguments{
 \item{x}{a vector of numerical values}
 
-\item{type}{a number of bins, limits or use quantiles of empirical
-distribution to tansform data into discrete form}
+\item{type}{bins, limits or quantiles of empirical distribution to discretize
+the data}
 
 \item{quantiles}{quantiles to use for discretization}
 
 \item{bins}{the number of bins with equal width used for discretization}
 
-\item{limits}{limits used for discretization explicitly}
+\item{limits}{limits used for discretization}
 
 \item{scale}{a scale parameter}
 }
