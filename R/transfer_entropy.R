@@ -24,6 +24,7 @@
 #' @param nboot number of bootstrap replications
 #' @param burn number of observations that are dropped from the beginning of
 #' the bootstrapped Markov chain
+#' @param quiet if FALSE (default), the function gives feedback
 #'
 #' @return returns a list containing the respective transfer entropy measure,
 #' the effective transfer entropy measure, standard errors, p-values and
@@ -48,8 +49,9 @@ transfer_entropy <- function(x,
                              quantiles = c(5, 95),
                              bins = NULL,
                              limits = NULL,
-                             nboot = 1000,
-                             burn = 50) {
+                             nboot = 10,
+                             burn = 50,
+                             quiet = FALSE) {
 
   # Check for unequal length of time series and treat missing values
   if (length(x) != length(y)) {
@@ -71,7 +73,13 @@ transfer_entropy <- function(x,
     stop("entropy must be either 'shannon' or 'renyi'.")
 
   # assign the respective function to te_function
-  te_function <- if (entropy == "shannon") te_shannon else te_renyi
+  if (entropy == "shannon") {
+    te_function <- te_shannon
+    if (!quiet) cat("Calculating Shannon's Entropy\n")
+  } else {
+    te_function <- te_renyi
+    if (!quiet) cat("Calculating Renyi's Entropy\n")
+  }
 
   # call either te_shannon or te_renyi as the te_function
   te <- te_function(x = tsmat[, 1],

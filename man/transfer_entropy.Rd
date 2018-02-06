@@ -7,8 +7,8 @@
 transfer_entropy(x, lx = 1, y, ly = 1, q = 0.5, entropy = "Shannon",
   shuffle = TRUE, constx = NULL, consty = NULL, nreps = 2,
   shuffles = 6, ncores = parallel::detectCores() - 1, type = "quantiles",
-  quantiles = c(5, 95), bins = NULL, limits = NULL, nboot = 1000,
-  burn = 50)
+  quantiles = c(5, 95), bins = NULL, limits = NULL, nboot = 10,
+  burn = 50, quiet = FALSE)
 }
 \arguments{
 \item{x}{a vector of values}
@@ -51,6 +51,8 @@ the data}
 
 \item{burn}{number of observations that are dropped from the beginning of
 the bootstrapped Markov chain}
+
+\item{quiet}{if FALSE (default), the function gives feedback}
 
 \item{boots}{number of bootstrap samples}
 }
