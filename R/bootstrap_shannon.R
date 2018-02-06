@@ -20,21 +20,21 @@
 #'
 #' @examples
 #'
-trans_boot_H0 <- function(x,
-                          lx,
-                          y,
-                          ly,
-                          burn = 50,
-                          shuffle = TRUE,
-                          const = FALSE,
-                          constx = NULL,
-                          consty = NULL,
-                          nreps = 2,
-                          shuffles = 6,
-                          ncores = parallel::detectCores() - 1) {
+bootstrap_shannon <- function(x,
+                              lx,
+                              y,
+                              ly,
+                              burn = 50,
+                              shuffle = TRUE,
+                              const = FALSE,
+                              constx = NULL,
+                              consty = NULL,
+                              nreps = 2,
+                              shuffles = 6,
+                              ncores = parallel::detectCores() - 1) {
 
-  bootx <- Markov_boot_step(x, lx, burn)
-  booty <- Markov_boot_step(y, ly, burn)
+  bootx <- markov_boot_step(x, lx, burn)
+  booty <- markov_boot_step(y, ly, burn)
 
   if (shuffle) {
     if (const) {
@@ -43,22 +43,22 @@ trans_boot_H0 <- function(x,
       # Lead = y
       dtey <- calc_te_shannon(booty, lx = ly, x, ly = lx)$transentropy - consty
     } else {
-      constx <- shuffled_transfer_entropy(bootx,
-                                          lx = lx,
-                                          y,
-                                          ly = ly,
-                                          nreps,
-                                          shuffles,
-                                          diff = TRUE,
-                                          ncores)
-      consty <- shuffled_transfer_entropy(booty,
-                                          lx = ly,
-                                          x,
-                                          ly = lx,
-                                          nreps,
-                                          shuffles,
-                                          diff = TRUE,
-                                          ncores)
+      constx <- shuffle_shannon(bootx,
+                                lx = lx,
+                                y,
+                                ly = ly,
+                                nreps,
+                                shuffles,
+                                diff = TRUE,
+                                ncores)
+      consty <- shuffle_shannon(booty,
+                                lx = ly,
+                                x,
+                                ly = lx,
+                                nreps,
+                                shuffles,
+                                diff = TRUE,
+                                ncores)
 
       # Lead = x
       dtex <- calc_te_shannon(bootx, lx = lx, y, ly = ly)$transentropy - constx

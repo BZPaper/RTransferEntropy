@@ -34,7 +34,7 @@ shuffle_shannon <- function(x,
   })
 
   parallel::clusterExport(cl, c("nreps", "x", "y", "n", "lx", "ly",
-                                "transfer_entropy", "cluster_gen"),
+                                "calc_te_shannon", "cluster_gen"),
                           envir = environment())
 
   seeds <- rnorm(shuffles)
