@@ -27,20 +27,32 @@
 #' the bootstrapped Markov chain
 #' @param quiet if FALSE (default), the function gives feedback
 #'
-#' @return returns a list containing the respective transfer entropy measure,
-#' the effective transfer entropy measure, standard errors, p-values and
-#' number of observations
+#' @return an object of class TEResult, coontaining the entropy measure, the
+#'   effective transfer entropy measure, standard errores, p-values, etc.
 #' @export
 #'
 #' @examples
+#' # construct two time-series
+#' set.seed(1234567890)
+#' n <- 100000
+#' x <- rep(0, n + 1)
+#' y <- rep(0, n + 1)
 #'
+#' for (i in seq(n)) {
+#'   x[i + 1] <- 0.2 * x[i] + rnorm(1, 0, 2)
+#'   y[i + 1] <- x[i] + rnorm(1, 0, 2)
+#' }
+#'
+#' x <- x[-1]
+#' y <- y[-1]
+#'
+#' te_result <- transfer_entropy(x, lx = 1, y, ly = 1)
 transfer_entropy <- function(x,
                              lx = 1,
                              y,
                              ly = 1,
                              q = 0.5,
                              entropy = "Shannon",
-                             shuffle = TRUE,
                              constx = NULL,
                              consty = NULL,
                              nreps = 2,
@@ -139,19 +151,23 @@ transfer_entropy <- function(x,
   }
 
   # Output
-  res <- list(TE_YX = te$tex,
-              TE_XY = te$tey,
-              ETE_YX = te$stex,
-              ETE_XY = te$stey,
-              SETE_YX = setex,
-              SETE_XY = setey,
-              PETE_YX = pstex,
-              PETE_XY = pstey,
-              tsobs = length(x))
+  res <- list(
+    obs = list(x = x, y = y),
+    te_yx = te$tex,
+    te_xy = te$tey,
+    ete_yx = te$stex,
+    ete_xy = te$stey,
+    sete_yx = setex,
+    sete_xy = setey,
+    pete_yx = pstex,
+    pete_xy = pstey,
+    nobs = length(x)
+  )
 
   if (!quiet) {
     t <- as.numeric(difftime(Sys.time(), t0, units = "secs"))
     cat("Done - Total time", round(t, 2), "seconds\n")
   }
+  class(list) <- "TEResult"
   return(res)
 }

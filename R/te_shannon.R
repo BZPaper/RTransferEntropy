@@ -74,8 +74,8 @@ te_shannon <- function(x,
                                                  cl = NULL),
                                cl = cl)
 
-  return(list(tex   = tex,
-              tey   = tey,
+  return(list(tex  = tex,
+              tey  = tey,
               stex = stex,
               stey = stey,
               bootstrap_H0 = boot))

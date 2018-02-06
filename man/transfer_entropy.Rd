@@ -5,10 +5,10 @@
 \title{Wrapper for the implementation of Shannon and Renyi transfer entropy.}
 \usage{
 transfer_entropy(x, lx = 1, y, ly = 1, q = 0.5, entropy = "Shannon",
-  shuffle = TRUE, constx = NULL, consty = NULL, nreps = 2,
-  shuffles = 6, cl = parallel::detectCores() - 1, type = "quantiles",
-  quantiles = c(5, 95), bins = NULL, limits = NULL, nboot = 10,
-  burn = 50, quiet = FALSE)
+  constx = NULL, consty = NULL, nreps = 2, shuffles = 6,
+  cl = parallel::detectCores() - 1, type = "quantiles", quantiles = c(5,
+  95), bins = NULL, limits = NULL, nboot = 10, burn = 50,
+  quiet = FALSE)
 }
 \arguments{
 \item{x}{a vector of values}
@@ -57,13 +57,26 @@ the bootstrapped Markov chain}
 \item{boots}{number of bootstrap samples}
 }
 \value{
-returns a list containing the respective transfer entropy measure,
-the effective transfer entropy measure, standard errors, p-values and
-number of observations
+an object of class TEResult, coontaining the entropy measure, the
+  effective transfer entropy measure, standard errores, p-values, etc.
 }
 \description{
 Wrapper for the implementation of Shannon and Renyi transfer entropy.
 }
 \examples{
+# construct two time-series
+set.seed(1234567890)
+n <- 100000
+x <- rep(0, n + 1)
+y <- rep(0, n + 1)
 
+for (i in seq(n)) {
+  x[i + 1] <- 0.2 * x[i] + rnorm(1, 0, 2)
+  y[i + 1] <- x[i] + rnorm(1, 0, 2)
+}
+
+x <- x[-1]
+y <- y[-1]
+
+te_result <- transfer_entropy(x, lx = 1, y, ly = 1)
 }
