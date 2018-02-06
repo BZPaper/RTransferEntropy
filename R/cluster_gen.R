@@ -16,19 +16,14 @@
 cluster_gen <- function(x,
                         lx,
                         y = NULL,
-                        ly =NULL,
+                        ly = NULL,
                         prog = TRUE) {
 
   n <- length(x)
 
-  if (!is.null(ly) && ly>lx) {
-    dclust <- ly + 1
-    difflag <- ly - lx
-  } else {
-    dclust <- lx + 1
-  }
+  difflag <- ly - lx
 
-  nclust <- (n - dclust) + 1
+  nclust <- n - max(lx, ly)
   clustlist <- list()
 
   if (is.null(y)) {
