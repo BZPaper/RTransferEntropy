@@ -1,24 +1,25 @@
 #' Function that calculates the transfer entropy between two time series x and
 #' y. The information flow from y to x is measured. Change x and y in function
 #' call to infer the dominant direction of the information flow. Calculated
-#' transfer entropy measure is Rényi transfer entropy.
+#' transfer entropy measure is Renyi transfer entropy.
 #'
 #' @param x a vector of coded values
 #' @param y a vector of coded values
 #' @param lx Markov order of x
 #' @param ly Markov order of y
-#' @param q weighting parameter in Rényi transfer entropy
+#' @param q weighting parameter in Renyi transfer entropy
 #'
+#' @keywords internal
 #' @return returns a list
 #' @export
 #'
 #' @examples
 #'
-transfer_entropy_ren <- function(x,
-                                 lx,
-                                 y,
-                                 ly,
-                                 q) {
+calc_te_renyi <- function(x,
+                          lx,
+                          y,
+                          ly,
+                          q) {
 
   # Frequencies
   #------------------------------

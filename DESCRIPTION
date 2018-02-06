@@ -8,6 +8,7 @@ Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: What license is it under?
 Encoding: UTF-8
-Imports: data.table
+Imports: 
+    pbapply
 LazyData: true
 RoxygenNote: 6.0.1

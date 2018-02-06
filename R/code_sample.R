@@ -10,6 +10,7 @@
 #' @param scale a scale parameter
 #'
 #' @return returns a numerical vector
+#' @keywords internal
 #' @export
 #'
 #' @examples
@@ -19,6 +20,7 @@
 #'  code_sample(x)
 #'
 #'  # or coming from a data.table framework:
+#'  library(data.table)
 #'  set.seed(42)
 #'  dt <- data.table(x = rnorm(100))
 #'  dt[, sample := code_sample(dt$x)]
@@ -56,7 +58,7 @@ code_sample <- function(x,
       x[x >= OSeq[j] & x < OSeq[j + 1]] <- j * scale
     }
   } else if (type == "quantiles") {
-    Qtl <- quantile(x, type = 8, probs = quantiles/100)
+    Qtl <- quantile(x, type = 8, probs = quantiles / 100)
     Qtl <- c(Qtl, max(x))
     Qlength <- length(Qtl)
 

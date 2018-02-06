@@ -6,6 +6,7 @@
 #'
 #' @return returns a list
 #' @export
+#' @keywords internal
 #'
 #' @examples
 #'
