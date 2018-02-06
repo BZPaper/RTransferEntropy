@@ -15,7 +15,6 @@ bootstrap_shannon <- function(x,
                               ly,
                               burn = 50,
                               shuffle = TRUE,
-                              const = FALSE,
                               constx = NULL,
                               consty = NULL,
                               nreps = 2,
@@ -26,39 +25,40 @@ bootstrap_shannon <- function(x,
   booty <- markov_boot_step(y, ly, burn)
 
   if (shuffle) {
-    if (const) {
+    if (is.null(constx) || is.null(consty)) {
       # Lead = x
-      dtex <- calc_te_shannon(bootx, lx = lx, y, ly = ly)$transentropy - constx
+      dtex <- calc_te_shannon(x = bootx, lx = lx, y = y, ly = ly)$transentropy - constx
       # Lead = y
-      dtey <- calc_te_shannon(booty, lx = ly, x, ly = lx)$transentropy - consty
+      dtey <- calc_te_shannon(x = booty, lx = ly, y = x, ly = lx)$transentropy - consty
     } else {
-      constx <- shuffle_shannon(bootx,
+      constx <- shuffle_shannon(x = bootx,
                                 lx = lx,
-                                y,
+                                y = y,
                                 ly = ly,
-                                nreps,
-                                shuffles,
+                                nreps = nreps,
+                                shuffles = shuffles,
                                 diff = TRUE,
-                                ncores)
-      consty <- shuffle_shannon(booty,
+                                ncores = ncores)
+
+      consty <- shuffle_shannon(x = booty,
                                 lx = ly,
-                                x,
+                                y = x,
                                 ly = lx,
-                                nreps,
-                                shuffles,
+                                nreps = nreps,
+                                shuffles = shuffles,
                                 diff = TRUE,
-                                ncores)
+                                ncores = ncores)
 
       # Lead = x
-      dtex <- calc_te_shannon(bootx, lx = lx, y, ly = ly)$transentropy - constx
+      dtex <- calc_te_shannon(x = bootx, lx = lx, y = y, ly = ly)$transentropy - constx
       # Lead = y
-      dtey <- calc_te_shannon(booty, lx = ly, x, ly = lx)$transentropy - consty
+      dtey <- calc_te_shannon(x = booty, lx = ly, y = x, ly = lx)$transentropy - consty
     }
   } else {
     # Lead = x
-    dtex <- calc_te_shannon(bootx, lx = lx, y, ly = ly)$transentropy
+    dtex <- calc_te_shannon(x = bootx, lx = lx, y = y, ly = ly)$transentropy
     # Lead = y
-    dtey <- calc_te_shannon(booty, lx = ly, x, ly = lx)$transentropy
+    dtey <- calc_te_shannon(x = booty, lx = ly, y = x, ly = lx)$transentropy
   }
 
   teboot <- c(dtex, dtey)

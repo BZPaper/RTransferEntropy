@@ -8,9 +8,10 @@
 #' @param entropy the type of entropy calculation to use, either 'shannon'
 #'   or 'renyi', first character can be used as well, defaults to shannon.
 #' @param shuffle if TRUE (default), shuffled transfer entropy is calculated
-#' @param const if TRUE (defaults to FALSE), then shuffle is constant for all bootstraps
-#' @param constx constant value substracted from transfer entropy measure x
-#' @param consty constant value substracted from transfer entropy measure y
+#' @param constx constant value substracted from transfer entropy measure x,
+#'   default to NULL (no const)
+#' @param consty constant value substracted from transfer entropy measure y,
+#'   default to NULL (no const)
 #' @param nreps number of replications for each shuffle
 #' @param shuffles number of shuffles
 #' @param ncores number of cores in parallel computation
@@ -38,9 +39,8 @@ transfer_entropy <- function(x,
                              q = 0.5,
                              entropy = "Shannon",
                              shuffle = TRUE,
-                             const = FALSE,
-                             constx = 0,
-                             consty = 0,
+                             constx = NULL,
+                             consty = NULL,
                              nreps = 2,
                              shuffles = 6,
                              ncores = parallel::detectCores() - 1,
@@ -79,7 +79,6 @@ transfer_entropy <- function(x,
                     y = tsmat[, 2],
                     ly = ly,
                     shuffle = shuffle,
-                    const = const,
                     constx = constx,
                     consty = consty,
                     nreps = nreps,
