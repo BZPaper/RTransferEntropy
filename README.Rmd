@@ -69,37 +69,11 @@ ggplot(df, aes(x = x, y = y, color = grp)) +
   scale_color_brewer(palette = "Set1", guide = F)
 ```
 
-### Shuffled Transfer Entropy
-```{r}
-x_code <- code_sample(x)
-y_code <- code_sample(y)
-
-set.seed(20180108 + 1)
-(shuffled_TE <- shuffled_transfer_entropy(x = x_code, lx = 1,
-                                          y = y_code, ly = 1))
-
-```
-
 ### Shannon Transfer Entropy
 ```{r}
 set.seed(20180108 + 1)
-(Shannon_TE <- transfer_entropy(x = x_code,
+(Shannon_TE <- transfer_entropy(x = x,
                                 lx = 1,
-                                y = y_code,
-                                ly = 1,
-                                q = 0.5,
-                                entropy = "Shannon",
-                                shuffle = TRUE,
-                                const = FALSE,
-                                constx = 0,
-                                consty = 0,
-                                nreps = 2,
-                                shuffles = 6,
-                                ncores = parallel::detectCores() - 1,
-                                type = "quantiles",
-                                quantiles = c(5, 95),
-                                bins = NULL,
-                                limits = NULL,
-                                nboot = 10,
-                                burn = 50))
+                                y = y,
+                                ly = 1))
 ```

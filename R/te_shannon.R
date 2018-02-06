@@ -62,18 +62,17 @@ te_shannon <- function(x,
 
   # Bootstrap
   boot <- replicate(nboot,
-                    bootstrap_shannon(x,
+                    bootstrap_shannon(x = x,
                                       lx = lx,
-                                      y,
+                                      y = y,
                                       ly = ly,
-                                      burn,
-                                      shuffle,
-                                      const,
-                                      constx,
-                                      consty,
-                                      nreps,
-                                      shuffles,
-                                      ncores))
+                                      burn = burn,
+                                      shuffle = shuffle,
+                                      constx = constx,
+                                      consty = consty,
+                                      nreps = nreps,
+                                      shuffles = shuffles,
+                                      ncores = ncores))
 
   return(list(tex   = tex,
               tey   = tey,

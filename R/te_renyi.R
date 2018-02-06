@@ -65,17 +65,16 @@ te_renyi <- function(x,
 
   # Bootstrap
   boot <- replicate(nboot,
-                    bootstrap_renyi(x,
-                                    lx,
-                                    y,
-                                    ly,
-                                    q,
-                                    burn,
-                                    shuffle,
-                                    const,
-                                    constx,
-                                    consty,
-                                    nreps))
+                    bootstrap_renyi(x = x,
+                                    lx = lx,
+                                    y = y,
+                                    ly = ly,
+                                    q = q,
+                                    burn = burn,
+                                    shuffle = shuffle,
+                                    constx = constx,
+                                    consty = consty,
+                                    nreps = nreps))
 
 
   return(list(tex   = tex,
