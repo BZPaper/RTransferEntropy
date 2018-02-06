@@ -48,8 +48,6 @@ the data}
 \item{burn}{number of observations that are dropped from the beginning of
 the bootstrapped Markov chain}
 
-\item{parcalc}{"yes" if parallel computations for the Markov chain bootstrap}
-
 \item{boots}{number of bootstrap samples}
 }
 \value{
