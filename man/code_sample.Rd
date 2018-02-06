@@ -36,6 +36,7 @@ the quantiles of the empirical distribution of the sample.
  code_sample(x)
 
  # or coming from a data.table framework:
+ library(data.table)
  set.seed(42)
  dt <- data.table(x = rnorm(100))
  dt[, sample := code_sample(dt$x)]

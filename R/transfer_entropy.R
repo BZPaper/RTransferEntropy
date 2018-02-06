@@ -47,6 +47,11 @@
 #' y <- y[-1]
 #'
 #' te_result <- transfer_entropy(x, lx = 1, y, ly = 1)
+#' print(te_result)
+#'
+#' summary(te_result)
+#'
+#' is.TEResult(te_result)
 transfer_entropy <- function(x,
                              lx = 1,
                              y,
@@ -168,6 +173,7 @@ transfer_entropy <- function(x,
     t <- as.numeric(difftime(Sys.time(), t0, units = "secs"))
     cat("Done - Total time", round(t, 2), "seconds\n")
   }
-  class(list) <- "TEResult"
+
+  class(res) <- append(class(res), "TEResult")
   return(res)
 }

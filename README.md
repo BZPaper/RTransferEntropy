@@ -65,14 +65,32 @@ ggplot(df, aes(x = x, y = y, color = grp)) +
 
 ![](README-unnamed-chunk-3-1.png)
 
-### Shuffled Transfer Entropy
+### Shannon Transfer Entropy
 
 ``` r
-x_code <- code_sample(x)
-y_code <- code_sample(y)
-
 set.seed(20180108 + 1)
-(shuffled_TE <- shuffled_transfer_entropy(x = x_code, lx = 1,
-                                          y = y_code, ly = 1))
-#> [1] 4.387012e-05
+n_cores <- parallel::detectCores() - 1
+
+shannon_te <- transfer_entropy(x = x,
+                               lx = 1,
+                               y = y,
+                               ly = 1,
+                               nboot = n_cores,
+                               cl = n_cores)
+#> Calculating Shannon's entropy on 7 cores with 6 shuffle(s) and 7 bootstrap(s)
+#> The timeseries have length 100000 (0 NAs removed)
+#> Calculate the x->y transfer entropy
+#> Calculate the y->x transfer entropy
+#> Bootstrap the transfer entropy
+#> Done - Total time 74.4 seconds
+
+shannon_te
+#> Transfer Entropy Result:
+#> Direction          te         ete        sete     p-value   sign
+#> ----------------------------------------------------------------
+#> X->Y          0.09686     0.09679          NA          NA       
+#> Y->X          0.00011     0.00004          NA          NA       
+#> ----------------------------------------------------------------
+#> Number of Observations: 100000
+#> ----------------------------------------------------------------
 ```
