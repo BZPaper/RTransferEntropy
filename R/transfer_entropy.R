@@ -28,25 +28,25 @@
 #'
 #' @examples
 #'
-TE <- function(x,
-               lx = 1,
-               y,
-               ly = 1,
-               q = 0.5,
-               entropy = "Shannon",
-               shuffle = TRUE,
-               const = FALSE,
-               constx = 0,
-               consty = 0,
-               nreps = 2,
-               shuffles = 6,
-               ncores = parallel::detectCores() - 1,
-               type = "quantiles",
-               quantiles = c(5, 95),
-               bins = NULL,
-               limits = NULL,
-               nboot = 1000,
-               burn = 50) {
+transfer_entropy <- function(x,
+                             lx = 1,
+                             y,
+                             ly = 1,
+                             q = 0.5,
+                             entropy = "Shannon",
+                             shuffle = TRUE,
+                             const = FALSE,
+                             constx = 0,
+                             consty = 0,
+                             nreps = 2,
+                             shuffles = 6,
+                             ncores = parallel::detectCores() - 1,
+                             type = "quantiles",
+                             quantiles = c(5, 95),
+                             bins = NULL,
+                             limits = NULL,
+                             nboot = 1000,
+                             burn = 50) {
 
   # Check for unequal length of time series and treat missing values
   m <- length(x)
