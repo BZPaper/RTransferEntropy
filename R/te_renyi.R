@@ -13,31 +13,27 @@ te_renyi <- function(x,
                      y,
                      ly,
                      q,
-                     shuffle = TRUE,
                      const = FALSE,
                      constx = 0,
                      consty = 0,
                      nreps = 2,
                      shuffles = 6,
-                     ncores = parallel::detectCores() - 1,
+                     cl = NULL,
                      type = "quantiles",
                      quantiles = c(5, 95),
                      bins = NULL,
                      limits = NULL,
-                     nboot,
-                     burn = 50) {
+                     nboot = 3,
+                     burn = 50,
+                     quiet = FALSE) {
 
   # Code time series
   x <- code_sample(x, type, quantiles, bins, limits)
   y <- code_sample(y, type, quantiles, bins, limits)
 
-  # Calculate transfer entropy (withour shuffling)
   # Lead = x
+  if (!quiet) cat("Calculate the x->y transfer entropy\n")
   tex <- calc_te_renyi(x, lx = lx, y, ly = ly, q)$transentropy
-  # Lead = y
-  tey <- calc_te_renyi(y, lx = ly, x, ly = lx, q)$transentropy
-
-  # Calculate transfer entropy (with shuffling)
   constx <- shuffle_renyi(x = x,
                           lx = lx,
                           y = y,
@@ -46,8 +42,13 @@ te_renyi <- function(x,
                           nreps = nreps,
                           shuffles = shuffles,
                           diff = FALSE,
-                          ncores = ncores)
+                          cl = cl)
 
+  stex <- tex - constx
+
+  # Lead = y
+  if (!quiet) cat("Calculate the y->x transfer entropy\n")
+  tey <- calc_te_renyi(y, lx = ly, x, ly = lx, q)$transentropy
   consty <- shuffle_renyi(x = y,
                           lx = ly,
                           y = x,
@@ -56,25 +57,25 @@ te_renyi <- function(x,
                           nreps = nreps,
                           shuffles = shuffles,
                           diff = FALSE,
-                          ncores = ncores)
+                          cl = cl)
 
-  # Lead = x
-  stex <- tex - constx
-  # Lead = y
   stey <- tey - consty
 
   # Bootstrap
-  boot <- replicate(nboot,
-                    bootstrap_renyi(x = x,
-                                    lx = lx,
-                                    y = y,
-                                    ly = ly,
-                                    q = q,
-                                    burn = burn,
-                                    shuffle = shuffle,
-                                    constx = constx,
-                                    consty = consty,
-                                    nreps = nreps))
+  if (!quiet) cat("Bootstrap the transfer entropy\n")
+  boot <- pbapply::pbreplicate(nboot,
+                               bootstrap_renyi(x = x,
+                                               lx = lx,
+                                               y = y,
+                                               ly = ly,
+                                               q = q,
+                                               burn = burn,
+                                               shuffles = shuffles,
+                                               constx = constx,
+                                               consty = consty,
+                                               nreps = nreps,
+                                               cl = NULL),
+                               cl = cl)
 
 
   return(list(tex   = tex,

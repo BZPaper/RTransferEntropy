@@ -15,32 +15,36 @@ bootstrap_renyi <- function(x,
                             ly,
                             q,
                             burn = 50,
-                            shuffle = TRUE,
                             constx = 0,
                             consty = 0,
                             nreps = 2,
                             shuffles = 6,
-                            ncores = parallel::detectCores() - 1) {
+                            cl = NULL) {
+
+  if (is.null(cl[[1]])) {
+    opb <- pbapply::pboptions(type = "none")
+    on.exit(pbapply::pboptions(opb), add = T)
+  }
 
   bootx <- markov_boot_step(x, lx, burn)
   booty <- markov_boot_step(y, ly, burn)
 
-  if (shuffle) {
+  if (shuffles > 1) {
     if (is.null(constx) || is.null(consty)) {
       # Lead = x
       x_te <- calc_te_renyi(x = bootx,
-                            lx = lx, 
-                            y = y, 
-                            ly = ly, 
+                            lx = lx,
+                            y = y,
+                            ly = ly,
                             q = q)
 
       dtex <- x_te$transentropy - constx
-      
+
       # Lead = y
-      y_te <- calc_te_renyi(x = booty, 
-                            lx = ly, 
-                            y = x, 
-                            ly = lx, 
+      y_te <- calc_te_renyi(x = booty,
+                            lx = ly,
+                            y = x,
+                            ly = lx,
                             q = q)
 
       dtey <- y_te$transentropy - consty
@@ -53,8 +57,8 @@ bootstrap_renyi <- function(x,
                               nreps = nreps,
                               shuffles = shuffles,
                               diff = TRUE,
-                              ncores)
-      
+                              cl = cl)
+
       consty <- shuffle_renyi(x = booty,
                               lx = ly,
                               y = x,
@@ -63,22 +67,22 @@ bootstrap_renyi <- function(x,
                               nreps = nreps,
                               shuffles = shuffles,
                               diff = TRUE,
-                              ncores = ncores)
+                              cl = cl)
 
       # Lead = x
-      x_te <- calc_te_renyi(x = bootx, 
-                            lx = lx, 
-                            y = y, 
-                            ly = ly, 
+      x_te <- calc_te_renyi(x = bootx,
+                            lx = lx,
+                            y = y,
+                            ly = ly,
                             q = q)
 
       dtex <- x_te$transentropy - constx
-      
+
       # Lead = y
-      y_te <- calc_te_renyi(x = booty, 
-                            lx = ly, 
-                            y = x, 
-                            ly = lx, 
+      y_te <- calc_te_renyi(x = booty,
+                            lx = ly,
+                            y = x,
+                            ly = lx,
                             q = q)
 
       dtey <- y_te$transentropy - consty

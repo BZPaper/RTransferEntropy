@@ -7,27 +7,26 @@ difference between the Renyi transfer entropy calculated from a sample and
 the respective shuffled transfer entropy.}
 \usage{
 shuffle_renyi(x, lx, y, ly, q, nreps = 2, shuffles = 6, diff = TRUE,
-  ncores = parallel::detectCores() - 1)
+  cl = NULL)
 }
 \arguments{
-\item{x}{a vector of coded values}
+\item{x}{a vector of values}
 
-\item{lx}{Markov order of x}
+\item{lx}{Markov order of x, defaults to 1}
 
-\item{y}{a vector of coded values}
+\item{y}{a vector of values}
 
-\item{ly}{Markov order of y}
+\item{ly}{Markov order of y, defaults to 1}
 
-\item{q}{weighting parameter in Renyi transfer entropy}
+\item{q}{weighting parameter in Renyi transfer entropy, defaults to 0.5}
 
 \item{nreps}{number of replications for each shuffle}
 
 \item{shuffles}{number of shuffles}
 
-\item{diff}{if TRUE, the effective transfer entropy is calculated, otherwise
-only the shuffled transfer entropy is returned}
-
-\item{ncores}{number of cores in parallel computation}
+\item{cl}{a numeric value (defaults to number of cores - 1),
+or a cluster as created by \code{\link[parallel]{makeCluster}}
+that can be used by \code{\link[pbapply]{pbapply}}}
 }
 \value{
 returns a numeric scalar

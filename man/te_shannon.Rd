@@ -4,10 +4,10 @@
 \alias{te_shannon}
 \title{Function to implement Shannon transfer entropy.}
 \usage{
-te_shannon(x, lx, y, ly, shuffle = TRUE, const = FALSE, constx = 0,
-  consty = 0, nreps = 2, shuffles = 6, ncores = parallel::detectCores()
-  - 1, type = "quantiles", quantiles = c(5, 95), bins = NULL,
-  limits = NULL, nboot, burn = 50)
+te_shannon(x, lx, y, ly, const = FALSE, constx = 0, consty = 0,
+  nreps = 2, shuffles = 6, cl = NULL, type = "quantiles",
+  quantiles = c(5, 95), bins = NULL, limits = NULL, nboot, burn = 50,
+  quiet = FALSE)
 }
 \arguments{
 \item{x}{a vector of values}
@@ -17,8 +17,6 @@ te_shannon(x, lx, y, ly, shuffle = TRUE, const = FALSE, constx = 0,
 \item{y}{a vector of values}
 
 \item{ly}{Markov order of y, defaults to 1}
-
-\item{shuffle}{if TRUE (default), shuffled transfer entropy is calculated}
 
 \item{constx}{constant value substracted from transfer entropy measure x,
 default to NULL (no const)}
@@ -30,7 +28,9 @@ default to NULL (no const)}
 
 \item{shuffles}{number of shuffles}
 
-\item{ncores}{number of cores in parallel computation}
+\item{cl}{a numeric value (defaults to number of cores - 1),
+or a cluster as created by \code{\link[parallel]{makeCluster}}
+that can be used by \code{\link[pbapply]{pbapply}}}
 
 \item{type}{bins, limits or quantiles of empirical distribution to discretize
 the data}
@@ -45,6 +45,8 @@ the data}
 
 \item{burn}{number of observations that are dropped from the beginning of
 the bootstrapped Markov chain}
+
+\item{quiet}{if FALSE (default), the function gives feedback}
 }
 \value{
 returns a list

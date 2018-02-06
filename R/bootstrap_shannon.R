@@ -14,17 +14,21 @@ bootstrap_shannon <- function(x,
                               y,
                               ly,
                               burn = 50,
-                              shuffle = TRUE,
                               constx = NULL,
                               consty = NULL,
                               nreps = 2,
                               shuffles = 6,
-                              ncores = parallel::detectCores() - 1) {
+                              cl = NULL) {
+
+  if (is.null(cl[[1]])) {
+    opb <- pbapply::pboptions(type = "none")
+    on.exit(pbapply::pboptions(opb), add = T)
+  }
 
   bootx <- markov_boot_step(x, lx, burn)
   booty <- markov_boot_step(y, ly, burn)
 
-  if (shuffle) {
+  if (shuffles > 1) {
     if (is.null(constx) || is.null(consty)) {
       # Lead = x
       dtex <- calc_te_shannon(x = bootx, lx = lx, y = y, ly = ly)$transentropy - constx
@@ -38,7 +42,7 @@ bootstrap_shannon <- function(x,
                                 nreps = nreps,
                                 shuffles = shuffles,
                                 diff = TRUE,
-                                ncores = ncores)
+                                cl = cl)
 
       consty <- shuffle_shannon(x = booty,
                                 lx = ly,
@@ -47,7 +51,7 @@ bootstrap_shannon <- function(x,
                                 nreps = nreps,
                                 shuffles = shuffles,
                                 diff = TRUE,
-                                ncores = ncores)
+                                cl = cl)
 
       # Lead = x
       dtex <- calc_te_shannon(x = bootx, lx = lx, y = y, ly = ly)$transentropy - constx

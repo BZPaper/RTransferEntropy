@@ -2,16 +2,7 @@
 #' difference between the Renyi transfer entropy calculated from a sample and
 #' the respective shuffled transfer entropy.
 #'
-#' @param x a vector of coded values
-#' @param lx Markov order of x
-#' @param y a vector of coded values
-#' @param ly Markov order of y
-#' @param q weighting parameter in Renyi transfer entropy
-#' @param nreps number of replications for each shuffle
-#' @param shuffles number of shuffles
-#' @param diff if TRUE, the effective transfer entropy is calculated, otherwise
-#' only the shuffled transfer entropy is returned
-#' @param ncores number of cores in parallel computation
+#' @inheritParams transfer_entropy
 #'
 #' @return returns a numeric scalar
 #' @keywords internal
@@ -27,29 +18,19 @@ shuffle_renyi <- function(x,
                           nreps = 2,
                           shuffles = 6,
                           diff = TRUE,
-                          ncores = parallel::detectCores() - 1) {
-
-  n <- length(x)
-
-  cl <- parallel::makeCluster(ncores)
-  on.exit({
-    parallel::stopCluster(cl)
-  })
-
-  parallel::clusterExport(cl, c("nreps", "x", "y", "n", "lx", "ly", "q",
-                                "calc_te_renyi", "cluster_gen"),
-                          envir = environment())
+                          cl = NULL) {
 
   seeds <- rnorm(shuffles)
+  n <- length(x)
 
-  shuffle <- parallel::parLapply(cl, seeds, function(seed) {
+  shuffle <- pbapply::pblapply(seeds, function(seed) {
     set.seed(seed)
     res <- replicate(nreps,
                      calc_te_renyi(x = x,
                                    y = sample(y, n, replace = TRUE),
-                                   lx = lx, ly = ly, q)$transentropy)
+                                   lx = lx, ly = ly, q = q)$transentropy)
     return(res)
-  })
+  }, cl = cl)
 
   ste <- mean(unlist(shuffle))
 

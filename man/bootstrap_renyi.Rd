@@ -5,9 +5,8 @@
 \title{Function for bootstrapping R?nyi transfer entropy under H0 of independence
 between time series x and y.}
 \usage{
-bootstrap_renyi(x, lx, y, ly, q, burn = 50, shuffle = TRUE, constx = 0,
-  consty = 0, nreps = 2, shuffles = 6, ncores = parallel::detectCores()
-  - 1)
+bootstrap_renyi(x, lx, y, ly, q, burn = 50, constx = 0, consty = 0,
+  nreps = 2, shuffles = 6, cl = NULL)
 }
 \arguments{
 \item{x}{a vector of values}
@@ -23,8 +22,6 @@ bootstrap_renyi(x, lx, y, ly, q, burn = 50, shuffle = TRUE, constx = 0,
 \item{burn}{number of observations that are dropped from the beginning of
 the bootstrapped Markov chain}
 
-\item{shuffle}{if TRUE (default), shuffled transfer entropy is calculated}
-
 \item{constx}{constant value substracted from transfer entropy measure x,
 default to NULL (no const)}
 
@@ -35,7 +32,9 @@ default to NULL (no const)}
 
 \item{shuffles}{number of shuffles}
 
-\item{ncores}{number of cores in parallel computation}
+\item{cl}{a numeric value (defaults to number of cores - 1),
+or a cluster as created by \code{\link[parallel]{makeCluster}}
+that can be used by \code{\link[pbapply]{pbapply}}}
 }
 \value{
 returns a vector

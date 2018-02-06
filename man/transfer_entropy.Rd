@@ -6,7 +6,7 @@
 \usage{
 transfer_entropy(x, lx = 1, y, ly = 1, q = 0.5, entropy = "Shannon",
   shuffle = TRUE, constx = NULL, consty = NULL, nreps = 2,
-  shuffles = 6, ncores = parallel::detectCores() - 1, type = "quantiles",
+  shuffles = 6, cl = parallel::detectCores() - 1, type = "quantiles",
   quantiles = c(5, 95), bins = NULL, limits = NULL, nboot = 10,
   burn = 50, quiet = FALSE)
 }
@@ -24,8 +24,6 @@ transfer_entropy(x, lx = 1, y, ly = 1, q = 0.5, entropy = "Shannon",
 \item{entropy}{the type of entropy calculation to use, either 'shannon'
 or 'renyi', first character can be used as well, defaults to shannon.}
 
-\item{shuffle}{if TRUE (default), shuffled transfer entropy is calculated}
-
 \item{constx}{constant value substracted from transfer entropy measure x,
 default to NULL (no const)}
 
@@ -36,7 +34,9 @@ default to NULL (no const)}
 
 \item{shuffles}{number of shuffles}
 
-\item{ncores}{number of cores in parallel computation}
+\item{cl}{a numeric value (defaults to number of cores - 1),
+or a cluster as created by \code{\link[parallel]{makeCluster}}
+that can be used by \code{\link[pbapply]{pbapply}}}
 
 \item{type}{bins, limits or quantiles of empirical distribution to discretize
 the data}

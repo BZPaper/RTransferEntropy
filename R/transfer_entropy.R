@@ -7,14 +7,15 @@
 #' @param q weighting parameter in Renyi transfer entropy, defaults to 0.5
 #' @param entropy the type of entropy calculation to use, either 'shannon'
 #'   or 'renyi', first character can be used as well, defaults to shannon.
-#' @param shuffle if TRUE (default), shuffled transfer entropy is calculated
 #' @param constx constant value substracted from transfer entropy measure x,
 #'   default to NULL (no const)
 #' @param consty constant value substracted from transfer entropy measure y,
 #'   default to NULL (no const)
 #' @param nreps number of replications for each shuffle
 #' @param shuffles number of shuffles
-#' @param ncores number of cores in parallel computation
+#' @param cl a numeric value (defaults to number of cores - 1),
+#'    or a cluster as created by \code{\link[parallel]{makeCluster}}
+#'    that can be used by \code{\link[pbapply]{pbapply}}
 #' @param type bins, limits or quantiles of empirical distribution to discretize
 #' the data
 #' @param quantiles quantiles to use for discretization
@@ -44,7 +45,7 @@ transfer_entropy <- function(x,
                              consty = NULL,
                              nreps = 2,
                              shuffles = 6,
-                             ncores = parallel::detectCores() - 1,
+                             cl = parallel::detectCores() - 1,
                              type = "quantiles",
                              quantiles = c(5, 95),
                              bins = NULL,
@@ -53,13 +54,11 @@ transfer_entropy <- function(x,
                              burn = 50,
                              quiet = FALSE) {
 
+  t0 <- Sys.time()
   # Check for unequal length of time series and treat missing values
   if (length(x) != length(y)) {
     stop("x and y must have the same length.")
   }
-
-  tsmat <- na.omit(matrix(cbind(x, y), ncol = 2))
-  obs <- dim(tsmat)[1]
 
   # Calculate transfer entropy
   entropy <- tolower(entropy)
@@ -75,23 +74,46 @@ transfer_entropy <- function(x,
   # assign the respective function to te_function
   if (entropy == "shannon") {
     te_function <- te_shannon
-    if (!quiet) cat("Calculating Shannon's Entropy\n")
+    if (!quiet) cat("Calculating Shannon's entropy ")
   } else {
     te_function <- te_renyi
-    if (!quiet) cat("Calculating Renyi's Entropy\n")
+    if (!quiet) cat("Calculating Renyi's entropy ")
   }
 
+  # set-up the parallel stuff
+  if (quiet) pbapply::pboptions(type = "none") else pbapply::pboptions(type = "timer")
+  if (is.numeric(cl)) {
+    if (cl == 1) {
+      cl <- NULL
+      if (!quiet) cat("sequentially ")
+    } else {
+      cl <- min(cl, parallel::detectCores())
+      if (!quiet) cat(sprintf("on %s cores ", cl))
+      cl <- parallel::makeCluster(cl)
+      on.exit(parallel::stopCluster(cl), add = T)
+    }
+  } else {
+    if (!quiet) cat(sprintf("on %s cores ", length(cl)))
+  }
+
+  # remove missing-values
+  mis_values <- is.na(x) | is.na(y)
+  x <- x[!mis_values]
+  y <- y[!mis_values]
+
+  if (!quiet) cat(sprintf("with %s shuffle(s) and %s bootstrap(s)\nThe timeseries have length %s (%s NAs removed)\n",
+                          shuffles, nboot, length(x), sum(mis_values)))
+
   # call either te_shannon or te_renyi as the te_function
-  te <- te_function(x = tsmat[, 1],
+  te <- te_function(x = x,
                     lx = lx,
-                    y = tsmat[, 2],
+                    y = y,
                     ly = ly,
-                    shuffle = shuffle,
                     constx = constx,
                     consty = consty,
                     nreps = nreps,
                     shuffles = shuffles,
-                    ncores = ncores,
+                    cl = cl,
                     type = type,
                     quantiles = quantiles,
                     bins = bins,
@@ -99,13 +121,13 @@ transfer_entropy <- function(x,
                     nboot = nboot,
                     burn = burn)
 
-  if (is.null(dim(te$bootstrap_H0))) {
+  if (nboot > 1) {
     # Inference (standard errors, p-values)
-    setex <- 0
-    setey <- 0
+    setex <- NA
+    setey <- NA
 
-    pstex <- 0
-    pstey <- 0
+    pstex <- NA
+    pstey <- NA
   } else {
     # Inference (standard errors, p-values)
     setex <- sd(te$bootstrap_H0[1, ])
@@ -125,7 +147,11 @@ transfer_entropy <- function(x,
               SETE_XY = setey,
               PETE_YX = pstex,
               PETE_XY = pstey,
-              tsobs = obs)
+              tsobs = length(x))
 
+  if (!quiet) {
+    t <- as.numeric(difftime(Sys.time(), t0, units = "secs"))
+    cat("Done - Total time", round(t, 2), "seconds\n")
+  }
   return(res)
 }
