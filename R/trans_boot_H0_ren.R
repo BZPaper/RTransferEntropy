@@ -1,11 +1,11 @@
-#' Function for bootstrapping Rényi transfer entropy under H0 of independence
+#' Function for bootstrapping R?nyi transfer entropy under H0 of independence
 #' between time series x and y.
 #'
 #' @param x a vector of coded values
 #' @param lx Markov order of x
 #' @param y a vector of coded values
 #' @param ly Markov order of y
-#' @param q weighting parameter in Rényi transfer entropy
+#' @param q weighting parameter in R?nyi transfer entropy
 #' @param burn number of observations that are dropped from the beginning of
 #' the bootstrapped Markov chain
 #' @param shuffle if TRUE, shuffled transfer entropy is calculated

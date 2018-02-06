@@ -9,14 +9,15 @@
 #' @param ly Markov order of y
 #'
 #' @return returns a list
+#' @keywords internal
 #' @export
 #'
 #' @examples
 #'
-transfer_entropy <- function(x,
-                             lx,
-                             y,
-                             ly) {
+transfer_entropy_internal <- function(x,
+                                      lx,
+                                      y,
+                                      ly) {
 
   # Frequencies
   #------------------------------

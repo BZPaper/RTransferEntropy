@@ -1,5 +1,6 @@
 #' Function for bootstrapping transfer entropy under H1.
 #'
+#'
 #' @param x a vector of coded values
 #' @param valuestab table of codes and associated values
 #' @param shuffle if TRUE, shuffled transfer entropy is calculated
@@ -38,11 +39,11 @@ trans_boot_H1 <- function(x,
   if (shuffle) {
     if (const) {
       # Lead = x
-      dtex <- transfer_entropy(dmat[, 1], lx = lx, dmat[, 2],
-                               ly = ly)$transentropy - constx
+      dtex <- transfer_entropy_internal(dmat[, 1], lx = lx, dmat[, 2],
+                                        ly = ly)$transentropy - constx
       # Lead = y
-      dtey <- transfer_entropy(dmat[, 2], lx = ly, dmat[, 1],
-                               ly = lx)$transentropy - consty
+      dtey <- transfer_entropy_internal(dmat[, 2], lx = ly, dmat[, 1],
+                                        ly = lx)$transentropy - consty
     } else {
       # Lead = x
       dtex <- shuffled_transfer_entropy(dmat[, 1],
@@ -66,11 +67,11 @@ trans_boot_H1 <- function(x,
   } else {
     # Transfer entropy of bootstrapped process (without shuffling)
     # Lead = x
-    dtex <- transfer_entropy(dmat[, 1], lx = lx, dmat[, 2],
-                             ly = ly)$transentropy
+    dtex <- transfer_entropy_internal(dmat[, 1], lx = lx, dmat[, 2],
+                                      ly = ly)$transentropy
     # Lead = y
-    dtey <- transfer_entropy(dmat[, 2], lx = ly, dmat[, 1],
-                             ly = lx)$transentropy
+    dtey <- transfer_entropy_internal(dmat[, 2], lx = ly, dmat[, 1],
+                                      ly = lx)$transentropy
   }
 
   teboot <- c(dtex, dtey)

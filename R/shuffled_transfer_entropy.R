@@ -42,17 +42,19 @@ shuffled_transfer_entropy <- function(x,
   shuffle <- parallel::parLapply(cl, seeds, function(seed) {
     set.seed(seed)
     res <- replicate(nreps,
-                     transfer_entropy(x = x,
-                                      lx = lx,
-                                      y = sample(y, n, replace = TRUE),
-                                      ly = ly)$transentropy)
+                     transfer_entropy_internal(
+                      x = x,
+                      lx = lx,
+                      y = sample(y, n, replace = TRUE),
+                      ly = ly)$transentropy
+                     )
     return(res)
   })
 
   ste <- mean(unlist(shuffle))
 
   if (diff) {
-    te <- transfer_entropy(x = x, y = y, lx = lx, ly = ly)$transentropy - ste
+    te <- transfer_entropy_internal(x = x, y = y, lx = lx, ly = ly)$transentropy - ste
   } else {
     te <- ste
   }
