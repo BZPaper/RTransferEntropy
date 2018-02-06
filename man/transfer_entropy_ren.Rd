@@ -32,3 +32,4 @@ transfer entropy measure is Renyi transfer entropy.
 \examples{
 
 }
+\keyword{internal}

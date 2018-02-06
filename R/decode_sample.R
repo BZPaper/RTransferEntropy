@@ -7,6 +7,7 @@
 #' @export
 #'
 #' @examples
+#' @keywords internal
 #'
 decode_sample <- function(x, coded) {
 

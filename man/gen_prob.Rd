@@ -22,3 +22,4 @@ step-wise markov bootstrap.
 \examples{
 
 }
+\keyword{internal}

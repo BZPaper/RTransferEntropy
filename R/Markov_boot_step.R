@@ -7,6 +7,7 @@
 #'
 #' @return returns a vector of characters
 #' @export
+#' @keywords internal
 #'
 #' @examples
 #'

@@ -17,6 +17,4 @@ returns a matrix
 \description{
 Function to decode a combined and coded sample of two time series.
 }
-\examples{
-
-}
+\keyword{internal}

@@ -23,3 +23,4 @@ Function for step-wise bootstraping the Markov chain.
 \examples{
 
 }
+\keyword{internal}

@@ -9,6 +9,7 @@
 #' @param ly Markov order of y
 #' @param q weighting parameter in R?nyi transfer entropy
 #'
+#' @keywords internal
 #' @return returns a list
 #' @export
 #'

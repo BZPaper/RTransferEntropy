@@ -1,12 +1,12 @@
 #' Function to calculate the effective transfer entropy, as given by the
-#' difference between the Rényi transfer entropy calculated from a sample and
+#' difference between the Renyi transfer entropy calculated from a sample and
 #' the respective shuffled transfer entropy.
 #'
 #' @param x a vector of coded values
 #' @param lx Markov order of x
 #' @param y a vector of coded values
 #' @param ly Markov order of y
-#' @param q weighting parameter in Rényi transfer entropy
+#' @param q weighting parameter in Renyi transfer entropy
 #' @param nreps number of replications for each shuffle
 #' @param shuffles number of shuffles
 #' @param diff if TRUE, the effective transfer entropy is calculated, otherwise
