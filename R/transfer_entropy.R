@@ -49,59 +49,45 @@ transfer_entropy <- function(x,
                              burn = 50) {
 
   # Check for unequal length of time series and treat missing values
-  m <- length(x)
-  n <- length(y)
-
-  if (m != n) {
-    stop(cat(paste("Warning: Time series of unequal length",
-                   "\n", "Execution halted")))
+  if (length(x) != length(y)) {
+    stop("x and y must have the same length.")
   }
 
   tsmat <- na.omit(matrix(cbind(x, y), ncol = 2))
   obs <- dim(tsmat)[1]
 
   # Calculate transfer entropy
-  if (entropy == "Shannon") {
-    te <- te_shannon(x = tsmat[, 1],
-                     lx,
-                     y = tsmat[, 2],
-                     ly,
-                     shuffle,
-                     const,
-                     constx,
-                     consty,
-                     nreps,
-                     shuffles,
-                     ncores,
-                     type,
-                     quantiles,
-                     bins,
-                     limits,
-                     nboot,
-                     burn)
-  } else if (entropy == "Renyi") {
-    te <- te_renyi(x = tsmat[, 1],
-                   lx,
-                   y = tsmat[, 2],
-                   ly,
-                   q,
-                   shuffle,
-                   const,
-                   constx,
-                   consty,
-                   nreps,
-                   shuffles,
-                   ncores,
-                   type,
-                   quantiles,
-                   bins,
-                   limits,
-                   nboot,
-                   burn)
-  } else {
-    stop(cat(paste("Warning: Transfer entropy measure not correctly specified",
-                   "\n", "Execution halted")))
+  entropy <- tolower(entropy)
+
+  # allow to specify the first character only as well
+  if (nchar(entropy) == 1 && entropy %in% c("s", "r")) {
+    entropy <- if (entropy == "s") "shannon" else "renyi"
   }
+
+  if (!entropy %in% c("shannon", "renyi"))
+    stop("entropy must be either 'shannon' or 'renyi'.")
+
+  # assign the respective function to te_function
+  te_function <- if (entropy == "shannon") te_shannnon else te_renyi
+
+  # call either te_shannon or te_renyi as the te_function
+  te <- te_function(x = tsmat[, 1],
+                    lx = lx,
+                    y = tsmat[, 2],
+                    ly = ly,
+                    shuffle = shuffle,
+                    const = const,
+                    constx = constx,
+                    consty = consty,
+                    nreps = nreps,
+                    shuffles = shuffles,
+                    ncores = ncores,
+                    type = type,
+                    quantiles = quantiles,
+                    bins = bins,
+                    limits = limits,
+                    nboot = nboot,
+                    burn = burn)
 
   if (is.null(dim(te$bootstrap_H0))) {
     # Inference (standard errors, p-values)
@@ -115,13 +101,13 @@ transfer_entropy <- function(x,
     setex <- sd(te$bootstrap_H0[1, ])
     setey <- sd(te$bootstrap_H0[2, ])
 
-    pval <- function(x, est) {length(x[x > est])/length(x)}
+    pval <- function(x, est) length(x[x > est]) / length(x)
     pstex <- pval(te$bootstrap_H0[1, ], te$stex)
     pstey <- pval(te$bootstrap_H0[2, ], te$stey)
   }
 
   # Output
-  return(list(TE_YX = te$tex,
+  res <- list(TE_YX = te$tex,
               TE_XY = te$tey,
               ETE_YX = te$stex,
               ETE_XY = te$stey,
@@ -129,5 +115,7 @@ transfer_entropy <- function(x,
               SETE_XY = setey,
               PETE_YX = pstex,
               PETE_XY = pstey,
-              tsobs = obs))
+              tsobs = obs)
+
+  return(res)
 }
