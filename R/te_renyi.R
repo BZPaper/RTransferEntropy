@@ -23,11 +23,12 @@
 #' the bootstrapped Markov chain
 #'
 #' @return returns a list
+#' @keywords internal
 #' @export
 #'
 #' @examples
 #'
-Renyi_transfer_entropy <- function(x,
+te_renyi <- function(x,
                                    lx,
                                    y,
                                    ly,
