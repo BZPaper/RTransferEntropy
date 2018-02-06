@@ -2,17 +2,57 @@
 % Please edit documentation in R/transfer_entropy.R
 \name{transfer_entropy}
 \alias{transfer_entropy}
-\title{Wrapper for the implementation of Shannon and Renyi transfer entropy.
---------------------------PRELIMINARY-------------------------------}
+\title{Wrapper for the implementation of Shannon and Renyi transfer entropy.}
 \usage{
 transfer_entropy(x, lx = 1, y, ly = 1, q = 0.5, entropy = "Shannon",
-  shuffle = TRUE, const = FALSE, constx = 0, consty = 0, nreps = 2,
+  shuffle = TRUE, constx = NULL, consty = NULL, nreps = 2,
   shuffles = 6, ncores = parallel::detectCores() - 1, type = "quantiles",
   quantiles = c(5, 95), bins = NULL, limits = NULL, nboot = 1000,
   burn = 50)
 }
 \arguments{
-\item{burn}{}
+\item{x}{a vector of values}
+
+\item{lx}{Markov order of x, defaults to 1}
+
+\item{y}{a vector of values}
+
+\item{ly}{Markov order of y, defaults to 1}
+
+\item{q}{weighting parameter in Renyi transfer entropy, defaults to 0.5}
+
+\item{entropy}{the type of entropy calculation to use, either 'shannon'
+or 'renyi', first character can be used as well, defaults to shannon.}
+
+\item{shuffle}{if TRUE (default), shuffled transfer entropy is calculated}
+
+\item{constx}{constant value substracted from transfer entropy measure x,
+default to NULL (no const)}
+
+\item{consty}{constant value substracted from transfer entropy measure y,
+default to NULL (no const)}
+
+\item{nreps}{number of replications for each shuffle}
+
+\item{shuffles}{number of shuffles}
+
+\item{ncores}{number of cores in parallel computation}
+
+\item{type}{bins, limits or quantiles of empirical distribution to discretize
+the data}
+
+\item{quantiles}{quantiles to use for discretization}
+
+\item{bins}{the number of bins with equal width used for discretization}
+
+\item{limits}{limits used for discretization}
+
+\item{nboot}{number of bootstrap replications}
+
+\item{burn}{number of observations that are dropped from the beginning of
+the bootstrapped Markov chain}
+
+\item{boots}{number of bootstrap samples}
 }
 \value{
 returns a list containing the respective transfer entropy measure,
@@ -21,7 +61,6 @@ number of observations
 }
 \description{
 Wrapper for the implementation of Shannon and Renyi transfer entropy.
---------------------------PRELIMINARY-------------------------------
 }
 \examples{
 

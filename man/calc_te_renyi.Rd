@@ -18,7 +18,7 @@ calc_te_renyi(x, lx, y, ly, q)
 
 \item{ly}{Markov order of y}
 
-\item{q}{weighting parameter in R?nyi transfer entropy}
+\item{q}{weighting parameter in Renyi transfer entropy}
 }
 \value{
 returns a list

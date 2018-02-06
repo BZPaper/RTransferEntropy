@@ -10,23 +10,23 @@ te_renyi(x, lx, y, ly, q, shuffle = TRUE, const = FALSE, constx = 0,
   limits = NULL, nboot, burn = 50)
 }
 \arguments{
-\item{x}{a vector of coded values}
+\item{x}{a vector of values}
 
-\item{lx}{Markov order of x}
+\item{lx}{Markov order of x, defaults to 1}
 
-\item{y}{a vector of coded values}
+\item{y}{a vector of values}
 
-\item{ly}{Markov order of y}
+\item{ly}{Markov order of y, defaults to 1}
 
-\item{q}{weighting parameter in Renyi transfer entropy}
+\item{q}{weighting parameter in Renyi transfer entropy, defaults to 0.5}
 
-\item{shuffle}{if TRUE, shuffled transfer entropy is calculated}
+\item{shuffle}{if TRUE (default), shuffled transfer entropy is calculated}
 
-\item{const}{if TRUE, then shuffle is constant for all bootstraps}
+\item{constx}{constant value substracted from transfer entropy measure x,
+default to NULL (no const)}
 
-\item{constx}{constant value substracted from transfer entropy measure}
-
-\item{consty}{constant value substracted from transfer entropy measure}
+\item{consty}{constant value substracted from transfer entropy measure y,
+default to NULL (no const)}
 
 \item{nreps}{number of replications for each shuffle}
 
@@ -47,8 +47,6 @@ the data}
 
 \item{burn}{number of observations that are dropped from the beginning of
 the bootstrapped Markov chain}
-
-\item{boots}{number of bootstrap samples}
 }
 \value{
 returns a list

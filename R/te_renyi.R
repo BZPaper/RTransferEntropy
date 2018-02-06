@@ -1,26 +1,6 @@
 #' Function to implement Renyi transfer entropy.
 #'
-#' @param x a vector of coded values
-#' @param lx Markov order of x
-#' @param y a vector of coded values
-#' @param ly Markov order of y
-#' @param q weighting parameter in Renyi transfer entropy
-#' @param const if TRUE, then shuffle is constant for all bootstraps
-#' @param constx constant value substracted from transfer entropy measure
-#' @param consty constant value substracted from transfer entropy measure
-#' @param shuffle if TRUE, shuffled transfer entropy is calculated
-#' @param nreps number of replications for each shuffle
-#' @param shuffles number of shuffles
-#' @param ncores number of cores in parallel computation
-#' @param type bins, limits or quantiles of empirical distribution to discretize
-#' the data
-#' @param quantiles quantiles to use for discretization
-#' @param bins the number of bins with equal width used for discretization
-#' @param limits limits used for discretization
-#' @param boots number of bootstrap samples
-#' @param nboot number of bootstrap replications
-#' @param burn number of observations that are dropped from the beginning of
-#' the bootstrapped Markov chain
+#' @inheritParams transfer_entropy
 #'
 #' @return returns a list
 #' @keywords internal
@@ -58,25 +38,25 @@ te_renyi <- function(x,
   tey <- calc_te_renyi(y, lx = ly, x, ly = lx, q)$transentropy
 
   # Calculate transfer entropy (with shuffling)
-  constx <- shuffle_renyi(x,
+  constx <- shuffle_renyi(x = x,
                           lx = lx,
-                          y,
+                          y = y,
                           ly = ly,
-                          q,
-                          nreps,
-                          shuffles,
+                          q = q,
+                          nreps = nreps,
+                          shuffles = shuffles,
                           diff = FALSE,
-                          ncores)
+                          ncores = ncores)
 
-  consty <- shuffle_renyi(y,
+  consty <- shuffle_renyi(x = y,
                           lx = ly,
-                          x,
+                          y = x,
                           ly = lx,
-                          q,
-                          nreps,
-                          shuffles,
+                          q = q,
+                          nreps = nreps,
+                          shuffles = shuffles,
                           diff = FALSE,
-                          ncores)
+                          ncores = ncores)
 
   # Lead = x
   stex <- tex - constx

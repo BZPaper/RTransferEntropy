@@ -1,25 +1,28 @@
 #' Wrapper for the implementation of Shannon and Renyi transfer entropy.
-#' --------------------------PRELIMINARY-------------------------------
 #'
-#' @param x
-#' @param lx
-#' @param y
-#' @param ly
-#' @param q
-#' @param entropy
-#' @param shuffle
-#' @param const
-#' @param constx
-#' @param consty
-#' @param nreps
-#' @param shuffles
-#' @param ncores
-#' @param type
-#' @param quantiles
-#' @param bins
-#' @param limits
-#' @param nboot
-#' @param burn
+#' @param x a vector of values
+#' @param lx Markov order of x, defaults to 1
+#' @param y a vector of values
+#' @param ly Markov order of y, defaults to 1
+#' @param q weighting parameter in Renyi transfer entropy, defaults to 0.5
+#' @param entropy the type of entropy calculation to use, either 'shannon'
+#'   or 'renyi', first character can be used as well, defaults to shannon.
+#' @param shuffle if TRUE (default), shuffled transfer entropy is calculated
+#' @param const if TRUE (defaults to FALSE), then shuffle is constant for all bootstraps
+#' @param constx constant value substracted from transfer entropy measure x
+#' @param consty constant value substracted from transfer entropy measure y
+#' @param nreps number of replications for each shuffle
+#' @param shuffles number of shuffles
+#' @param ncores number of cores in parallel computation
+#' @param type bins, limits or quantiles of empirical distribution to discretize
+#' the data
+#' @param quantiles quantiles to use for discretization
+#' @param bins the number of bins with equal width used for discretization
+#' @param limits limits used for discretization
+#' @param boots number of bootstrap samples
+#' @param nboot number of bootstrap replications
+#' @param burn number of observations that are dropped from the beginning of
+#' the bootstrapped Markov chain
 #'
 #' @return returns a list containing the respective transfer entropy measure,
 #' the effective transfer entropy measure, standard errors, p-values and
@@ -68,7 +71,7 @@ transfer_entropy <- function(x,
     stop("entropy must be either 'shannon' or 'renyi'.")
 
   # assign the respective function to te_function
-  te_function <- if (entropy == "shannon") te_shannnon else te_renyi
+  te_function <- if (entropy == "shannon") te_shannon else te_renyi
 
   # call either te_shannon or te_renyi as the te_function
   te <- te_function(x = tsmat[, 1],

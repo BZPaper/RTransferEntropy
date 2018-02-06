@@ -5,29 +5,29 @@
 \title{Function for bootstrapping Shannon transfer entropy under H0 of independence
 between time series x and y.}
 \usage{
-bootstrap_shannon(x, lx, y, ly, burn = 50, shuffle = TRUE, const = FALSE,
-  constx = NULL, consty = NULL, nreps = 2, shuffles = 6,
+bootstrap_shannon(x, lx, y, ly, burn = 50, shuffle = TRUE, constx = NULL,
+  consty = NULL, nreps = 2, shuffles = 6,
   ncores = parallel::detectCores() - 1)
 }
 \arguments{
-\item{x}{a vector of coded values}
+\item{x}{a vector of values}
 
-\item{lx}{Markov order of x}
+\item{lx}{Markov order of x, defaults to 1}
 
-\item{y}{a vector of coded values}
+\item{y}{a vector of values}
 
-\item{ly}{Markov order of y}
+\item{ly}{Markov order of y, defaults to 1}
 
 \item{burn}{number of observations that are dropped from the beginning of
 the bootstrapped Markov chain}
 
-\item{shuffle}{if TRUE, shuffled transfer entropy is calculated}
+\item{shuffle}{if TRUE (default), shuffled transfer entropy is calculated}
 
-\item{const}{if TRUE, then shuffle is constant for all bootstraps}
+\item{constx}{constant value substracted from transfer entropy measure x,
+default to NULL (no const)}
 
-\item{constx}{constant value substracted from transfer entropy measure}
-
-\item{consty}{constant value substracted from transfer entropy measure}
+\item{consty}{constant value substracted from transfer entropy measure y,
+default to NULL (no const)}
 
 \item{nreps}{number of replications for each shuffle}
 
