@@ -18,15 +18,15 @@
 #'
 #' @examples
 #'
-shuffled_transfer_entropy_ren <- function(x,
-                                          lx,
-                                          y,
-                                          ly,
-                                          q,
-                                          nreps = 2,
-                                          shuffles = 6,
-                                          diff = TRUE,
-                                          ncores = parallel::detectCores() - 1) {
+shuffle_renyi <- function(x,
+                          lx,
+                          y,
+                          ly,
+                          q,
+                          nreps = 2,
+                          shuffles = 6,
+                          diff = TRUE,
+                          ncores = parallel::detectCores() - 1) {
 
   n <- length(x)
 
@@ -36,7 +36,7 @@ shuffled_transfer_entropy_ren <- function(x,
   })
 
   parallel::clusterExport(cl, c("nreps", "x", "y", "n", "lx", "ly", "q",
-                                "transfer_entropy_ren", "cluster_gen"),
+                                "calc_te_renyi", "cluster_gen"),
                           envir = environment())
 
   seeds <- rnorm(shuffles)
@@ -44,16 +44,16 @@ shuffled_transfer_entropy_ren <- function(x,
   shuffle <- parallel::parLapply(cl, seeds, function(seed) {
     set.seed(seed)
     res <- replicate(nreps,
-                     transfer_entropy_ren(x = x,
-                                          y = sample(y, n, replace = TRUE),
-                                          lx = lx, ly = ly, q)$transentropy)
+                     calc_te_renyi(x = x,
+                                   y = sample(y, n, replace = TRUE),
+                                   lx = lx, ly = ly, q)$transentropy)
     return(res)
   })
 
   ste <- mean(unlist(shuffle))
 
   if (diff) {
-    te <- transfer_entropy_ren(x = x, y = y, lx = lx, ly = ly, q)$transentropy - ste
+    te <- calc_te_renyi(x = x, y = y, lx = lx, ly = ly, q)$transentropy - ste
   } else {
     te <- ste
   }

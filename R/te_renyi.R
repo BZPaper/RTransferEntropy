@@ -29,23 +29,23 @@
 #' @examples
 #'
 te_renyi <- function(x,
-                                   lx,
-                                   y,
-                                   ly,
-                                   q,
-                                   shuffle = TRUE,
-                                   const = FALSE,
-                                   constx = 0,
-                                   consty = 0,
-                                   nreps = 2,
-                                   shuffles = 6,
-                                   ncores = parallel::detectCores() - 1,
-                                   type = "quantiles",
-                                   quantiles = c(5, 95),
-                                   bins = NULL,
-                                   limits = NULL,
-                                   nboot,
-                                   burn = 50) {
+                     lx,
+                     y,
+                     ly,
+                     q,
+                     shuffle = TRUE,
+                     const = FALSE,
+                     constx = 0,
+                     consty = 0,
+                     nreps = 2,
+                     shuffles = 6,
+                     ncores = parallel::detectCores() - 1,
+                     type = "quantiles",
+                     quantiles = c(5, 95),
+                     bins = NULL,
+                     limits = NULL,
+                     nboot,
+                     burn = 50) {
 
   # Code time series
   x <- code_sample(x, type, quantiles, bins, limits)
@@ -58,25 +58,25 @@ te_renyi <- function(x,
   tey <- calc_te_renyi(y, lx = ly, x, ly = lx, q)$transentropy
 
   # Calculate transfer entropy (with shuffling)
-  constx <- shuffled_transfer_entropy_ren(x,
-                                          lx = lx,
-                                          y,
-                                          ly = ly,
-                                          q,
-                                          nreps,
-                                          shuffles,
-                                          diff = FALSE,
-                                          ncores)
+  constx <- shuffle_renyi(x,
+                          lx = lx,
+                          y,
+                          ly = ly,
+                          q,
+                          nreps,
+                          shuffles,
+                          diff = FALSE,
+                          ncores)
 
-  consty <- shuffled_transfer_entropy_ren(y,
-                                          lx = ly,
-                                          x,
-                                          ly = lx,
-                                          q,
-                                          nreps,
-                                          shuffles,
-                                          diff = FALSE,
-                                          ncores)
+  consty <- shuffle_renyi(y,
+                          lx = ly,
+                          x,
+                          ly = lx,
+                          q,
+                          nreps,
+                          shuffles,
+                          diff = FALSE,
+                          ncores)
 
   # Lead = x
   stex <- tex - constx
