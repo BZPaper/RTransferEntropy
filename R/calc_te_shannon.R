@@ -14,10 +14,10 @@
 #'
 #' @examples
 #'
-transfer_entropy_internal <- function(x,
-                                      lx,
-                                      y,
-                                      ly) {
+calc_te_shannon <- function(x,
+                            lx,
+                            y,
+                            ly) {
 
   # Frequencies
   #------------------------------

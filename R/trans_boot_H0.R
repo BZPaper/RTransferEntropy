@@ -39,9 +39,9 @@ trans_boot_H0 <- function(x,
   if (shuffle) {
     if (const) {
       # Lead = x
-      dtex <- transfer_entropy_internal(bootx, lx = lx, y, ly = ly)$transentropy - constx
+      dtex <- calc_te_shannon(bootx, lx = lx, y, ly = ly)$transentropy - constx
       # Lead = y
-      dtey <- transfer_entropy_internal(booty, lx = ly, x, ly = lx)$transentropy - consty
+      dtey <- calc_te_shannon(booty, lx = ly, x, ly = lx)$transentropy - consty
     } else {
       constx <- shuffled_transfer_entropy(bootx,
                                           lx = lx,
@@ -61,15 +61,15 @@ trans_boot_H0 <- function(x,
                                           ncores)
 
       # Lead = x
-      dtex <- transfer_entropy_internal(bootx, lx = lx, y, ly = ly)$transentropy - constx
+      dtex <- calc_te_shannon(bootx, lx = lx, y, ly = ly)$transentropy - constx
       # Lead = y
-      dtey <- transfer_entropy_internal(booty, lx = ly, x, ly = lx)$transentropy - consty
+      dtey <- calc_te_shannon(booty, lx = ly, x, ly = lx)$transentropy - consty
     }
   } else {
     # Lead = x
-    dtex <- transfer_entropy_internal(bootx, lx = lx, y, ly = ly)$transentropy
+    dtex <- calc_te_shannon(bootx, lx = lx, y, ly = ly)$transentropy
     # Lead = y
-    dtey <- transfer_entropy_internal(booty, lx = ly, x, ly = lx)$transentropy
+    dtey <- calc_te_shannon(booty, lx = ly, x, ly = lx)$transentropy
   }
 
   teboot <- c(dtex, dtey)

@@ -52,9 +52,9 @@ te_shannon <- function(x,
 
   # Calculate transfer entropy (without shuffling)
   # Lead = x
-  tex <- transfer_entropy_internal(x, lx = lx, y, ly = ly)$transentropy
+  tex <- calc_te_shannon(x, lx = lx, y, ly = ly)$transentropy
   # Lead = y
-  tey <- transfer_entropy_internal(y, lx = ly, x, ly = lx)$transentropy
+  tey <- calc_te_shannon(y, lx = ly, x, ly = lx)$transentropy
 
   # Calculate transfer entropy (with shuffling)
   constx <- shuffled_transfer_entropy(x,
