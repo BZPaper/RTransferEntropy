@@ -53,9 +53,9 @@ te_renyi <- function(x,
 
   # Calculate transfer entropy (withour shuffling)
   # Lead = x
-  tex <- transfer_entropy_ren(x, lx = lx, y, ly = ly, q)$transentropy
+  tex <- calc_te_renyi(x, lx = lx, y, ly = ly, q)$transentropy
   # Lead = y
-  tey <- transfer_entropy_ren(y, lx = ly, x, ly = lx, q)$transentropy
+  tey <- calc_te_renyi(y, lx = ly, x, ly = lx, q)$transentropy
 
   # Calculate transfer entropy (with shuffling)
   constx <- shuffled_transfer_entropy_ren(x,

@@ -15,11 +15,11 @@
 #'
 #' @examples
 #'
-transfer_entropy_ren <- function(x,
-                                 lx,
-                                 y,
-                                 ly,
-                                 q) {
+calc_te_renyi <- function(x,
+                          lx,
+                          y,
+                          ly,
+                          q) {
 
   # Frequencies
   #------------------------------
