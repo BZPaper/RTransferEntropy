@@ -178,10 +178,10 @@ transfer_entropy <- function(x,
     te_xy = te$tey,
     ete_yx = te$stex,
     ete_xy = te$stey,
-    sete_yx = setex,
-    sete_xy = setey,
-    pete_yx = pstex,
-    pete_xy = pstey,
+    se_yx = setex,
+    se_xy = setey,
+    p_yx = pstex,
+    p_xy = pstey,
     nobs = length(x)
   )
 

@@ -19,12 +19,12 @@ print.TEResult <- function(x, ...) {
   str <- c(
     "Transfer Entropy Result:",
     sprintf("Direction  %10s  %10s  %10s  %10s  %5s",
-            "te", "ete", "sete", "p-value", "sign"),
+            "te", "ete", "se", "p-value", "sig"),
     paste(rep("-", n), collapse = ""),
     sprintf("X->Y       %10.05f  %10.05f  %10.05f  %10.05f  %5s",
-            x$te_xy, x$ete_xy, x$sete_xy, x$pete_xy, star(x$pete_xy)),
+            x$te_xy, x$ete_xy, x$se_xy, x$p_xy, star(x$p_xy)),
     sprintf("Y->X       %10.05f  %10.05f  %10.05f  %10.05f  %5s",
-            x$te_yx, x$ete_yx, x$sete_yx, x$pete_yx, star(x$pete_yx)),
+            x$te_yx, x$ete_yx, x$se_yx, x$p_yx, star(x$p_yx)),
     paste(rep("-", n), collapse = ""),
     sprintf("Number of Observations: %s", x$nobs),
     paste(rep("-", n), collapse = "")
