@@ -106,15 +106,6 @@ transfer_entropy <- function(x,
   if (!entropy %in% c("shannon", "renyi"))
     stop("entropy must be either 'shannon' or 'renyi'.")
 
-  # assign the respective function to te_function
-  if (entropy == "shannon") {
-    te_function <- te_shannon
-    if (!quiet) cat("Calculating Shannon's entropy ")
-  } else {
-    te_function <- te_renyi
-    if (!quiet) cat("Calculating Renyi's entropy ")
-  }
-
   # set-up the parallel stuff
   pbapply::pboptions(type = "timer")
   if (quiet) pbapply::pboptions(type = "none")
@@ -141,23 +132,46 @@ transfer_entropy <- function(x,
   if (!quiet) cat(sprintf("with %s shuffle(s) and %s bootstrap(s)\nThe timeseries have length %s (%s NAs removed)\n",
                           shuffles, nboot, length(x), sum(mis_values)))
 
-  # call either te_shannon or te_renyi as the te_function
-  te <- te_function(x = x,
-                    lx = lx,
-                    y = y,
-                    ly = ly,
-                    constx = constx,
-                    consty = consty,
-                    nreps = nreps,
-                    shuffles = shuffles,
-                    cl = cl,
-                    type = type,
-                    quantiles = quantiles,
-                    bins = bins,
-                    limits = limits,
-                    nboot = nboot,
-                    burn = burn,
-                    quiet = quiet)
+  # call either te_shannon or te_renyi
+  if (entropy == "shannon") {
+    if (!quiet) cat("Calculating Shannon's entropy ")
+    te <- te_shannon(x = x,
+                     lx = lx,
+                     y = y,
+                     ly = ly,
+                     constx = constx,
+                     consty = consty,
+                     nreps = nreps,
+                     shuffles = shuffles,
+                     cl = cl,
+                     type = type,
+                     quantiles = quantiles,
+                     bins = bins,
+                     limits = limits,
+                     nboot = nboot,
+                     burn = burn,
+                     quiet = quiet)
+  } else {
+    if (!quiet) cat("Calculating Renyi's entropy ")
+    te <- te_renyi(x = x,
+                   lx = lx,
+                   y = y,
+                   ly = ly,
+                   q = q,
+                   constx = constx,
+                   consty = consty,
+                   nreps = nreps,
+                   shuffles = shuffles,
+                   cl = cl,
+                   type = type,
+                   quantiles = quantiles,
+                   bins = bins,
+                   limits = limits,
+                   nboot = nboot,
+                   burn = burn,
+                   quiet = quiet)
+  }
+
 
   # Inference (standard errors, p-values)
   if (nboot > 1) {
