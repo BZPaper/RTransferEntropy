@@ -8,7 +8,7 @@ transfer_entropy(x, lx = 1, y, ly = 1, q = 0.5, entropy = "Shannon",
   constx = NULL, consty = NULL, nreps = 2, shuffles = 6,
   cl = parallel::detectCores() - 1, type = "quantiles", quantiles = c(5,
   95), bins = NULL, limits = NULL, nboot = 10, burn = 50,
-  quiet = FALSE)
+  quiet = FALSE, seed = NULL)
 }
 \arguments{
 \item{x}{a vector of values}
@@ -53,6 +53,8 @@ the data}
 the bootstrapped Markov chain}
 
 \item{quiet}{if FALSE (default), the function gives feedback}
+
+\item{seed}{a seed that seeds the PRNG (will internally just call set.seed), defaults to NULL}
 
 \item{boots}{number of bootstrap samples}
 }

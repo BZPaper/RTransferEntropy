@@ -26,6 +26,7 @@
 #' @param burn number of observations that are dropped from the beginning of
 #' the bootstrapped Markov chain
 #' @param quiet if FALSE (default), the function gives feedback
+#' @param seed a seed that seeds the PRNG (will internally just call set.seed), defaults to NULL
 #'
 #' @return an object of class TEResult, coontaining the entropy measure, the
 #'   effective transfer entropy measure, standard errores, p-values, etc.
@@ -69,7 +70,10 @@ transfer_entropy <- function(x,
                              limits = NULL,
                              nboot = 10,
                              burn = 50,
-                             quiet = FALSE) {
+                             quiet = FALSE,
+                             seed = NULL) {
+
+  if (!is.null(seed)) set.seed(seed)
 
   t0 <- Sys.time()
   # Check for unequal length of time series and treat missing values
