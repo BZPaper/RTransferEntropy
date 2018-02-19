@@ -77,9 +77,23 @@ transfer_entropy <- function(x,
     stop("x and y must have the same length.")
   }
 
-  # Calculate transfer entropy
-  entropy <- tolower(entropy)
+  # check that type is specified correctly
+  type <- tolower(type)
+  if (!type %in% c("quantiles", "bins", "limits", "q", "b", "l"))
+    stop("type must be either 'quantiles', 'bins', or 'limits'")
 
+  if (nchar(type) == 1) {
+    if (type == "q") {
+      type <- "quantiles"
+    } else if (type == "b") {
+      type <- "bins"
+    } else {
+      type <- "limits"
+    }
+  }
+
+  # check that entropy is specified correctly
+  entropy <- tolower(entropy)
   # allow to specify the first character only as well
   if (nchar(entropy) == 1 && entropy %in% c("s", "r")) {
     entropy <- if (entropy == "s") "shannon" else "renyi"
