@@ -4,7 +4,7 @@
 \alias{print.TEResult}
 \title{Prints a transfer-entropy result}
 \usage{
-\method{print}{TEResult}(x, ...)
+\method{print}{TEResult}(x, digits = 4, ...)
 }
 \arguments{
 \item{x}{a TEResult}

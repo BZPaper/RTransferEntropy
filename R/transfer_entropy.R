@@ -106,6 +106,8 @@ transfer_entropy <- function(x,
   if (!entropy %in% c("shannon", "renyi"))
     stop("entropy must be either 'shannon' or 'renyi'.")
 
+  if (!quiet) cat(sprintf("Calculating %s's entropy ", fupper(entropy)))
+
   # set-up the parallel stuff
   pbapply::pboptions(type = "timer")
   if (quiet) pbapply::pboptions(type = "none")
