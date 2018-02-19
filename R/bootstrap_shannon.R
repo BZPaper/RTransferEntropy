@@ -41,7 +41,7 @@ bootstrap_shannon <- function(x,
                               y = x,
                               ly = lx)$transentropy - consty
     } else {
-      constx <- shuffle_shannon(x = as.numeric(bootx),
+      constx <- shuffle_shannon(x = bootx,
                                 lx = lx,
                                 y = y,
                                 ly = ly,
@@ -50,7 +50,7 @@ bootstrap_shannon <- function(x,
                                 diff = TRUE,
                                 cl = cl)
 
-      consty <- shuffle_shannon(x = as.numeric(booty),
+      consty <- shuffle_shannon(x = booty,
                                 lx = ly,
                                 y = x,
                                 ly = lx,
@@ -60,24 +60,24 @@ bootstrap_shannon <- function(x,
                                 cl = cl)
 
       # Lead = x
-      dtex <- calc_te_shannon(x = as.numeric(bootx),
+      dtex <- calc_te_shannon(x = bootx,
                               lx = lx,
                               y = y,
                               ly = ly)$transentropy - constx
       # Lead = y
-      dtey <- calc_te_shannon(x = as.numeric(booty),
+      dtey <- calc_te_shannon(x = booty,
                               lx = ly,
                               y = x,
                               ly = lx)$transentropy - consty
     }
   } else {
     # Lead = x
-    dtex <- calc_te_shannon(x = as.numeric(bootx),
+    dtex <- calc_te_shannon(x = bootx,
                             lx = lx,
                             y = y,
                             ly = ly)$transentropy
     # Lead = y
-    dtey <- calc_te_shannon(x = as.numeric(booty),
+    dtey <- calc_te_shannon(x = booty,
                             lx = ly,
                             y = x,
                             ly = lx)$transentropy

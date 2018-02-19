@@ -47,6 +47,7 @@ markov_boot_step <- function (x,
 
   bootvec <- unlist(bootlist)
   bootvec <- bootvec[(burn + 1):n]
+  bootvec <- as.numeric(bootvec)
 
   return(bootvec)
 }
