@@ -15,9 +15,10 @@ print.TEResult <- function(x, ...) {
                   ifelse(x < 0.01, "**",
                          ifelse(x < 0.05, "*", ""))))
   }
+  fupper <- function(x) paste0(toupper(substr(x, 1, 1)), substr(x, 2, nchar(x)))
   n <- 64
   str <- c(
-    "Transfer Entropy Result:",
+    paste(fupper(x$entropy), "Transfer Entropy Results:"),
     sprintf("Direction  %10s  %10s  %10s  %10s  %5s",
             "te", "ete", "se", "p-value", "sig"),
     paste(rep("-", n), collapse = ""),
@@ -26,7 +27,8 @@ print.TEResult <- function(x, ...) {
     sprintf("Y->X       %10.05f  %10.05f  %10.05f  %10.05f  %5s",
             x$te_yx, x$ete_yx, x$se_yx, x$p_yx, star(x$p_yx)),
     paste(rep("-", n), collapse = ""),
-    sprintf("Number of Observations: %s", x$nobs),
+    paste0(sprintf("Number of Observations: %s", x$nobs),
+           ifelse(x$entropy == "renyi", sprintf("\nQ: %s", x$q), "")),
     paste(rep("-", n), collapse = "")
   )
   str <- paste(str, collapse = "\n")

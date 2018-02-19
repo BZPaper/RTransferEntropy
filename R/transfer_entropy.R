@@ -191,6 +191,7 @@ transfer_entropy <- function(x,
 
   # Output
   res <- list(
+    entropy = entropy,
     obs = list(x = x, y = y),
     te_yx = te$tex,
     te_xy = te$tey,
@@ -200,7 +201,8 @@ transfer_entropy <- function(x,
     se_xy = setey,
     p_yx = pstex,
     p_xy = pstey,
-    nobs = length(x)
+    nobs = length(x),
+    q = q
   )
 
   if (!quiet) {
