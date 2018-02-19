@@ -61,18 +61,21 @@ te_shannon <- function(x,
   # Bootstrap
   if (!quiet) cat("Bootstrap the transfer entropy\n")
 
-  boot <- pbapply::pbreplicate(nboot,
-                               bootstrap_shannon(x = x,
-                                                 lx = lx,
-                                                 y = y,
-                                                 ly = ly,
-                                                 burn = burn,
-                                                 constx = constx,
-                                                 consty = consty,
-                                                 nreps = nreps,
-                                                 shuffles = shuffles,
-                                                 cl = NULL),
-                               cl = cl)
+  seeds <- sample(.Machine$integer.max, nboot)
+
+  boot <- pbapply::pbsapply(seeds, function(seed) {
+    set.seed(seed)
+    bootstrap_shannon(x = x,
+                      lx = lx,
+                      y = y,
+                      ly = ly,
+                      burn = burn,
+                      constx = constx,
+                      consty = consty,
+                      nreps = nreps,
+                      shuffles = shuffles,
+                      cl = NULL)
+  }, cl = cl)
 
   return(list(tex  = tex,
               tey  = tey,

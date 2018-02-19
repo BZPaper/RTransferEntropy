@@ -20,7 +20,7 @@ shuffle_renyi <- function(x,
                           diff = TRUE,
                           cl = NULL) {
 
-  seeds <- rnorm(shuffles)
+  seeds <- sample(.Machine$integer.max, shuffles)
   n <- length(x)
 
   shuffle <- pbapply::pblapply(seeds, function(seed) {
