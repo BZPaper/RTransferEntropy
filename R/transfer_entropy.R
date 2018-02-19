@@ -112,7 +112,9 @@ transfer_entropy <- function(x,
   }
 
   # set-up the parallel stuff
-  if (quiet) pbapply::pboptions(type = "none") else pbapply::pboptions(type = "timer")
+  pbapply::pboptions(type = "timer")
+  if (quiet) pbapply::pboptions(type = "none")
+
   if (is.numeric(cl)) {
     if (cl == 1) {
       cl <- NULL
