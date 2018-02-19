@@ -150,7 +150,8 @@ transfer_entropy <- function(x,
                     bins = bins,
                     limits = limits,
                     nboot = nboot,
-                    burn = burn)
+                    burn = burn,
+                    quiet = quiet)
 
   # Inference (standard errors, p-values)
   if (nboot > 1) {
