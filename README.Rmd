@@ -75,8 +75,8 @@ set.seed(20180108 + 1)
 n_cores <- parallel::detectCores() - 1
 
 shannon_te <- transfer_entropy(x = x,
-                               lx = 1,
                                y = y,
+                               lx = 1,
                                ly = 1,
                                nboot = n_cores,
                                cl = n_cores)

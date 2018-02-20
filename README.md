@@ -72,25 +72,27 @@ set.seed(20180108 + 1)
 n_cores <- parallel::detectCores() - 1
 
 shannon_te <- transfer_entropy(x = x,
-                               lx = 1,
                                y = y,
+                               lx = 1,
                                ly = 1,
                                nboot = n_cores,
                                cl = n_cores)
 #> Calculating Shannon's entropy on 7 cores with 6 shuffle(s) and 7 bootstrap(s)
 #> The timeseries have length 100000 (0 NAs removed)
-#> Calculate the x->y transfer entropy
+#> Calculating Shannon's entropy Calculate the x->y transfer entropy
 #> Calculate the y->x transfer entropy
 #> Bootstrap the transfer entropy
-#> Done - Total time 74.4 seconds
+#> Done - Total time 29.03 seconds
 
 shannon_te
-#> Transfer Entropy Result:
-#> Direction          te         ete        sete     p-value   sign
-#> ----------------------------------------------------------------
-#> X->Y          0.09686     0.09679          NA          NA       
-#> Y->X          0.00011     0.00004          NA          NA       
-#> ----------------------------------------------------------------
+#> Shannon Transfer Entropy Results:
+#> --------------------------------------------------------------
+#> Direction          te         ete          se     p-value  sig
+#> --------------------------------------------------------------
+#>      X->Y      0.0969      0.0968      0.0000      0.0000  ***
+#>      Y->X      0.0001      0.0000      0.0000      1.0000  
+#> --------------------------------------------------------------
 #> Number of Observations: 100000
-#> ----------------------------------------------------------------
+#> --------------------------------------------------------------
+#> Sig. P-values:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1
 ```
