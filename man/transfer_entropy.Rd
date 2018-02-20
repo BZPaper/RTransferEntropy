@@ -4,7 +4,7 @@
 \alias{transfer_entropy}
 \title{Wrapper for the implementation of Shannon and Renyi transfer entropy.}
 \usage{
-transfer_entropy(x, lx = 1, y, ly = 1, q = 0.5, entropy = "Shannon",
+transfer_entropy(x, y, lx = 1, ly = 1, q = 0.5, entropy = "Shannon",
   constx = NULL, consty = NULL, nreps = 2, shuffles = 6,
   cl = parallel::detectCores() - 1, type = "quantiles", quantiles = c(5,
   95), bins = NULL, limits = NULL, nboot = 10, burn = 50,
@@ -13,9 +13,9 @@ transfer_entropy(x, lx = 1, y, ly = 1, q = 0.5, entropy = "Shannon",
 \arguments{
 \item{x}{a vector of values}
 
-\item{lx}{Markov order of x, defaults to 1}
-
 \item{y}{a vector of values}
+
+\item{lx}{Markov order of x, defaults to 1}
 
 \item{ly}{Markov order of y, defaults to 1}
 

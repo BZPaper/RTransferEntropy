@@ -1,8 +1,8 @@
 #' Wrapper for the implementation of Shannon and Renyi transfer entropy.
 #'
 #' @param x a vector of values
-#' @param lx Markov order of x, defaults to 1
 #' @param y a vector of values
+#' @param lx Markov order of x, defaults to 1
 #' @param ly Markov order of y, defaults to 1
 #' @param q weighting parameter in Renyi transfer entropy, defaults to 0.5
 #' @param entropy the type of entropy calculation to use, either 'shannon'
@@ -54,8 +54,8 @@
 #'
 #' is.TEResult(te_result)
 transfer_entropy <- function(x,
-                             lx = 1,
                              y,
+                             lx = 1,
                              ly = 1,
                              q = 0.5,
                              entropy = "Shannon",
