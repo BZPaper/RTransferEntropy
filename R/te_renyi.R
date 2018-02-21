@@ -85,5 +85,5 @@ te_renyi <- function(x,
               tey   = tey,
               stex = stex,
               stey = stey,
-              bootstrap_H0 = boot))
+              boot = boot))
 }

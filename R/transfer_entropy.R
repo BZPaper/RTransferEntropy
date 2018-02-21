@@ -177,12 +177,12 @@ transfer_entropy <- function(x,
 
   # Inference (standard errors, p-values)
   if (nboot > 1) {
-    setex <- sd(te$bootstrap_H0[1, ])
-    setey <- sd(te$bootstrap_H0[2, ])
+    setex <- sd(te$boot[1, ])
+    setey <- sd(te$boot[2, ])
 
     pval <- function(x, est) length(x[x > est]) / length(x)
-    pstex <- pval(te$bootstrap_H0[1, ], te$stex)
-    pstey <- pval(te$bootstrap_H0[2, ], te$stey)
+    pstex <- pval(te$boot[1, ], te$stex)
+    pstey <- pval(te$boot[2, ], te$stey)
   } else {
     setex <- NA
     setey <- NA
