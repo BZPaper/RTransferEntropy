@@ -68,7 +68,7 @@ Wrapper for the implementation of Shannon and Renyi transfer entropy.
 \examples{
 # construct two time-series
 set.seed(1234567890)
-n <- 100000
+n <- 1000
 x <- rep(0, n + 1)
 y <- rep(0, n + 1)
 
@@ -80,7 +80,7 @@ for (i in seq(n)) {
 x <- x[-1]
 y <- y[-1]
 
-te_result <- transfer_entropy(x, lx = 1, y, ly = 1)
+te_result <- transfer_entropy(x, y)
 te_result
 
 summary(te_result)
