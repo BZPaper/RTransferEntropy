@@ -83,3 +83,21 @@ shannon_te <- transfer_entropy(x = x,
 
 shannon_te
 ```
+
+
+### Shannon Transfer Entropy
+```{r}
+set.seed(20180108 + 1)
+n_cores <- parallel::detectCores() - 1
+
+renyi_te <- transfer_entropy(x = x,
+                             y = y,
+                             lx = 1,
+                             ly = 1,
+                             entropy = "renyi",
+                             q = 0.5,
+                             nboot = n_cores,
+                             cl = n_cores)
+
+renyi_te
+```

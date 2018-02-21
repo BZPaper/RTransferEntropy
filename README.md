@@ -79,20 +79,69 @@ shannon_te <- transfer_entropy(x = x,
                                cl = n_cores)
 #> Calculating Shannon's entropy on 7 cores with 6 shuffle(s) and 7 bootstrap(s)
 #> The timeseries have length 100000 (0 NAs removed)
-#> Calculating Shannon's entropy Calculate the x->y transfer entropy
-#> Calculate the y->x transfer entropy
-#> Bootstrap the transfer entropy
-#> Done - Total time 29.03 seconds
+#> Calculate the X->Y transfer entropy
+#> Calculate the Y->X transfer entropy
+#> Bootstrap the transfer entropies
+#> Done - Total time 14.39 seconds
 
 shannon_te
 #> Shannon Transfer Entropy Results:
-#> --------------------------------------------------------------
-#> Direction          te         ete          se     p-value  sig
-#> --------------------------------------------------------------
-#>      X->Y      0.0969      0.0968      0.0000      0.0000  ***
-#>      Y->X      0.0001      0.0000      0.0000      1.0000  
-#> --------------------------------------------------------------
+#> -----------------------------------------------------------------
+#>  Direction          TE     Eff. TE    Std.Err.     p-value    sig
+#> -----------------------------------------------------------------
+#>       X->Y      0.0969      0.0968      0.0000      0.0000    ***
+#>       Y->X      0.0001      0.0000      0.0000      1.0000       
+#> -----------------------------------------------------------------
+#> Bootstrapped TE Quantiles (7 replications):
+#> -----------------------------------------------------------------
+#> Direction        0%       25%       50%       75%      100%
+#> -----------------------------------------------------------------
+#>     X->Y    0.0001    0.0001    0.0001    0.0001    0.0001
+#>     Y->X    0.0001    0.0001    0.0001    0.0001    0.0001
+#> -----------------------------------------------------------------
 #> Number of Observations: 100000
-#> --------------------------------------------------------------
-#> Sig. P-values:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1
+#> -----------------------------------------------------------------
+#> p-values: < 0.001 ‘***’, < 0.01 ‘**’, < 0.05 ‘*’, < 0.1 ‘.’
+```
+
+### Shannon Transfer Entropy
+
+``` r
+set.seed(20180108 + 1)
+n_cores <- parallel::detectCores() - 1
+
+renyi_te <- transfer_entropy(x = x,
+                             y = y,
+                             lx = 1,
+                             ly = 1,
+                             entropy = "renyi",
+                             q = 0.5,
+                             nboot = n_cores,
+                             cl = n_cores)
+#> Calculating Renyi's entropy on 7 cores with 6 shuffle(s) and 7 bootstrap(s)
+#> The timeseries have length 100000 (0 NAs removed)
+#> Calculate the X->Y transfer entropy
+#> Calculate the Y->X transfer entropy
+#> Bootstrap the transfer entropies
+#> Done - Total time 14.1 seconds
+
+renyi_te
+#> Renyi Transfer Entropy Results:
+#> -----------------------------------------------------------------
+#>  Direction          TE     Eff. TE    Std.Err.     p-value    sig
+#> -----------------------------------------------------------------
+#>       X->Y      0.0861      0.0836      0.0010      0.0000    ***
+#>       Y->X      0.0003     -0.0007      0.0007      1.0000       
+#> -----------------------------------------------------------------
+#> Bootstrapped TE Quantiles (7 replications):
+#> -----------------------------------------------------------------
+#> Direction        0%       25%       50%       75%      100%
+#> -----------------------------------------------------------------
+#>     X->Y    0.0004    0.0013    0.0016    0.0020    0.0024
+#>     Y->X   -0.0013   -0.0000    0.0005    0.0010    0.0020
+#> -----------------------------------------------------------------
+#> Number of Observations: 100000
+#> Q: 0.5
+#> -----------------------------------------------------------------
+#> p-values: < 0.001 ‘***’, < 0.01 ‘**’, < 0.05 ‘*’, < 0.1 ‘.’
 ```
