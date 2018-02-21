@@ -76,7 +76,6 @@ transfer_entropy <- function(x,
                              seed = NULL) {
 
   if (!is.null(seed)) set.seed(seed)
-  if (length(x) == 0) return(NA)
 
   t0 <- Sys.time()
   # Check for unequal length of time series and treat missing values
@@ -138,6 +137,8 @@ transfer_entropy <- function(x,
 
   if (!quiet) cat(sprintf("with %s shuffle(s) and %s bootstrap(s)\nThe timeseries have length %s (%s NAs removed)\n",
                           shuffles, nboot, length(x), sum(mis_values)))
+
+  if (length(x) == 0) return(NA)
 
   # call either te_shannon or te_renyi
   if (entropy == "shannon") {
