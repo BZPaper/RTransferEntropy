@@ -28,9 +28,6 @@ std::vector<std::string> generate_clusters(Rcpp::IntegerVector x,
   int y_pre = std::max(lx - ly, 0);
   int y_post = std::max(lx, ly) - 1;
 
-  // Rcpp::Rcout << "x: " << x_pre << ":" << x_post << " | y: " <<
-  //    y_pre << ":" << y_post << "\n";
-
   // iterate over the clusters and generate the cluster-sequences
   if (no_y) {
     for (int i = 0; i < nclust; ++i) {
@@ -76,20 +73,20 @@ Rcpp::NumericVector freq_table(std::vector<std::string> x) {
   // contains the cluster names, i.e., "1 2 2", "2 2 2" etc
   std::vector<std::string> cluster_names;
   cluster_names.reserve(counts.size());
+
   // contains the cluster counts
-  std::vector<int> vec_counts;
-  vec_counts.reserve(counts.size());
+  std::vector<int> cluster_counts;
+  cluster_counts.reserve(counts.size());
 
   double total = 0;
-  for (std::map<std::string, int>::iterator it = counts.begin();
-       it != counts.end(); ++it) {
+  for (auto it = counts.begin(); it != counts.end(); ++it) {
     total += it->second;
     cluster_names.push_back(it->first);
-    vec_counts.push_back(it->second);
+    cluster_counts.push_back(it->second);
   }
   Rcpp::NumericVector vec(cluster_names.size());
   for (int i = 0; i < cluster_names.size(); ++i) {
-    vec[i] = vec_counts[i] / total;
+    vec[i] = cluster_counts[i] / total;
   }
 
   vec.attr("names") = cluster_names;
@@ -121,6 +118,7 @@ Rcpp::List cluster_gen(Rcpp::IntegerVector x, int lx = 1,
   Rcpp::IntegerVector y_;
   int ly_ = 0;
   bool no_y = y.isNull();
+
   if (!no_y) {
     y_ = Rcpp::as<Rcpp::IntegerVector>(y);
     ly_ = Rcpp::as<int>(ly);
