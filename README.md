@@ -63,7 +63,7 @@ ggplot(df, aes(x = x, y = y, color = grp)) +
 #> Warning: Removed 1 rows containing missing values (geom_point).
 ```
 
-![](README-unnamed-chunk-3-1.png)
+![](README-contemp_plot-1.png)
 
 ### Shannon Transfer Entropy
 
@@ -82,7 +82,7 @@ shannon_te <- transfer_entropy(x = x,
 #> Calculate the X->Y transfer entropy
 #> Calculate the Y->X transfer entropy
 #> Bootstrap the transfer entropies
-#> Done - Total time 14.39 seconds
+#> Done - Total time 13.91 seconds
 
 shannon_te
 #> Shannon Transfer Entropy Results:
@@ -104,7 +104,7 @@ shannon_te
 #> p-values: < 0.001 ‘***’, < 0.01 ‘**’, < 0.05 ‘*’, < 0.1 ‘.’
 ```
 
-### Shannon Transfer Entropy
+### Renyi Transfer Entropy
 
 ``` r
 set.seed(20180108 + 1)
@@ -123,7 +123,7 @@ renyi_te <- transfer_entropy(x = x,
 #> Calculate the X->Y transfer entropy
 #> Calculate the Y->X transfer entropy
 #> Bootstrap the transfer entropies
-#> Done - Total time 14.1 seconds
+#> Done - Total time 13.57 seconds
 
 renyi_te
 #> Renyi Transfer Entropy Results:
@@ -131,7 +131,7 @@ renyi_te
 #>  Direction          TE     Eff. TE    Std.Err.     p-value    sig
 #> -----------------------------------------------------------------
 #>       X->Y      0.0861      0.0836      0.0010      0.0000    ***
-#>       Y->X      0.0003     -0.0007      0.0007      1.0000       
+#>       Y->X      0.0003      0.0000      0.0007      1.0000       
 #> -----------------------------------------------------------------
 #> Bootstrapped TE Quantiles (7 replications):
 #> -----------------------------------------------------------------

@@ -49,7 +49,7 @@ y <- y[-1]
 ```
 
 ### Visualisation
-```{r}
+```{r contemp_plot}
 library(data.table)
 library(ggplot2)
 library(latex2exp)
@@ -85,7 +85,7 @@ shannon_te
 ```
 
 
-### Shannon Transfer Entropy
+### Renyi Transfer Entropy
 ```{r}
 set.seed(20180108 + 1)
 n_cores <- parallel::detectCores() - 1
