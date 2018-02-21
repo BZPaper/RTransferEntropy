@@ -4,10 +4,14 @@
 \alias{print.TEResult}
 \title{Prints a transfer-entropy result}
 \usage{
-\method{print}{TEResult}(x, digits = 4, ...)
+\method{print}{TEResult}(x, digits = 4, boot = TRUE, ...)
 }
 \arguments{
 \item{x}{a TEResult}
+
+\item{digits}{the number of digits to display, defaults to 4}
+
+\item{boot}{if the bootstrapped results should be printed, defautls to TRUE}
 
 \item{...}{}
 }

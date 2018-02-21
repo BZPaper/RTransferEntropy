@@ -1,6 +1,8 @@
 #' Prints a transfer-entropy result
 #'
 #' @param x a TEResult
+#' @param digits the number of digits to display, defaults to 4
+#' @param boot if the bootstrapped results should be printed, defautls to TRUE
 #' @param ...
 #'
 #' @return invisible the text
@@ -8,7 +10,7 @@
 #'
 #' @examples
 #' # see ?transfer_entropy()
-print.TEResult <- function(x, digits = 4, ...) {
+print.TEResult <- function(x, digits = 4, boot = TRUE, ...) {
 
   # the number of chars per reported value
   n_digits <- max(10, digits + 2)
@@ -28,12 +30,36 @@ print.TEResult <- function(x, digits = 4, ...) {
                          l = header_lengths, t = header_names),
                   collapse = "  ")
 
+  # create the bootstrapped output:
+  if (!is.matrix(x$boot) || !boot) {
+    boot_res <- NULL
+  } else {
+    quants <- t(apply(x$boot, 1, function(b) quantile(b)))
+    rownames(quants) <- c("X->Y", "Y->X")
+
+    quant_hdr_l <- c(rep(8, ncol(quants) + 1))
+    quant_hdr_n <- c("Direction", "0%", "25%", "50%", "75%", "100%")
+    quant_hdr <- paste(mapply(function(l, t) sprintf(sprintf("%%%ss", l), t),
+                              l = quant_hdr_l, t = quant_hdr_n),
+                       collapse = "  ")
+
+    boot_res <- c(
+      line,
+      "Bootstrapped TE Quantiles:",
+      line,
+      quant_hdr,
+      line,
+      textify_mat(quants, digits = digits, width = 8, stars = FALSE)
+    )
+  }
+
   str <- c(
     paste(fupper(x$entropy), "Transfer Entropy Results:"),
     line,
     header,
     line,
-    textify_coef(x$coef, digits, 10),
+    textify_mat(x$coef, digits, 10),
+    boot_res,
     line,
     paste0(sprintf("Number of Observations: %s", x$nobs),
            ifelse(x$entropy == "renyi", sprintf("\nQ: %s", x$q), "")),
@@ -48,19 +74,25 @@ print.TEResult <- function(x, digits = 4, ...) {
 # mat the matrix that contains the coefficients
 # n the number of digits for the coefficients
 # w the width of each number-field, defaults to 10
-textify_coef <- function(mat, n, w = 10) {
+# stars if the last row represents the p-values and we want to calc the ***
+textify_mat <- function(mat, digits, width = 10, stars = TRUE) {
 
-  w <- max(10, n + 2)
-  nr_fmt <- sprintf("%%%s.%sf", w, n)
-  txt_fmt <- sprintf("%%%ss", w)
+  width <- max(width, digits + 2)
+  nr_fmt <- sprintf("%%%s.%sf", width, digits)
+  txt_fmt <- sprintf("%%%ss", width)
 
   # for each row, for each col, paste the number in the right format and
   # add the stars at the end
   txt <- apply(mat, 1, function(row_el) {
     res <- sapply(row_el, function(x) sprintf(nr_fmt, x))
 
-    paste(c(res, sprintf("%5s", star(row_el[length(row_el)]))),
-          collapse = "  ")
+    if (stars) {
+      paste(c(res, sprintf("%5s", star(row_el[length(row_el)]))),
+            collapse = "  ")
+    } else {
+      paste(res, collapse = "  ")
+    }
+
   })
 
   paste(sprintf(txt_fmt, names(txt)), txt, sep = "  ")
