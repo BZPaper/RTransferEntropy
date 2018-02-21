@@ -101,3 +101,17 @@ renyi_te <- transfer_entropy(x = x,
 
 renyi_te
 ```
+
+
+# Efficient Programming
+If you know that you will call the function multiple times, you can outsource the cluster creation, i.e., the following code might save you time
+```{r, warning=F}
+mycl <- parallel::makeCluster(parallel::detectCores() - 1)
+
+# stop the cluster when the whole programm exits
+# on.exit({parallel::stopCluster(mycl)}, add = T)
+
+te <- transfer_entropy(x, y, nboot = length(mycl), cl = mycl)
+te <- transfer_entropy(x, y, nboot = length(mycl), entropy = "renyi", cl = mycl)
+```
+

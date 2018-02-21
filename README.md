@@ -82,7 +82,7 @@ shannon_te <- transfer_entropy(x = x,
 #> Calculate the X->Y transfer entropy
 #> Calculate the Y->X transfer entropy
 #> Bootstrap the transfer entropies
-#> Done - Total time 13.91 seconds
+#> Done - Total time 14.25 seconds
 
 shannon_te
 #> Shannon Transfer Entropy Results:
@@ -123,7 +123,7 @@ renyi_te <- transfer_entropy(x = x,
 #> Calculate the X->Y transfer entropy
 #> Calculate the Y->X transfer entropy
 #> Bootstrap the transfer entropies
-#> Done - Total time 13.57 seconds
+#> Done - Total time 14.19 seconds
 
 renyi_te
 #> Renyi Transfer Entropy Results:
@@ -144,4 +144,31 @@ renyi_te
 #> Q: 0.5
 #> -----------------------------------------------------------------
 #> p-values: < 0.001 ‘***’, < 0.01 ‘**’, < 0.05 ‘*’, < 0.1 ‘.’
+```
+
+Efficient Programming
+=====================
+
+If you know that you will call the function multiple times, you can outsource the cluster creation, i.e., the following code will save you a lot of time
+
+``` r
+mycl <- parallel::makeCluster(parallel::detectCores() - 1)
+
+# stop the cluster when the whole programm exits
+# on.exit({parallel::stopCluster(mycl)}, add = T)
+
+te <- transfer_entropy(x, y, nboot = length(mycl), cl = mycl)
+#> Calculating Shannon's entropy on 7 cores with 6 shuffle(s) and 7 bootstrap(s)
+#> The timeseries have length 100000 (0 NAs removed)
+#> Calculate the X->Y transfer entropy
+#> Calculate the Y->X transfer entropy
+#> Bootstrap the transfer entropies
+#> Done - Total time 13.6 seconds
+te <- transfer_entropy(x, y, nboot = length(mycl), entropy = "renyi", cl = mycl)
+#> Calculating Renyi's entropy on 7 cores with 6 shuffle(s) and 7 bootstrap(s)
+#> The timeseries have length 100000 (0 NAs removed)
+#> Calculate the X->Y transfer entropy
+#> Calculate the Y->X transfer entropy
+#> Bootstrap the transfer entropies
+#> Done - Total time 12.27 seconds
 ```
