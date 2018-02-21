@@ -12,7 +12,7 @@ test_that("gen_prob is correctly specified", {
   expect_equal(sum(gen$px), 1)
 
   expect_true(is.list(gen$transprob))
-  expect_equal(length(gen$transprob), length(unique(x)))
+  expect_equal(length(gen$transprob), 3)
   # in transprob all values sum up to 1
   expect_equal(sapply(gen$transprob, sum), c("1" = 1, "2" = 1, "3" = 1))
 

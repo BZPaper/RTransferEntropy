@@ -76,6 +76,7 @@ transfer_entropy <- function(x,
                              seed = NULL) {
 
   if (!is.null(seed)) set.seed(seed)
+  if (length(x) == 0) return(NA)
 
   t0 <- Sys.time()
   # Check for unequal length of time series and treat missing values
