@@ -1,9 +1,3 @@
-library(RTransferEntropy)
-library(testthat)
-
-# tests if x is numeric (allowing for NAs) and of length 1
-expect_numeric_1 <- function(x) (is.numeric(x) | is.na(x)) && length(x) == 1
-
 # construct two time-series
 set.seed(1234567890)
 n <- 10000
@@ -20,11 +14,12 @@ y <- y[-1]
 # Shannon Entropy
 #################################
 
-context("Shannon")
 test_that("te_result is correctly specified", {
+  context("Shannon")
   res <- transfer_entropy(x, y, lx = 1, ly = 1, nboot = 10, quiet = T,
                           seed = 12345667)
 
+  context("check types")
   expect_true(is.TEResult(res))
 
   # we have the all observations saved properly
@@ -43,7 +38,7 @@ test_that("te_result is correctly specified", {
   expect_true(is.matrix(boot))
   expect_equal(dim(boot), c(2, 10))
 
-  context("Result values")
+  context("check values")
   exp_coefs <- matrix(c(0.0996107279340461, 0.00128027810811011,
                         0.0987866909219102, 0.000472164215081831,
                         0.000108401564915032, 0.000119239167199667,
@@ -58,11 +53,12 @@ test_that("te_result is correctly specified", {
 # Renyi Entropy
 #################################
 
-context("Renyi")
 test_that("te_result is correctly specified", {
+  context("Renyi")
   res <- transfer_entropy(x, y, lx = 1, ly = 1, entropy = "renyi", q = 0.5,
                           nboot = 10, quiet = T, seed = 12345667)
 
+  context("check types")
   expect_true(is.TEResult(res))
 
   # we have the all observations saved properly
@@ -81,7 +77,7 @@ test_that("te_result is correctly specified", {
   expect_true(is.matrix(boot))
   expect_equal(dim(boot), c(2, 10))
 
-  context("Result values")
+  context("check values")
   exp_coefs <- matrix(c(0.0941334355990759, 0.0298813788644767,
                         0.0808040232549858, 0.0136590056511369,
                         0.00401946422132985, 0.00316381604679907,
