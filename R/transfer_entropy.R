@@ -192,8 +192,8 @@ transfer_entropy <- function(x,
   }
 
   coef <- matrix(
-    c(te$texy, te$stexy, setexy, pstexy,
-      te$teyx, te$steyx, seteyx, psteyx),
+    c(te$texy, max(0, te$stexy), setexy, pstexy,
+      te$teyx, max(0, te$steyx), seteyx, psteyx),
     nrow = 2, byrow = T,
     dimnames = list(c("X->Y", "Y->X"),
                     c("te", "ete", "se", "p-value"))
