@@ -31,24 +31,9 @@ te_renyi <- function(x,
   x <- code_sample(x, type, quantiles, bins, limits)
   y <- code_sample(y, type, quantiles, bins, limits)
 
-  # Lead = x
-  if (!quiet) cat("Calculate the x->y transfer entropy\n")
-  tex <- calc_te_renyi(x, lx = lx, y, ly = ly, q)$transentropy
-  constx <- shuffle_renyi(x = x,
-                          lx = lx,
-                          y = y,
-                          ly = ly,
-                          q = q,
-                          nreps = nreps,
-                          shuffles = shuffles,
-                          diff = FALSE,
-                          cl = cl)
-
-  stex <- tex - constx
-
   # Lead = y
-  if (!quiet) cat("Calculate the y->x transfer entropy\n")
-  tey <- calc_te_renyi(y, lx = ly, x, ly = lx, q)$transentropy
+  if (!quiet) cat("Calculate the X->Y transfer entropy\n")
+  texy <- calc_te_renyi(y, lx = ly, x, ly = lx, q)$transentropy
   consty <- shuffle_renyi(x = y,
                           lx = ly,
                           y = x,
@@ -58,11 +43,25 @@ te_renyi <- function(x,
                           shuffles = shuffles,
                           diff = FALSE,
                           cl = cl)
+  stexy <- texy - consty
 
-  stey <- tey - consty
+  # Lead = x
+  if (!quiet) cat("Calculate the Y->X transfer entropy\n")
+  teyx <- calc_te_renyi(x, lx = lx, y, ly = ly, q)$transentropy
+  constx <- shuffle_renyi(x = x,
+                          lx = lx,
+                          y = y,
+                          ly = ly,
+                          q = q,
+                          nreps = nreps,
+                          shuffles = shuffles,
+                          diff = FALSE,
+                          cl = cl)
+  steyx <- teyx - constx
+
 
   # Bootstrap
-  if (!quiet) cat("Bootstrap the transfer entropy\n")
+  if (!quiet) cat("Bootstrap the transfer entropies\n")
 
   if (nboot > 0) {
     seeds <- sample(.Machine$integer.max, nboot)
@@ -84,9 +83,9 @@ te_renyi <- function(x,
     boot <- NA
   }
 
-  return(list(tex   = tex,
-              tey   = tey,
-              stex = stex,
-              stey = stey,
+  return(list(teyx   = teyx,
+              texy   = texy,
+              steyx = steyx,
+              stexy = stexy,
               boot = boot))
 }

@@ -136,7 +136,6 @@ transfer_entropy <- function(x,
 
   # call either te_shannon or te_renyi
   if (entropy == "shannon") {
-    if (!quiet) cat("Calculating Shannon's entropy ")
     te <- te_shannon(x = x,
                      lx = lx,
                      y = y,
@@ -154,7 +153,6 @@ transfer_entropy <- function(x,
                      burn = burn,
                      quiet = quiet)
   } else {
-    if (!quiet) cat("Calculating Renyi's entropy ")
     te <- te_renyi(x = x,
                    lx = lx,
                    y = y,
@@ -177,24 +175,23 @@ transfer_entropy <- function(x,
 
   # Inference (standard errors, p-values)
   if (nboot > 1) {
-    setex <- sd(te$boot[1, ])
-    setey <- sd(te$boot[2, ])
+    seteyx <- sd(te$boot[1, ])
+    setexy <- sd(te$boot[2, ])
 
     pval <- function(x, est) length(x[x > est]) / length(x)
-    pstex <- pval(te$boot[1, ], te$stex)
-    pstey <- pval(te$boot[2, ], te$stey)
+    psteyx <- pval(te$boot[1, ], te$steyx)
+    pstexy <- pval(te$boot[2, ], te$stexy)
   } else {
-    setex <- NA
-    setey <- NA
+    seteyx <- NA
+    setexy <- NA
 
-    pstex <- NA
-    pstey <- NA
+    psteyx <- NA
+    pstexy <- NA
   }
 
   coef <- matrix(
-    c(te$tex, te$stex, setex, pstex,
-      te$tey, te$stey, setey, pstey
-    ),
+    c(te$texy, te$stexy, setexy, pstexy,
+      te$teyx, te$steyx, seteyx, psteyx),
     nrow = 2, byrow = T,
     dimnames = list(c("X->Y", "Y->X"),
                     c("te", "ete", "se", "p-value"))
