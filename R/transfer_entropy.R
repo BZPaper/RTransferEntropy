@@ -124,8 +124,10 @@ transfer_entropy <- function(x,
       cl <- parallel::makeCluster(cl)
       on.exit(parallel::stopCluster(cl), add = T)
     }
-  } else {
+  } else if ("cluster" %in% class(cl)) {
     if (!quiet) cat(sprintf("on %s cores ", length(cl)))
+  } else  {
+    stop("cl must be either a cluster (i.e., parallel::makeCluster()), or a numeric value")
   }
 
   # remove missing-values
