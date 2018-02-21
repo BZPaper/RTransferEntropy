@@ -59,7 +59,7 @@ the bootstrapped Markov chain}
 \item{boots}{number of bootstrap samples}
 }
 \value{
-an object of class TEResult, coontaining the entropy measure, the
+an object of class TEResult, containing the entropy measure, the
   effective transfer entropy measure, standard errores, p-values, etc.
 }
 \description{
@@ -86,4 +86,7 @@ te_result
 summary(te_result)
 
 is.TEResult(te_result)
+}
+\seealso{
+\code{\link{coefs}}, \code{\link{print.TEResult}}
 }

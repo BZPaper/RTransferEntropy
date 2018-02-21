@@ -45,7 +45,7 @@ print.TEResult <- function(x, digits = 4, boot = TRUE, ...) {
 
     boot_res <- c(
       line,
-      "Bootstrapped TE Quantiles:",
+      sprintf("Bootstrapped TE Quantiles (%s replications):", ncol(x$boot)),
       line,
       quant_hdr,
       line,

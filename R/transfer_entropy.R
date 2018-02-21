@@ -28,9 +28,11 @@
 #' @param quiet if FALSE (default), the function gives feedback
 #' @param seed a seed that seeds the PRNG (will internally just call set.seed), defaults to NULL
 #'
-#' @return an object of class TEResult, coontaining the entropy measure, the
+#' @return an object of class TEResult, containing the entropy measure, the
 #'   effective transfer entropy measure, standard errores, p-values, etc.
 #' @export
+#'
+#' @seealso \code{\link{coefs}}, \code{\link{print.TEResult}}
 #'
 #' @examples
 #' # construct two time-series
