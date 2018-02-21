@@ -48,7 +48,7 @@
 #' y <- y[-1]
 #'
 #' te_result <- transfer_entropy(x, lx = 1, y, ly = 1)
-#' print(te_result)
+#' te_result
 #'
 #' summary(te_result)
 #'
@@ -191,18 +191,20 @@ transfer_entropy <- function(x,
     pstey <- NA
   }
 
+  coef <- matrix(
+    c(te$tex, te$stex, setex, pstex,
+      te$tey, te$stey, setey, pstey
+    ),
+    nrow = 2, byrow = T,
+    dimnames = list(c("X->Y", "Y->X"),
+                    c("te", "ete", "se", "p-value"))
+  )
+
   # Output
   res <- list(
     entropy = entropy,
     obs = list(x = x, y = y),
-    te_yx = te$tex,
-    te_xy = te$tey,
-    ete_yx = te$stex,
-    ete_xy = te$stey,
-    se_yx = setex,
-    se_xy = setey,
-    p_yx = pstex,
-    p_xy = pstey,
+    coef = coef,
     nobs = length(x),
     q = q
   )

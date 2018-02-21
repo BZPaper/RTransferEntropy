@@ -81,7 +81,7 @@ x <- x[-1]
 y <- y[-1]
 
 te_result <- transfer_entropy(x, lx = 1, y, ly = 1)
-print(te_result)
+te_result
 
 summary(te_result)
 

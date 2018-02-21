@@ -24,5 +24,3 @@ test_that("cluster_gen with lag of x of 2", {
   frqs_exp <- c("1 1 2" = 0.25, "1 2 2" = 0.25, "2 1 1" = 0.25, "2 2 1" = 0.25)
   expect_equal(cls$frequency, frqs_exp)
 })
-
-
