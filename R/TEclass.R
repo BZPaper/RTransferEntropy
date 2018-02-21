@@ -21,9 +21,9 @@ print.TEResult <- function(x, digits = 4, ...) {
 
   line <- paste(rep("-", n), collapse = "")
 
+  # crate the header
   header_lengths <- c(rep(10, ncol(x$coef) + 1), 5)
   header_names <- c("Direction", "TE", "Eff. TE", "Std.Err.", "p-value", "sig")
-  # crate the header
   header <- paste(mapply(function(l, t) sprintf(sprintf("%%%ss", l), t),
                          l = header_lengths, t = header_names),
                   collapse = "  ")

@@ -200,13 +200,16 @@ transfer_entropy <- function(x,
                     c("te", "ete", "se", "p-value"))
   )
 
+  q <- ifelse(entropy == "renyi", q, NA)
+
   # Output
   res <- list(
     entropy = entropy,
     obs = list(x = x, y = y),
     coef = coef,
     nobs = length(x),
-    q = q
+    q = q,
+    boot = te$boot
   )
 
   if (!quiet) {
