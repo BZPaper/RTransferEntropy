@@ -20,10 +20,11 @@ y <- y[-1]
 # Shannon Entropy
 #################################
 
-res <- transfer_entropy(x, lx = 1, y, ly = 1, quiet = T, seed = 12345667)
-
-context("Result Type")
+context("Shannon")
 test_that("te_result is correctly specified", {
+  res <- transfer_entropy(x, y, lx = 1, ly = 1, nboot = 10, quiet = T,
+                          seed = 12345667)
+
   expect_true(is.TEResult(res))
 
   # we have the all observations saved properly
@@ -32,27 +33,24 @@ test_that("te_result is correctly specified", {
   expect_equal(res$obs$y, y)
   expect_equal(res$nobs, n)
 
-  # we have only one result for each te, ete, sete, pete
-  expect_true(expect_numeric_1(res$te_xy))
-  expect_true(expect_numeric_1(res$te_yx))
-  expect_true(expect_numeric_1(res$ete_xy))
-  expect_true(expect_numeric_1(res$ete_yx))
-  expect_true(expect_numeric_1(res$se_xy))
-  expect_true(expect_numeric_1(res$se_yx))
-  expect_true(expect_numeric_1(res$p_xy))
-  expect_true(expect_numeric_1(res$p_yx))
-})
+  # check the coefficients
+  coefs <- coefs(res)
+  expect_true(is.matrix(coefs))
+  expect_equal(dim(coefs), c(2, 4))
 
-context("Result Value")
-test_that("te_result have certain values for the seed 12345667", {
-  expect_equal(res$te_xy, 0.09961073)
-  expect_equal(res$te_yx, 0.001280278)
-  expect_equal(res$ete_xy, 0.09872741)
-  expect_equal(res$ete_yx, 0.0003214504)
-  expect_equal(res$se_xy, 0.0001084016)
-  expect_equal(res$se_yx, 0.0001192392)
-  expect_equal(res$p_xy, 0)
-  expect_equal(res$p_yx, 1)
+  # check bootstrapped results
+  boot <- res$boot
+  expect_true(is.matrix(boot))
+  expect_equal(dim(boot), c(2, 10))
+
+  context("Result values")
+  exp_coefs <- matrix(c(0.0996107279340461, 0.00128027810811011,
+                        0.0987866909219102, 0.000472164215081831,
+                        0.000108401564915032, 0.000119239167199667,
+                        0, 1), nrow = 2, ncol = 4,
+                      dimnames = list(c("X->Y", "Y->X"),
+                                      c("te", "ete", "se", "p-value")))
+  expect_equal(coefs, exp_coefs)
 })
 
 
@@ -60,11 +58,11 @@ test_that("te_result have certain values for the seed 12345667", {
 # Renyi Entropy
 #################################
 
-res <- transfer_entropy(x, lx = 1, y, ly = 1, entropy = "renyi", q = 0.5, cl = 1, quiet = T, seed = 12345667)
-
-
-context("Result Type")
+context("Renyi")
 test_that("te_result is correctly specified", {
+  res <- transfer_entropy(x, y, lx = 1, ly = 1, entropy = "renyi", q = 0.5,
+                          nboot = 10, quiet = T, seed = 12345667)
+
   expect_true(is.TEResult(res))
 
   # we have the all observations saved properly
@@ -73,25 +71,22 @@ test_that("te_result is correctly specified", {
   expect_equal(res$obs$y, y)
   expect_equal(res$nobs, n)
 
-  # we have only one result for each te, ete, sete, pete
-  expect_true(expect_numeric_1(res$te_xy))
-  expect_true(expect_numeric_1(res$te_yx))
-  expect_true(expect_numeric_1(res$ete_xy))
-  expect_true(expect_numeric_1(res$ete_yx))
-  expect_true(expect_numeric_1(res$se_xy))
-  expect_true(expect_numeric_1(res$se_yx))
-  expect_true(expect_numeric_1(res$p_xy))
-  expect_true(expect_numeric_1(res$p_yx))
-})
+  # check the coefficients
+  coefs <- coefs(res)
+  expect_true(is.matrix(coefs))
+  expect_equal(dim(coefs), c(2, 4))
 
-context("Result Value")
-test_that("te_result have certain values for the seed 12345667", {
-  expect_equal(res$te_xy, 0.09413344)
-  expect_equal(res$te_yx, 0.02988138)
-  expect_equal(res$ete_xy, 0.07991739)
-  expect_equal(res$ete_yx, 0.0104142)
-  expect_equal(res$se_xy, 0.003887758)
-  expect_equal(res$se_yx, 0.002233663)
-  expect_equal(res$p_xy, 0)
-  expect_equal(res$p_yx, 1)
+  # check bootstrapped results
+  boot <- res$boot
+  expect_true(is.matrix(boot))
+  expect_equal(dim(boot), c(2, 10))
+
+  context("Result values")
+  exp_coefs <- matrix(c(0.0941334355990759, 0.0298813788644767,
+                        0.0808040232549858, 0.0136590056511369,
+                        0.00401946422132985, 0.00316381604679907,
+                        0, 0.7), nrow = 2, ncol = 4,
+                      dimnames = list(c("X->Y", "Y->X"),
+                                      c("te", "ete", "se", "p-value")))
+  expect_equal(coefs, exp_coefs)
 })
