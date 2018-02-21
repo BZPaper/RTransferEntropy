@@ -64,22 +64,25 @@ te_renyi <- function(x,
   # Bootstrap
   if (!quiet) cat("Bootstrap the transfer entropy\n")
 
-  seeds <- sample(.Machine$integer.max, nboot)
-
-  boot <- pbapply::pbsapply(seeds, function(seed) {
-    set.seed(seed)
-    bootstrap_renyi(x = x,
-                    lx = lx,
-                    y = y,
-                    ly = ly,
-                    q = q,
-                    burn = burn,
-                    shuffles = shuffles,
-                    constx = constx,
-                    consty = consty,
-                    nreps = nreps,
-                    cl = NULL)
-  }, cl = cl)
+  if (nboot > 0) {
+    seeds <- sample(.Machine$integer.max, nboot)
+    boot <- pbapply::pbsapply(seeds, function(seed) {
+      set.seed(seed)
+      bootstrap_renyi(x = x,
+                      lx = lx,
+                      y = y,
+                      ly = ly,
+                      q = q,
+                      burn = burn,
+                      shuffles = shuffles,
+                      constx = constx,
+                      consty = consty,
+                      nreps = nreps,
+                      cl = NULL)
+    }, cl = cl)
+  } else {
+    boot <- NA
+  }
 
   return(list(tex   = tex,
               tey   = tey,
