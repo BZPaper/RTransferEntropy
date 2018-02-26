@@ -4,7 +4,7 @@
 #' @param y a vector of values
 #' @param lx Markov order of x, defaults to 1
 #' @param ly Markov order of y, defaults to 1
-#' @param q weighting parameter in Renyi transfer entropy, defaults to 0.5
+#' @param q weighting parameter in Renyi transfer entropy, defaults to 0.1
 #' @param entropy the type of entropy calculation to use, either 'shannon'
 #'   or 'renyi', first character can be used as well, defaults to shannon.
 #' @param constx constant value substracted from transfer entropy measure x,
@@ -59,7 +59,7 @@ transfer_entropy <- function(x,
                              y,
                              lx = 1,
                              ly = 1,
-                             q = 0.5,
+                             q = 0.1,
                              entropy = "Shannon",
                              constx = NULL,
                              consty = NULL,

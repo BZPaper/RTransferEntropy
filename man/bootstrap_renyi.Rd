@@ -17,7 +17,7 @@ bootstrap_renyi(x, lx, y, ly, q, burn = 50, constx = 0, consty = 0,
 
 \item{ly}{Markov order of y, defaults to 1}
 
-\item{q}{weighting parameter in Renyi transfer entropy, defaults to 0.5}
+\item{q}{weighting parameter in Renyi transfer entropy, defaults to 0.1}
 
 \item{burn}{number of observations that are dropped from the beginning of
 the bootstrapped Markov chain}

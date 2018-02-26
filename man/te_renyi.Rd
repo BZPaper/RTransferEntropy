@@ -18,7 +18,7 @@ te_renyi(x, lx, y, ly, q, const = FALSE, constx = 0, consty = 0,
 
 \item{ly}{Markov order of y, defaults to 1}
 
-\item{q}{weighting parameter in Renyi transfer entropy, defaults to 0.5}
+\item{q}{weighting parameter in Renyi transfer entropy, defaults to 0.1}
 
 \item{constx}{constant value substracted from transfer entropy measure x,
 default to NULL (no const)}
