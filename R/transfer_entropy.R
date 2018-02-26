@@ -4,7 +4,8 @@
 #' @param y a vector of values
 #' @param lx Markov order of x, defaults to 1
 #' @param ly Markov order of y, defaults to 1
-#' @param q weighting parameter in Renyi transfer entropy, defaults to 0.1
+#' @param q weighting parameter in Renyi transfer entropy between 0 and 1.
+#' At \code{q = 1}, Renyi TE converges to Shannon TE. Value defaults to 0.1
 #' @param entropy the type of entropy calculation to use, either 'shannon'
 #'   or 'renyi', first character can be used as well, defaults to shannon.
 #' @param constx constant value substracted from transfer entropy measure x,
@@ -107,6 +108,16 @@ transfer_entropy <- function(x,
 
   if (!entropy %in% c("shannon", "renyi"))
     stop("entropy must be either 'shannon' or 'renyi'.")
+
+  # check that q has good values
+  if (entropy == "renyi") {
+    if (q < 0) {
+      stop("q must follow 0 < q < 1")
+    } else if (q >= 1) {
+      warning("As q-->1, Renyi TE converges to Shannon TE. Using Shannon TE now")
+      entropy <- "shannon"
+    }
+  }
 
   if (!quiet) cat(sprintf("Calculating %s's entropy ", fupper(entropy)))
 

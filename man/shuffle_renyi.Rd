@@ -18,7 +18,8 @@ shuffle_renyi(x, lx, y, ly, q, nreps = 2, shuffles = 6, diff = TRUE,
 
 \item{ly}{Markov order of y, defaults to 1}
 
-\item{q}{weighting parameter in Renyi transfer entropy, defaults to 0.1}
+\item{q}{weighting parameter in Renyi transfer entropy between 0 and 1.
+At \code{q = 1}, Renyi TE converges to Shannon TE. Value defaults to 0.1}
 
 \item{nreps}{number of replications for each shuffle}
 

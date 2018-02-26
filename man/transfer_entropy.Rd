@@ -19,7 +19,8 @@ transfer_entropy(x, y, lx = 1, ly = 1, q = 0.1, entropy = "Shannon",
 
 \item{ly}{Markov order of y, defaults to 1}
 
-\item{q}{weighting parameter in Renyi transfer entropy, defaults to 0.1}
+\item{q}{weighting parameter in Renyi transfer entropy between 0 and 1.
+At \code{q = 1}, Renyi TE converges to Shannon TE. Value defaults to 0.1}
 
 \item{entropy}{the type of entropy calculation to use, either 'shannon'
 or 'renyi', first character can be used as well, defaults to shannon.}
