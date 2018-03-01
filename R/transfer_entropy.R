@@ -119,6 +119,15 @@ transfer_entropy <- function(x,
     }
   }
 
+  # check quantiles
+  if (type == "quantiles" && (min(quantiles) < 0 || max(quantiles) > 100))
+    stop("Quantiles must be between 0 and 100")
+
+  if (type == "quantiles" && max(quantiles) <= 1) {
+    warning("Expected quantiles between 0 and 100 but found between 0 and 1, multiplying by 100.")
+    quantiles <- quantiles * 100
+  }
+
   if (!quiet) cat(sprintf("Calculating %s's entropy ", fupper(entropy)))
 
   # set-up the parallel stuff
