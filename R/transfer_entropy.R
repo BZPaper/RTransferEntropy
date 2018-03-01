@@ -196,8 +196,8 @@ transfer_entropy <- function(x,
     setexy <- sd(te$boot[2, ])
 
     pval <- function(x, est) length(x[x > est]) / length(x)
-    psteyx <- pval(te$boot[1, ], te$steyx)
-    pstexy <- pval(te$boot[2, ], te$stexy)
+    psteyx <- pval(te$boot[1, ], te$teyx)
+    pstexy <- pval(te$boot[2, ], te$texy)
   } else {
     seteyx <- NA
     setexy <- NA
