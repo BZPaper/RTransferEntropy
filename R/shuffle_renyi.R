@@ -1,15 +1,11 @@
-#' Function to calculate the effective transfer entropy, as given by the
-#' difference between the Renyi transfer entropy calculated from a sample and
-#' the respective shuffled transfer entropy.
-#'
-#' @inheritParams transfer_entropy
-#'
-#' @return returns a numeric scalar
-#' @keywords internal
-#' @export
-#'
-#' @examples
-#'
+# Function to calculate the effective transfer entropy, as given by the
+# difference between the Renyi transfer entropy calculated from a sample and
+# the respective shuffled transfer entropy.
+#
+# Same arguments as transfer_entropy.
+# Used internally by transfer_entropy.
+# @return returns a numeric scalar
+#
 shuffle_renyi <- function(x,
                           lx,
                           y,

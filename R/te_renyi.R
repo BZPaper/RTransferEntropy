@@ -1,13 +1,6 @@
-#' Function to implement Renyi transfer entropy.
-#'
-#' @inheritParams transfer_entropy
-#'
-#' @return returns a list
-#' @keywords internal
-#' @export
-#'
-#' @examples
-#'
+# Function to implement Renyi transfer entropy.
+# Same arguments as transfer_entropy.
+# Used internally by transfer_entropy.
 te_renyi <- function(x,
                      lx,
                      y,

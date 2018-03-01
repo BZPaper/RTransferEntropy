@@ -89,5 +89,5 @@ summary(te_result)
 is.TEResult(te_result)
 }
 \seealso{
-\code{\link{coefs}}, \code{\link{print.TEResult}}
+\code{\link{coef}}, \code{\link{print.TEResult}}
 }

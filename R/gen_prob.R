@@ -1,15 +1,9 @@
-#' Function generates state and transition probabilities for
-#' step-wise markov bootstrap.
-#'
-#' @param x a vector of coded values
-#' @param lx Markov order of x
-#'
-#' @return returns a list
-#' @export
-#' @keywords internal
-#'
-#' @examples
-#'
+# Function generates state and transition probabilities for
+# step-wise markov bootstrap.
+#
+# @param x a vector of coded values
+# @param lx Markov order of x
+#
 gen_prob <- function(x,
                      lx) {
 

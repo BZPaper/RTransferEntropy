@@ -1,13 +1,6 @@
-#' Function to implement Shannon transfer entropy.
-#'
-#' @inheritParams transfer_entropy
-#'
-#' @return returns a list
-#' @keywords internal
-#' @export
-#'
-#' @examples
-#'
+# Function to implement Shannon transfer entropy.
+# Same arguments as transfer_entropy.
+# Used internally by transfer_entropy.
 te_shannon <- function(x,
                        lx,
                        y,

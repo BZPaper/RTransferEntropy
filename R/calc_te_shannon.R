@@ -1,19 +1,12 @@
-#' Function that calculates the transfer entropy between two time series x and
-#' y. The information flow from y to x is measured. Change x and y in function
-#' call to infer the dominant direction of the information flow. Calculated
-#' transfer entropy measure is Shannon transfer entropy.
-#'
-#' @param x a vector of coded values
-#' @param y a vector of coded values
-#' @param lx Markov order of x
-#' @param ly Markov order of y
-#'
-#' @return returns a list
-#' @keywords internal
-#' @export
-#'
-#' @examples
-#'
+# Function that calculates the transfer entropy between two time series x and
+# y. The information flow from y to x is measured. Change x and y in function
+# call to infer the dominant direction of the information flow. Calculated
+# transfer entropy measure is Shannon transfer entropy.
+#
+# @param x a vector of coded values
+# @param y a vector of coded values
+# @param lx Markov order of x
+# @param ly Markov order of y
 calc_te_shannon <- function(x,
                             lx,
                             y,

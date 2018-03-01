@@ -1,14 +1,7 @@
-#' Function for bootstrapping R?nyi transfer entropy under H0 of independence
-#' between time series x and y.
-#'
-#' @inheritParams transfer_entropy
-#'
-#' @return returns a vector
-#' @keywords internal
-#' @export
-#'
-#' @examples
-#'
+# Function for bootstrapping Renyi transfer entropy under H0 of independence
+# between time series x and y.
+# Same arguments as transfer_entropy.
+# Used internally by transfer_entropy.
 bootstrap_renyi <- function(x,
                             lx,
                             y,

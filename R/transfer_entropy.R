@@ -33,7 +33,7 @@
 #'   effective transfer entropy measure, standard errores, p-values, etc.
 #' @export
 #'
-#' @seealso \code{\link{coefs}}, \code{\link{print.TEResult}}
+#' @seealso \code{\link{coef}}, \code{\link{print.TEResult}}
 #'
 #' @examples
 #' # construct two time-series

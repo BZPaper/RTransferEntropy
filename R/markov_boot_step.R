@@ -1,19 +1,13 @@
-#' Function for step-wise bootstraping the Markov chain.
-#'
-#' @param x a vector of coded values
-#' @param lx Markov order of x
-#' @param burn number of observations that are dropped from the beginning of
-#' the bootstrapped time series
-#'
-#' @return returns a vector of characters
-#' @export
-#' @keywords internal
-#'
-#' @examples
-#'
-markov_boot_step <- function (x,
-                              lx,
-                              burn = 50) {
+# Function for step-wise bootstraping the Markov chain.
+#
+# @param x a vector of coded values
+# @param lx Markov order of x
+# @param burn number of observations that are dropped from the beginning of
+# the bootstrapped time series
+#
+markov_boot_step <- function(x,
+                             lx,
+                             burn = 50) {
 
   n <- length(x) + burn
   bootlist <- list()
