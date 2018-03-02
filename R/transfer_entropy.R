@@ -131,9 +131,6 @@ transfer_entropy <- function(x,
   if (!quiet) cat(sprintf("Calculating %s's entropy ", fupper(entropy)))
 
   # set-up the parallel stuff
-  pbapply::pboptions(type = "timer")
-  if (quiet) pbapply::pboptions(type = "none")
-
   if (is.numeric(cl)) {
     if (cl == 1) {
       cl <- NULL
@@ -148,6 +145,13 @@ transfer_entropy <- function(x,
     if (!quiet) cat(sprintf("on %s cores ", length(cl)))
   } else  {
     stop("cl must be either a cluster (i.e., parallel::makeCluster()), or a numeric value")
+  }
+
+  # only if we have a cluster, set the pboptions
+  # otherwise we would interfere with potential pboptions that the user set
+  if (!is.null(cl)) {
+    pbapply::pboptions(type = "timer")
+    if (quiet) pbapply::pboptions(type = "none")
   }
 
   # remove missing-values
