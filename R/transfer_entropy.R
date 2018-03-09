@@ -53,7 +53,8 @@
 #' te_result <- transfer_entropy(x, y)
 #' te_result
 #'
-#' summary(te_result)
+#' te_result <- transfer_entropy(x, y, nboot = 0)
+#' te_result
 #'
 #' is.TEResult(te_result)
 transfer_entropy <- function(x,

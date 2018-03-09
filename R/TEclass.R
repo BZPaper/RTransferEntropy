@@ -32,7 +32,10 @@ print.TEResult <- function(x, digits = 4, boot = TRUE, ...) {
 
   # create the bootstrapped output:
   if (!is.matrix(x$boot) || !boot) {
-    boot_res <- NULL
+    boot_res <- c(
+      line,
+      "For calculation of standard errors and p-values set nboot > 0"
+    )
   } else {
     quants <- t(apply(x$boot, 1, function(b) quantile(b)))
     rownames(quants) <- c("X->Y", "Y->X")
