@@ -1,5 +1,34 @@
-#' Wrapper for the implementation of Shannon and Renyi transfer entropy.
+#' Calculates Shannon and Renyi transfer entropy between two time series.
 #'
+<<<<<<< HEAD
+#' @param x vector of values, ordered by time
+#' @param y vector of values, ordered by time
+#' @param lx Markov order of x, i.e. number of lagged values affecting the
+#'           current value; default is 1
+#' @param ly Markov order of y, i.e. number of lagged values affecting the
+#'           current value; default is 1
+#' @param q weighting parameter in Renyi transfer entropy between 0 and 1;
+#'          at \code{q = 1}, Renyi transfer entropy converges to Shannon
+#'          transfer entropy; default is 0.1
+#' @param entropy transfer entropy measure that is calculated, either 'Shannon'
+#'                or 'Renyi'; first character can be used as well;
+#'                default is Shannon
+#' @param constx constant value subtracted from transfer entropy measure Y->X;
+#'               default is NULL (no constant value is subtracted)
+#' @param consty constant value subtracted from transfer entropy measure X->Y;
+#'               default is NULL (no constant value is subtracted
+#' @param nreps number of replications for each shuffle; default is 2
+#' @param shuffles number of shuffles; default is 50
+#' @param cl numeric value (default is number of cores - 1),
+#'           or a cluster as created by \code{\link[parallel]{makeCluster}}
+#'           that can be used by \code{\link[pbapply]{pbapply}}
+#' @param type 'quantiles', 'bins' or 'limits' to discretize the data; default
+#'             is 'quantiles'
+#' @param quantiles quantiles of empirical distribution used for discretization
+#' @param bins number of bins with equal width used for discretization
+#' @param limits user determined limits on values used for discretization
+#' @param nboot number of bootstrap replications; default is 300
+=======
 #' @param x a vector of values
 #' @param y a vector of values
 #' @param lx Markov order of x, defaults to 1
@@ -24,13 +53,17 @@
 #' @param limits limits used for discretization
 #' @param boots number of bootstrap samples
 #' @param nboot number of bootstrap replications
+>>>>>>> 14b62da2826eb09e585c4b259967e8aef8a68a45
 #' @param burn number of observations that are dropped from the beginning of
-#' the bootstrapped Markov chain
+#'             the bootstrapped Markov chain; default is 50
 #' @param quiet if FALSE (default), the function gives feedback
-#' @param seed a seed that seeds the PRNG (will internally just call set.seed), defaults to NULL
+#' @param seed a seed that seeds the PRNG (will internally just call set.seed),
+#'             default is NULL
 #'
 #' @return an object of class TEResult, containing the entropy measure, the
-#'   effective transfer entropy measure, standard errores, p-values, etc.
+#'         effective transfer entropy measure, standard errors, p-values,
+#'         indication of statistical significance, quantiles of bootstrap
+#'         sample (if nboot > 0)
 #' @export
 #'
 #' @seealso \code{\link{coef}}, \code{\link{print.TEResult}}
@@ -66,13 +99,17 @@ transfer_entropy <- function(x,
                              constx = NULL,
                              consty = NULL,
                              nreps = 2,
+<<<<<<< HEAD
+                             shuffles = 50,
+=======
                              shuffles = 100,
+>>>>>>> 14b62da2826eb09e585c4b259967e8aef8a68a45
                              cl = parallel::detectCores() - 1,
                              type = "quantiles",
                              quantiles = c(5, 95),
                              bins = NULL,
                              limits = NULL,
-                             nboot = 10,
+                             nboot = 300,
                              burn = 50,
                              quiet = FALSE,
                              seed = NULL) {
@@ -80,15 +117,15 @@ transfer_entropy <- function(x,
   if (!is.null(seed)) set.seed(seed)
 
   t0 <- Sys.time()
-  # Check for unequal length of time series and treat missing values
+  # Check for unequal length of time series
   if (length(x) != length(y)) {
-    stop("x and y must have the same length.")
+    stop("x and y must be of same length.")
   }
 
-  # check that type is specified correctly
+  # Check that type is specified correctly
   type <- tolower(type)
   if (!type %in% c("quantiles", "bins", "limits", "q", "b", "l"))
-    stop("type must be either 'quantiles', 'bins', or 'limits'")
+    stop("type must be either 'quantiles', 'bins' or 'limits'.")
 
   if (nchar(type) == 1) {
     if (type == "q") {
@@ -100,27 +137,34 @@ transfer_entropy <- function(x,
     }
   }
 
-  # check that entropy is specified correctly
+  # Check/Restrict number of classes and Markov order/lags
+  if (length(quantiles) > 10 || length(bins) > 10 || length(limits) > 10)
+    stop("Number of classes should not exceed 10.")
+
+  if (lx > 10 || ly > 10)
+    stop("Markov order/number of lags should not exceed 10.")
+
+  # Check that transfer entropy measure is specified correctly
   entropy <- tolower(entropy)
-  # allow to specify the first character only as well
+  # Allow for specifying the first character only
   if (nchar(entropy) == 1 && entropy %in% c("s", "r")) {
     entropy <- if (entropy == "s") "shannon" else "renyi"
   }
 
   if (!entropy %in% c("shannon", "renyi"))
-    stop("entropy must be either 'shannon' or 'renyi'.")
+    stop("entropy must be either 'Shannon' or 'Renyi'.")
 
-  # check that q has good values
+  # Check that q is between 0 and 1
   if (entropy == "renyi") {
     if (q < 0) {
       stop("q must follow 0 < q < 1")
     } else if (q >= 1) {
-      warning("As q-->1, Renyi TE converges to Shannon TE. Using Shannon TE now")
+      warning("As q-->1, Renyi transfer entropy converges to Shannon transfer entropy. Shannon transfer entropy is calculated.")
       entropy <- "shannon"
     }
   }
 
-  # check quantiles
+  # Check quantiles
   if (type == "quantiles" && (min(quantiles) < 0 || max(quantiles) > 100))
     stop("Quantiles must be between 0 and 100")
 
@@ -131,7 +175,7 @@ transfer_entropy <- function(x,
 
   if (!quiet) cat(sprintf("Calculating %s's entropy ", fupper(entropy)))
 
-  # set-up the parallel stuff
+  # Set-up the parallelization of computations
   if (is.numeric(cl)) {
     if (cl == 1) {
       cl <- NULL
@@ -148,14 +192,14 @@ transfer_entropy <- function(x,
     stop("cl must be either a cluster (i.e., parallel::makeCluster()), or a numeric value")
   }
 
-  # only if we have a cluster, set the pboptions
-  # otherwise we would interfere with potential pboptions that the user set
+  # Only if a cluster is specified, set the pboptions
+  # Otherwise, interference with potential pboptions set by the user
   if (!is.null(cl)) {
     pbapply::pboptions(type = "timer")
     if (quiet) pbapply::pboptions(type = "none")
   }
 
-  # remove missing-values
+  # Remove missing values
   mis_values <- is.na(x) | is.na(y)
   x <- x[!mis_values]
   y <- y[!mis_values]
@@ -165,7 +209,7 @@ transfer_entropy <- function(x,
 
   if (length(x) == 0) return(NA)
 
-  # call either te_shannon or te_renyi
+  # Call either te_shannon or te_renyi
   if (entropy == "shannon") {
     te <- te_shannon(x = x,
                      lx = lx,

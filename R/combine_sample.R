@@ -1,14 +1,5 @@
-#' Function that combines the given time series.
-#'
-#' @param x a vector of coded values
-#' @param y a vector of coded values
-#'
-#' @return returns a list
-#' @keywords internal
-#' @export
-#'
-#' @examples
-#'
+# Used internally for the bootstrap of the Markov chain.
+#
 combine_sample <- function(x, y) {
 
   n <- length(x)

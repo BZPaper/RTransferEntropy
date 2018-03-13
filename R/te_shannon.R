@@ -1,6 +1,6 @@
 # Function to implement Shannon transfer entropy.
-# Same arguments as transfer_entropy.
-# Used internally by transfer_entropy.
+# Used internally by transfer_entropy; same arguments.
+#
 te_shannon <- function(x,
                        lx,
                        y,
@@ -25,7 +25,7 @@ te_shannon <- function(x,
 
   # Lead = y
   if (!quiet) cat("Calculate the X->Y transfer entropy\n")
-  texy <- calc_te_shannon(y, lx = ly, x, ly = lx)$transentropy
+  texy <- calc_te_shannon(y, lx = ly, x, ly = lx)
   consty <- shuffle_shannon(x = y,
                             lx = ly,
                             y = x,
@@ -38,7 +38,7 @@ te_shannon <- function(x,
 
   # Lead = x
   if (!quiet) cat("Calculate the Y->X transfer entropy\n")
-  teyx <- calc_te_shannon(x, lx = lx, y, ly = ly)$transentropy
+  teyx <- calc_te_shannon(x, lx = lx, y, ly = ly)
   constx <- shuffle_shannon(x = x,
                             lx = lx,
                             y = y,

@@ -1,30 +1,8 @@
-#' Codes the sample by assigning data to bins that are, for example, based on
-#' the quantiles of the empirical distribution of the sample.
-#'
-#' @param x a vector of numerical values
-#' @param type bins, limits or quantiles of empirical distribution to discretize
-#' the data
-#' @param quantiles quantiles to use for discretization
-#' @param bins the number of bins with equal width used for discretization
-#' @param limits limits used for discretization
-#' @param scale a scale parameter
-#'
-#' @return returns a numerical vector
-#' @keywords internal
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#'  set.seed(42)
-#'  x <- rnorm(100)
-#'  code_sample(x)
-#'
-#'  # or coming from a data.table framework:
-#'  library(data.table)
-#'  set.seed(42)
-#'  dt <- data.table(x = rnorm(100))
-#'  dt[, sample := code_sample(dt$x)]
-#' }
+# Codes the time series by discretizing the data, i.e. assigning values to bins
+# that are either based on the quantiles of the empirical distribution of the
+# given time series or are specified directly over a chosen number of bins or
+# predefined value-limits. Function used internally.
+#
 code_sample <- function(x,
                         type = "quantiles",
                         quantiles = c(5, 95),

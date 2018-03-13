@@ -1,6 +1,6 @@
 # Function to implement Renyi transfer entropy.
-# Same arguments as transfer_entropy.
-# Used internally by transfer_entropy.
+# Used internally by transfer_entropy; same arguments.
+#
 te_renyi <- function(x,
                      lx,
                      y,
@@ -26,7 +26,7 @@ te_renyi <- function(x,
 
   # Lead = y
   if (!quiet) cat("Calculate the X->Y transfer entropy\n")
-  texy <- calc_te_renyi(y, lx = ly, x, ly = lx, q)$transentropy
+  texy <- calc_te_renyi(y, lx = ly, x, ly = lx, q)
   consty <- shuffle_renyi(x = y,
                           lx = ly,
                           y = x,
@@ -40,7 +40,7 @@ te_renyi <- function(x,
 
   # Lead = x
   if (!quiet) cat("Calculate the Y->X transfer entropy\n")
-  teyx <- calc_te_renyi(x, lx = lx, y, ly = ly, q)$transentropy
+  teyx <- calc_te_renyi(x, lx = lx, y, ly = ly, q)
   constx <- shuffle_renyi(x = x,
                           lx = lx,
                           y = y,

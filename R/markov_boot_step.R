@@ -1,9 +1,5 @@
-# Function for step-wise bootstraping the Markov chain.
-#
-# @param x a vector of coded values
-# @param lx Markov order of x
-# @param burn number of observations that are dropped from the beginning of
-# the bootstrapped time series
+# Function used for sampling from the coded time series. New time series is
+# used for the H0 bootstrap. Used internally by transfer_entropy; same arguments.
 #
 markov_boot_step <- function(x,
                              lx,
@@ -18,7 +14,6 @@ markov_boot_step <- function(x,
   bootlist[[1]] <- fdraw
 
   # Draws
-
   for (i in 2:(lx + 1)) {
     probs <- gen_prob(x, lx = i - 1)
     tprob <- probs$transprob

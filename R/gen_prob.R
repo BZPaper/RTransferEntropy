@@ -1,18 +1,19 @@
-# Function generates state and transition probabilities for
-# step-wise markov bootstrap.
-#
-# @param x a vector of coded values
-# @param lx Markov order of x
+# Function calculates state and transition probabilities for step-wise
+# bootstrap of the Markov chain. Bootstrapping the Markov chain is only
+# relevant if statistical inference is required. State and transition
+# probabilities are calculated based on relative frequencies and transition
+# probabilities sum up to one. Function used internally.
 #
 gen_prob <- function(x,
                      lx) {
 
   n <- length(x)
 
-  # Calculate state probabilities
+  # Calculate state probabilities (relative frequencies of coded values)
   px <- table(x)/n
 
-  # Calculate transition probabilities
+  # Calculate transition probabilities (relative frequencies of blocks
+  # containing current and lagged values of coded time series)
   nclust <- n - lx
   clustlist <- list()
 

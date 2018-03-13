@@ -1,7 +1,7 @@
 # Function for bootstrapping Shannon transfer entropy under H0 of independence
-# between time series x and y.
-# Same arguments as transfer_entropy.
-# Used internally by transfer_entropy.
+# between time series x and y. Used internally by transfer_entropy; same
+# arguments.
+#
 bootstrap_shannon <- function(x,
                               lx,
                               y,
@@ -27,12 +27,12 @@ bootstrap_shannon <- function(x,
       dteyx <- calc_te_shannon(x = bootx,
                                lx = lx,
                                y = y,
-                               ly = ly)$transentropy - constx
+                               ly = ly) - constx
       # Lead = y
       dtexy <- calc_te_shannon(x = booty,
                                lx = ly,
                                y = x,
-                               ly = lx)$transentropy - consty
+                               ly = lx) - consty
     } else {
       constx <- shuffle_shannon(x = bootx,
                                 lx = lx,
@@ -56,24 +56,24 @@ bootstrap_shannon <- function(x,
       dteyx <- calc_te_shannon(x = bootx,
                                lx = lx,
                                y = y,
-                               ly = ly)$transentropy - constx
+                               ly = ly) - constx
       # Lead = y
       dtexy <- calc_te_shannon(x = booty,
                                lx = ly,
                                y = x,
-                               ly = lx)$transentropy - consty
+                               ly = lx) - consty
     }
   } else {
     # Lead = x
     dteyx <- calc_te_shannon(x = bootx,
                              lx = lx,
                              y = y,
-                             ly = ly)$transentropy
+                             ly = ly)
     # Lead = y
     dtexy <- calc_te_shannon(x = booty,
                              lx = ly,
                              y = x,
-                             ly = lx)$transentropy
+                             ly = lx)
   }
 
   teboot <- c(dteyx, dtexy)

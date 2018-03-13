@@ -1,12 +1,9 @@
 # Function that calculates the transfer entropy between two time series x and
 # y. The information flow from y to x is measured. Change x and y in function
 # call to infer the dominant direction of the information flow. Calculated
-# transfer entropy measure is Shannon transfer entropy.
+# transfer entropy measure is Shannon transfer entropy. Used internally by
+# transfer_entropy; same arguments.
 #
-# @param x a vector of coded values
-# @param y a vector of coded values
-# @param lx Markov order of x
-# @param ly Markov order of y
 calc_te_shannon <- function(x,
                             lx,
                             y,
@@ -28,7 +25,6 @@ calc_te_shannon <- function(x,
 
   # x(k)
   k <- cluster_gen(x, lx = lx, prog = FALSE)$frequency
-  nck <- length(k)
 
   # Transfer entropy
   #------------------------------
@@ -43,9 +39,7 @@ calc_te_shannon <- function(x,
     entropy[i] <- k1_j[i] * log2((k1_j[i] * p3) / (p2 * p1))
   }
 
-  return(list(transentropy = sum(entropy),
-              numclassk1_j = nck1_j,
-              numclassk1 = nck1,
-              numclassk_j = nck_j,
-              numclassk = nck))
+  shan_entropy <- sum(entropy)
+
+  return(shan_entropy)
 }
