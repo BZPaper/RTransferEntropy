@@ -1,6 +1,5 @@
 #' Calculates Shannon and Renyi transfer entropy between two time series.
 #'
-<<<<<<< HEAD
 #' @param x vector of values, ordered by time
 #' @param y vector of values, ordered by time
 #' @param lx Markov order of x, i.e. number of lagged values affecting the
@@ -28,32 +27,6 @@
 #' @param bins number of bins with equal width used for discretization
 #' @param limits user determined limits on values used for discretization
 #' @param nboot number of bootstrap replications; default is 300
-=======
-#' @param x a vector of values
-#' @param y a vector of values
-#' @param lx Markov order of x, defaults to 1
-#' @param ly Markov order of y, defaults to 1
-#' @param q weighting parameter in Renyi transfer entropy between 0 and 1.
-#' At \code{q = 1}, Renyi TE converges to Shannon TE. Value defaults to 0.1
-#' @param entropy the type of entropy calculation to use, either 'shannon'
-#'   or 'renyi', first character can be used as well, defaults to shannon.
-#' @param constx constant value substracted from transfer entropy measure x,
-#'   default to NULL (no const)
-#' @param consty constant value substracted from transfer entropy measure y,
-#'   default to NULL (no const)
-#' @param nreps number of replications for each shuffle
-#' @param shuffles number of shuffles, defaults to 100
-#' @param cl a numeric value (defaults to number of cores - 1),
-#'    or a cluster as created by \code{\link[parallel]{makeCluster}}
-#'    that can be used by \code{\link[pbapply]{pbapply}}
-#' @param type bins, limits or quantiles of empirical distribution to discretize
-#' the data
-#' @param quantiles quantiles to use for discretization
-#' @param bins the number of bins with equal width used for discretization
-#' @param limits limits used for discretization
-#' @param boots number of bootstrap samples
-#' @param nboot number of bootstrap replications
->>>>>>> 14b62da2826eb09e585c4b259967e8aef8a68a45
 #' @param burn number of observations that are dropped from the beginning of
 #'             the bootstrapped Markov chain; default is 50
 #' @param quiet if FALSE (default), the function gives feedback
@@ -99,11 +72,7 @@ transfer_entropy <- function(x,
                              constx = NULL,
                              consty = NULL,
                              nreps = 2,
-<<<<<<< HEAD
                              shuffles = 50,
-=======
-                             shuffles = 100,
->>>>>>> 14b62da2826eb09e585c4b259967e8aef8a68a45
                              cl = parallel::detectCores() - 1,
                              type = "quantiles",
                              quantiles = c(5, 95),
