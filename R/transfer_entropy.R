@@ -13,7 +13,7 @@
 #' @param consty constant value substracted from transfer entropy measure y,
 #'   default to NULL (no const)
 #' @param nreps number of replications for each shuffle
-#' @param shuffles number of shuffles
+#' @param shuffles number of shuffles, defaults to 100
 #' @param cl a numeric value (defaults to number of cores - 1),
 #'    or a cluster as created by \code{\link[parallel]{makeCluster}}
 #'    that can be used by \code{\link[pbapply]{pbapply}}
@@ -66,7 +66,7 @@ transfer_entropy <- function(x,
                              constx = NULL,
                              consty = NULL,
                              nreps = 2,
-                             shuffles = 6,
+                             shuffles = 100,
                              cl = parallel::detectCores() - 1,
                              type = "quantiles",
                              quantiles = c(5, 95),
