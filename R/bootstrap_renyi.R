@@ -31,7 +31,7 @@ bootstrap_renyi <- function(x,
                             ly = ly,
                             q = q)
 
-      dteyx <- x_te$transentropy - constx
+      dteyx <- x_te - constx
 
       # Lead = y
       y_te <- calc_te_renyi(x = booty,
@@ -40,7 +40,7 @@ bootstrap_renyi <- function(x,
                             ly = lx,
                             q = q)
 
-      dtexy <- y_te$transentropy - consty
+      dtexy <- y_te - consty
     } else {
       constx <- shuffle_renyi(x = bootx,
                               lx = lx,
@@ -69,7 +69,7 @@ bootstrap_renyi <- function(x,
                             ly = ly,
                             q = q)
 
-      dteyx <- x_te$transentropy - constx
+      dteyx <- x_te - constx
 
       # Lead = y
       y_te <- calc_te_renyi(x = booty,
@@ -78,7 +78,7 @@ bootstrap_renyi <- function(x,
                             ly = lx,
                             q = q)
 
-      dtexy <- y_te$transentropy - consty
+      dtexy <- y_te - consty
     }
   } else {
     # Lead = x
