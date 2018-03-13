@@ -2,9 +2,7 @@
 
 S3method(print,TEResult)
 S3method(summary,TEResult)
-export(code_sample)
 export(coef)
-export(combine_sample)
 export(is.TEResult)
 export(transfer_entropy)
 importFrom(Rcpp,sourceCpp)

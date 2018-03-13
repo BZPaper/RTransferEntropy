@@ -2,69 +2,74 @@
 % Please edit documentation in R/transfer_entropy.R
 \name{transfer_entropy}
 \alias{transfer_entropy}
-\title{Wrapper for the implementation of Shannon and Renyi transfer entropy.}
+\title{Calculates Shannon and Renyi transfer entropy between two time series.}
 \usage{
 transfer_entropy(x, y, lx = 1, ly = 1, q = 0.1, entropy = "Shannon",
-  constx = NULL, consty = NULL, nreps = 2, shuffles = 100,
+  constx = NULL, consty = NULL, nreps = 2, shuffles = 50,
   cl = parallel::detectCores() - 1, type = "quantiles", quantiles = c(5,
-  95), bins = NULL, limits = NULL, nboot = 10, burn = 50,
+  95), bins = NULL, limits = NULL, nboot = 300, burn = 50,
   quiet = FALSE, seed = NULL)
 }
 \arguments{
-\item{x}{a vector of values}
+\item{x}{vector of values, ordered by time}
 
-\item{y}{a vector of values}
+\item{y}{vector of values, ordered by time}
 
-\item{lx}{Markov order of x, defaults to 1}
+\item{lx}{Markov order of x, i.e. number of lagged values affecting the
+current value; default is 1}
 
-\item{ly}{Markov order of y, defaults to 1}
+\item{ly}{Markov order of y, i.e. number of lagged values affecting the
+current value; default is 1}
 
-\item{q}{weighting parameter in Renyi transfer entropy between 0 and 1.
-At \code{q = 1}, Renyi TE converges to Shannon TE. Value defaults to 0.1}
+\item{q}{weighting parameter in Renyi transfer entropy between 0 and 1;
+at \code{q = 1}, Renyi transfer entropy converges to Shannon
+transfer entropy; default is 0.1}
 
-\item{entropy}{the type of entropy calculation to use, either 'shannon'
-or 'renyi', first character can be used as well, defaults to shannon.}
+\item{entropy}{transfer entropy measure that is calculated, either 'Shannon'
+or 'Renyi'; first character can be used as well;
+default is Shannon}
 
-\item{constx}{constant value substracted from transfer entropy measure x,
-default to NULL (no const)}
+\item{constx}{constant value subtracted from transfer entropy measure Y->X;
+default is NULL (no constant value is subtracted)}
 
-\item{consty}{constant value substracted from transfer entropy measure y,
-default to NULL (no const)}
+\item{consty}{constant value subtracted from transfer entropy measure X->Y;
+default is NULL (no constant value is subtracted}
 
-\item{nreps}{number of replications for each shuffle}
+\item{nreps}{number of replications for each shuffle; default is 2}
 
-\item{shuffles}{number of shuffles, defaults to 100}
+\item{shuffles}{number of shuffles; default is 50}
 
-\item{cl}{a numeric value (defaults to number of cores - 1),
+\item{cl}{numeric value (default is number of cores - 1),
 or a cluster as created by \code{\link[parallel]{makeCluster}}
 that can be used by \code{\link[pbapply]{pbapply}}}
 
-\item{type}{bins, limits or quantiles of empirical distribution to discretize
-the data}
+\item{type}{'quantiles', 'bins' or 'limits' to discretize the data; default
+is 'quantiles'}
 
-\item{quantiles}{quantiles to use for discretization}
+\item{quantiles}{quantiles of empirical distribution used for discretization}
 
-\item{bins}{the number of bins with equal width used for discretization}
+\item{bins}{number of bins with equal width used for discretization}
 
-\item{limits}{limits used for discretization}
+\item{limits}{user determined limits on values used for discretization}
 
-\item{nboot}{number of bootstrap replications}
+\item{nboot}{number of bootstrap replications; default is 300}
 
 \item{burn}{number of observations that are dropped from the beginning of
-the bootstrapped Markov chain}
+the bootstrapped Markov chain; default is 50}
 
 \item{quiet}{if FALSE (default), the function gives feedback}
 
-\item{seed}{a seed that seeds the PRNG (will internally just call set.seed), defaults to NULL}
-
-\item{boots}{number of bootstrap samples}
+\item{seed}{a seed that seeds the PRNG (will internally just call set.seed),
+default is NULL}
 }
 \value{
 an object of class TEResult, containing the entropy measure, the
-  effective transfer entropy measure, standard errores, p-values, etc.
+        effective transfer entropy measure, standard errors, p-values,
+        indication of statistical significance, quantiles of bootstrap
+        sample (if nboot > 0)
 }
 \description{
-Wrapper for the implementation of Shannon and Renyi transfer entropy.
+Calculates Shannon and Renyi transfer entropy between two time series.
 }
 \examples{
 # construct two time-series
