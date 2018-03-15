@@ -8,10 +8,6 @@ bootstrap_renyi <- function(x,
                             ly,
                             q,
                             burn = 50,
-                            constx = 0,
-                            consty = 0,
-                            nreps = 2,
-                            shuffles = 6,
                             cl = NULL) {
 
   if (is.null(cl[[1]])) {
@@ -22,70 +18,19 @@ bootstrap_renyi <- function(x,
   bootx <- markov_boot_step(x, lx, burn)
   booty <- markov_boot_step(y, ly, burn)
 
-  if (shuffles > 1) {
-    if (is.null(constx) || is.null(consty)) {
-      # Lead = x
-      x_te <- calc_te_renyi(x = bootx,
-                            lx = lx,
-                            y = y,
-                            ly = ly,
-                            q = q)
+  # Lead = x
+  dteyx <- calc_te_renyi(x = bootx,
+                         lx = lx,
+                         y = y,
+                         ly = ly,
+                         q = q)
 
-      dteyx <- x_te - constx
-
-      # Lead = y
-      y_te <- calc_te_renyi(x = booty,
-                            lx = ly,
-                            y = x,
-                            ly = lx,
-                            q = q)
-
-      dtexy <- y_te - consty
-    } else {
-      constx <- shuffle_renyi(x = bootx,
-                              lx = lx,
-                              y = y,
-                              ly = ly,
-                              q = q,
-                              nreps = nreps,
-                              shuffles = shuffles,
-                              diff = TRUE,
-                              cl = cl)
-
-      consty <- shuffle_renyi(x = booty,
-                              lx = ly,
-                              y = x,
-                              ly = lx,
-                              q = q,
-                              nreps = nreps,
-                              shuffles = shuffles,
-                              diff = TRUE,
-                              cl = cl)
-
-      # Lead = x
-      x_te <- calc_te_renyi(x = bootx,
-                            lx = lx,
-                            y = y,
-                            ly = ly,
-                            q = q)
-
-      dteyx <- x_te - constx
-
-      # Lead = y
-      y_te <- calc_te_renyi(x = booty,
-                            lx = ly,
-                            y = x,
-                            ly = lx,
-                            q = q)
-
-      dtexy <- y_te - consty
-    }
-  } else {
-    # Lead = x
-    dteyx <- calc_te_renyi(x = bootx, lx = lx, y = y, ly = ly, q = q)
-    # Lead = y
-    dtexy <- calc_te_renyi(x = booty, lx = ly, y = x, ly = lx, q = q)
-  }
+  # Lead = y
+  dtexy <- calc_te_renyi(x = booty,
+                         lx = ly,
+                         y = x,
+                         ly = lx,
+                         q = q)
 
   teboot <- c(dteyx, dtexy)
   names(teboot) <- c("dteyx", "dtexy")

@@ -10,7 +10,6 @@ shuffle_renyi <- function(x,
                           q,
                           nreps = 2,
                           shuffles = 6,
-                          diff = TRUE,
                           cl = NULL) {
 
   seeds <- sample(.Machine$integer.max, shuffles)
@@ -27,11 +26,5 @@ shuffle_renyi <- function(x,
 
   ste <- mean(unlist(shuffle))
 
-  if (diff) {
-    te <- calc_te_renyi(x = x, y = y, lx = lx, ly = ly, q) - ste
-  } else {
-    te <- ste
-  }
-
-  return(te)
+  return(ste)
 }

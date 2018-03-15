@@ -5,10 +5,9 @@
 \title{Calculates Shannon and Renyi transfer entropy between two time series.}
 \usage{
 transfer_entropy(x, y, lx = 1, ly = 1, q = 0.1, entropy = "Shannon",
-  constx = NULL, consty = NULL, nreps = 2, shuffles = 50,
-  cl = parallel::detectCores() - 1, type = "quantiles", quantiles = c(5,
-  95), bins = NULL, limits = NULL, nboot = 300, burn = 50,
-  quiet = FALSE, seed = NULL)
+  nreps = 2, shuffles = 50, cl = parallel::detectCores() - 1,
+  type = "quantiles", quantiles = c(5, 95), bins = NULL, limits = NULL,
+  nboot = 300, burn = 50, quiet = FALSE, seed = NULL)
 }
 \arguments{
 \item{x}{vector of values, ordered by time}
@@ -28,12 +27,6 @@ transfer entropy; default is 0.1}
 \item{entropy}{transfer entropy measure that is calculated, either 'Shannon'
 or 'Renyi'; first character can be used as well;
 default is Shannon}
-
-\item{constx}{constant value subtracted from transfer entropy measure Y->X;
-default is NULL (no constant value is subtracted)}
-
-\item{consty}{constant value subtracted from transfer entropy measure X->Y;
-default is NULL (no constant value is subtracted}
 
 \item{nreps}{number of replications for each shuffle; default is 2}
 

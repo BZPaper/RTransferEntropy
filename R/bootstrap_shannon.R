@@ -7,10 +7,6 @@ bootstrap_shannon <- function(x,
                               y,
                               ly,
                               burn = 50,
-                              constx = NULL,
-                              consty = NULL,
-                              nreps = 2,
-                              shuffles = 6,
                               cl = NULL) {
 
   if (is.null(cl[[1]])) {
@@ -21,60 +17,17 @@ bootstrap_shannon <- function(x,
   bootx <- markov_boot_step(x, lx, burn)
   booty <- markov_boot_step(y, ly, burn)
 
-  if (shuffles > 1) {
-    if (is.null(constx) || is.null(consty)) {
-      # Lead = x
-      dteyx <- calc_te_shannon(x = bootx,
-                               lx = lx,
-                               y = y,
-                               ly = ly) - constx
-      # Lead = y
-      dtexy <- calc_te_shannon(x = booty,
-                               lx = ly,
-                               y = x,
-                               ly = lx) - consty
-    } else {
-      constx <- shuffle_shannon(x = bootx,
-                                lx = lx,
-                                y = y,
-                                ly = ly,
-                                nreps = nreps,
-                                shuffles = shuffles,
-                                diff = TRUE,
-                                cl = cl)
+  # Lead = x
+  dteyx <- calc_te_shannon(x = bootx,
+                           lx = lx,
+                           y = y,
+                           ly = ly)
 
-      consty <- shuffle_shannon(x = booty,
-                                lx = ly,
-                                y = x,
-                                ly = lx,
-                                nreps = nreps,
-                                shuffles = shuffles,
-                                diff = TRUE,
-                                cl = cl)
-
-      # Lead = x
-      dteyx <- calc_te_shannon(x = bootx,
-                               lx = lx,
-                               y = y,
-                               ly = ly) - constx
-      # Lead = y
-      dtexy <- calc_te_shannon(x = booty,
-                               lx = ly,
-                               y = x,
-                               ly = lx) - consty
-    }
-  } else {
-    # Lead = x
-    dteyx <- calc_te_shannon(x = bootx,
-                             lx = lx,
-                             y = y,
-                             ly = ly)
-    # Lead = y
-    dtexy <- calc_te_shannon(x = booty,
-                             lx = ly,
-                             y = x,
-                             ly = lx)
-  }
+  # Lead = y
+  dtexy <- calc_te_shannon(x = booty,
+                           lx = ly,
+                           y = x,
+                           ly = lx)
 
   teboot <- c(dteyx, dtexy)
   names(teboot) <- c("dteyx", "dtexy")
