@@ -5,9 +5,6 @@ te_shannon <- function(x,
                        lx,
                        y,
                        ly,
-                       const = FALSE,
-                       constx = 0,
-                       consty = 0,
                        nreps = 2,
                        shuffles = 6,
                        cl = NULL,
@@ -32,7 +29,6 @@ te_shannon <- function(x,
                             ly = lx,
                             nreps = nreps,
                             shuffles = shuffles,
-                            diff = FALSE,
                             cl = cl)
   stexy <- texy - consty
 
@@ -45,7 +41,6 @@ te_shannon <- function(x,
                             ly = ly,
                             nreps = nreps,
                             shuffles = shuffles,
-                            diff = FALSE,
                             cl = cl)
   steyx <- teyx - constx
 
@@ -60,10 +55,6 @@ te_shannon <- function(x,
                         y = y,
                         ly = ly,
                         burn = burn,
-                        constx = constx,
-                        consty = consty,
-                        nreps = nreps,
-                        shuffles = shuffles,
                         cl = NULL)
     }, cl = cl)
   } else {

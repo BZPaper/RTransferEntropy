@@ -12,10 +12,6 @@
 #' @param entropy transfer entropy measure that is calculated, either 'Shannon'
 #'                or 'Renyi'; first character can be used as well;
 #'                default is Shannon
-#' @param constx constant value subtracted from transfer entropy measure Y->X;
-#'               default is NULL (no constant value is subtracted)
-#' @param consty constant value subtracted from transfer entropy measure X->Y;
-#'               default is NULL (no constant value is subtracted
 #' @param nreps number of replications for each shuffle; default is 2
 #' @param shuffles number of shuffles; default is 50
 #' @param cl numeric value (default is number of cores - 1),
@@ -69,8 +65,6 @@ transfer_entropy <- function(x,
                              ly = 1,
                              q = 0.1,
                              entropy = "Shannon",
-                             constx = NULL,
-                             consty = NULL,
                              nreps = 2,
                              shuffles = 50,
                              cl = parallel::detectCores() - 1,
@@ -107,11 +101,11 @@ transfer_entropy <- function(x,
   }
 
   # Check/Restrict number of classes and Markov order/lags
-  if (length(quantiles) > 10 || length(bins) > 10 || length(limits) > 10)
-    stop("Number of classes should not exceed 10.")
+  if (length(quantiles) > 20 || length(bins) > 20 || length(limits) > 20)
+    stop("Number of classes should not exceed 20. Do not expect sensical results when using too many classes and/or lags.")
 
-  if (lx > 10 || ly > 10)
-    stop("Markov order/number of lags should not exceed 10.")
+  if (lx > 20 || ly > 20)
+    stop("Markov order/number of lags should not exceed 20. Do not expect sensical results when using too many classes and/or lags.")
 
   # Check that transfer entropy measure is specified correctly
   entropy <- tolower(entropy)
@@ -184,8 +178,6 @@ transfer_entropy <- function(x,
                      lx = lx,
                      y = y,
                      ly = ly,
-                     constx = constx,
-                     consty = consty,
                      nreps = nreps,
                      shuffles = shuffles,
                      cl = cl,
@@ -202,8 +194,6 @@ transfer_entropy <- function(x,
                    y = y,
                    ly = ly,
                    q = q,
-                   constx = constx,
-                   consty = consty,
                    nreps = nreps,
                    shuffles = shuffles,
                    cl = cl,

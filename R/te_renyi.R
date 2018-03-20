@@ -6,9 +6,6 @@ te_renyi <- function(x,
                      y,
                      ly,
                      q,
-                     const = FALSE,
-                     constx = 0,
-                     consty = 0,
                      nreps = 2,
                      shuffles = 6,
                      cl = NULL,
@@ -34,7 +31,6 @@ te_renyi <- function(x,
                           q = q,
                           nreps = nreps,
                           shuffles = shuffles,
-                          diff = FALSE,
                           cl = cl)
   stexy <- texy - consty
 
@@ -48,7 +44,6 @@ te_renyi <- function(x,
                           q = q,
                           nreps = nreps,
                           shuffles = shuffles,
-                          diff = FALSE,
                           cl = cl)
   steyx <- teyx - constx
 
@@ -66,10 +61,6 @@ te_renyi <- function(x,
                       ly = ly,
                       q = q,
                       burn = burn,
-                      shuffles = shuffles,
-                      constx = constx,
-                      consty = consty,
-                      nreps = nreps,
                       cl = NULL)
     }, cl = cl)
   } else {
