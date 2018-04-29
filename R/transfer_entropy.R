@@ -107,6 +107,9 @@ transfer_entropy <- function(x,
   if (lx > 20 || ly > 20)
     stop("Markov order/number of lags should not exceed 20. Do not expect sensical results when using too many classes and/or lags.")
 
+  if (lx != ly)
+    warning("Markov order/number of lags should be identical for both time series to facilitate interpretation of results. Consider setting lx = ly.")
+
   # Check that transfer entropy measure is specified correctly
   entropy <- tolower(entropy)
   # Allow for specifying the first character only
@@ -135,6 +138,10 @@ transfer_entropy <- function(x,
     warning("Expected quantiles between 0 and 100 but found between 0 and 1, multiplying by 100.")
     quantiles <- quantiles * 100
   }
+
+  # Check number of bootstrap replications
+  if (nboot < 100)
+    warning("Number of bootstrap replications is below 100. Use a higher number of bootstrap replications, you are relying on asymptotic arguments here.")
 
   if (!quiet) cat(sprintf("Calculating %s's entropy ", fupper(entropy)))
 
