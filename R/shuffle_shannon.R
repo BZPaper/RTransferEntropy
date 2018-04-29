@@ -7,8 +7,7 @@ shuffle_shannon <- function(x,
                             lx,
                             y,
                             ly,
-                            nreps = 2,
-                            shuffles = 6,
+                            shuffles,
                             cl = NULL) {
 
   seeds <- sample(.Machine$integer.max, shuffles)
@@ -16,10 +15,8 @@ shuffle_shannon <- function(x,
 
   shuffle <- pbapply::pblapply(seeds, function(seed) {
     set.seed(seed)
-    res <- replicate(nreps,
-                     calc_te_shannon(x = x,
-                                     y = sample(y, n, replace = TRUE),
-                                     lx = lx, ly = ly))
+    res <- calc_te_shannon(x = x, y = sample(y, n, replace = TRUE),
+                           lx = lx, ly = ly)
     return(res)
   }, cl = cl)
 

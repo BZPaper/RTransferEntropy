@@ -12,8 +12,7 @@
 #' @param entropy transfer entropy measure that is calculated, either 'Shannon'
 #'                or 'Renyi'; first character can be used as well;
 #'                default is Shannon
-#' @param nreps number of replications for each shuffle; default is 2
-#' @param shuffles number of shuffles; default is 50
+#' @param shuffles number of shuffles; default is 100
 #' @param cl numeric value (default is number of cores - 1),
 #'           or a cluster as created by \code{\link[parallel]{makeCluster}}
 #'           that can be used by \code{\link[pbapply]{pbapply}}
@@ -65,8 +64,7 @@ transfer_entropy <- function(x,
                              ly = 1,
                              q = 0.1,
                              entropy = "Shannon",
-                             nreps = 2,
-                             shuffles = 50,
+                             shuffles = 100,
                              cl = parallel::detectCores() - 1,
                              type = "quantiles",
                              quantiles = c(5, 95),
@@ -185,7 +183,6 @@ transfer_entropy <- function(x,
                      lx = lx,
                      y = y,
                      ly = ly,
-                     nreps = nreps,
                      shuffles = shuffles,
                      cl = cl,
                      type = type,
@@ -201,7 +198,6 @@ transfer_entropy <- function(x,
                    y = y,
                    ly = ly,
                    q = q,
-                   nreps = nreps,
                    shuffles = shuffles,
                    cl = cl,
                    type = type,

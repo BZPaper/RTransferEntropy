@@ -5,16 +5,15 @@ te_shannon <- function(x,
                        lx,
                        y,
                        ly,
-                       nreps = 2,
-                       shuffles = 6,
-                       cl = NULL,
-                       type = "quantiles",
-                       quantiles = c(5, 95),
-                       bins = NULL,
-                       limits = NULL,
+                       shuffles,
+                       cl,
+                       type,
+                       quantiles,
+                       bins,
+                       limits,
                        nboot,
-                       burn = 50,
-                       quiet = FALSE) {
+                       burn,
+                       quiet) {
 
   # Code time series
   x <- code_sample(x, type, quantiles, bins, limits)
@@ -27,7 +26,6 @@ te_shannon <- function(x,
                             lx = ly,
                             y = x,
                             ly = lx,
-                            nreps = nreps,
                             shuffles = shuffles,
                             cl = cl)
   stexy <- texy - consty
@@ -39,7 +37,6 @@ te_shannon <- function(x,
                             lx = lx,
                             y = y,
                             ly = ly,
-                            nreps = nreps,
                             shuffles = shuffles,
                             cl = cl)
   steyx <- teyx - constx

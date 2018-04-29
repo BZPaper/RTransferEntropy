@@ -8,8 +8,7 @@ shuffle_renyi <- function(x,
                           y,
                           ly,
                           q,
-                          nreps = 2,
-                          shuffles = 6,
+                          shuffles,
                           cl = NULL) {
 
   seeds <- sample(.Machine$integer.max, shuffles)
@@ -17,10 +16,8 @@ shuffle_renyi <- function(x,
 
   shuffle <- pbapply::pblapply(seeds, function(seed) {
     set.seed(seed)
-    res <- replicate(nreps,
-                     calc_te_renyi(x = x,
-                                   y = sample(y, n, replace = TRUE),
-                                   lx = lx, ly = ly, q = q))
+    res <- calc_te_renyi(x = x, y = sample(y, n, replace = TRUE),
+                         lx = lx, ly = ly, q = q)
     return(res)
   }, cl = cl)
 
