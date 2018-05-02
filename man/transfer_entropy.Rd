@@ -5,9 +5,9 @@
 \title{Calculates Shannon and Renyi transfer entropy between two time series.}
 \usage{
 transfer_entropy(x, y, lx = 1, ly = 1, q = 0.1, entropy = "Shannon",
-  nreps = 2, shuffles = 50, cl = parallel::detectCores() - 1,
-  type = "quantiles", quantiles = c(5, 95), bins = NULL, limits = NULL,
-  nboot = 300, burn = 50, quiet = FALSE, seed = NULL)
+  shuffles = 100, cl = parallel::detectCores() - 1, type = "quantiles",
+  quantiles = c(5, 95), bins = NULL, limits = NULL, nboot = 300,
+  burn = 50, quiet = FALSE, seed = NULL)
 }
 \arguments{
 \item{x}{vector of values, ordered by time}
@@ -28,9 +28,7 @@ transfer entropy; default is 0.1}
 or 'Renyi'; first character can be used as well;
 default is Shannon}
 
-\item{nreps}{number of replications for each shuffle; default is 2}
-
-\item{shuffles}{number of shuffles; default is 50}
+\item{shuffles}{number of shuffles; default is 100}
 
 \item{cl}{numeric value (default is number of cores - 1),
 or a cluster as created by \code{\link[parallel]{makeCluster}}
