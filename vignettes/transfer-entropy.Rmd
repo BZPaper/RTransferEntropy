@@ -12,7 +12,9 @@ vignette: >
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
 )
 ```
 
@@ -21,6 +23,7 @@ Vignettes are long form documentation commonly included in packages. Because the
 - Never uses retina figures
 - Has a smaller default figure size
 - Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+Some Examples:
 
 ## Vignette Info
 
@@ -35,6 +38,10 @@ The `html_vignette` template includes a basic CSS theme. To override this theme 
         css: mystyles.css
 
 ## Figures
+We define the `mean_`-function as  (note the `eval=F` in the code: This code will not be run (the function in this case will not be sourced)! It will be displayed only!)
+```{r part1, eval=F}
+mean_ <- function(x) sum(x) / length(x)
+```
 
 The figure sizes have been customised so that you can easily put two images side-by-side. 
 
@@ -63,3 +70,44 @@ Also a quote using `>`:
 
 > "He who gives up [code] safety for [code] speed deserves neither."
 ([via](https://twitter.com/hadleywickham/status/504368538874703872))
+
+
+
+# Some David Stuff
+
+
+Some Examples:
+
+We define the `mean_`-function as  (note the `eval=F` in the code: This code will not be run (the function in this case will not be sourced)! It will be displayed only!)
+```{r part1, eval=F}
+mean_ <- function(x) sum(x) / length(x)
+```
+
+If we want to output something and show the code, we can leave the options empty
+
+```{r part2}
+x <- rnorm(10)
+summary(x)
+```
+
+If we only want to show some output but do not want to show the code, we can use the `echo=F` option
+
+```{r part3, echo=F}
+plot(1:1000, rnorm(1000, sd = 0.01), type = "l", xlab = "Time", ylab = "Return")
+```
+
+
+# Equations
+
+To write an equation:
+
+\begin{equation}
+  x = \sqrt{y + 1}
+\end{equation}
+
+or like this 
+
+$$
+  x = \sqrt{y + 1}
+$$
+
