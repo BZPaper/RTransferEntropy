@@ -1,37 +1,51 @@
-#' Calculates Shannon and Renyi transfer entropy between two time series.
+#' Function to estimate Shannon and Renyi transfer entropy between two time
+#' series x and y.
 #'
-#' @param x vector of values, ordered by time
-#' @param y vector of values, ordered by time
-#' @param lx Markov order of x, i.e. number of lagged values affecting the
-#'           current value; default is 1
-#' @param ly Markov order of y, i.e. number of lagged values affecting the
-#'           current value; default is 1
-#' @param q weighting parameter in Renyi transfer entropy between 0 and 1;
-#'          at \code{q = 1}, Renyi transfer entropy converges to Shannon
-#'          transfer entropy; default is 0.1
-#' @param entropy transfer entropy measure that is calculated, either 'Shannon'
-#'                or 'Renyi'; first character can be used as well;
-#'                default is Shannon
-#' @param shuffles number of shuffles; default is 100
-#' @param cl numeric value (default is number of cores - 1),
+#' @param x a vector of numeric values, ordered by time.
+#' @param y a vector of numeric values, ordered by time.
+#' @param lx Markov order of x, i.e. the number of lagged values affecting the
+#'           current value of x. Default is \code{lx = 1}.
+#' @param ly Markov order of y, i.e. the number of lagged values affecting the
+#'           current value of y. Default is \code{ly = 1}.
+#' @param q a weighting parameter used to estimate Renyi transfer entropy,
+#'          parameter is between 0 and 1. For \code{q = 1}, Renyi transfer
+#'          entropy converges to Shannon transfer entropy. Default is
+#'          \code{q = 0.1}.
+#' @param entropy specifies the transfer entropy measure that is estimated,
+#'                either 'Shannon' or 'Renyi'. The first character can be used
+#'                to specify the type of transfer entropy as well. Default is
+#'                \code{entropy = 'Shannon'}.
+#' @param shuffles the number of shuffles used to calculate the effective
+#'                 transfer entropy. Default is \code{shuffles = 100}.
+#' @param cl a numeric value (default is number of cores - 1),
 #'           or a cluster as created by \code{\link[parallel]{makeCluster}}
-#'           that can be used by \code{\link[pbapply]{pbapply}}
-#' @param type 'quantiles', 'bins' or 'limits' to discretize the data; default
-#'             is 'quantiles'
-#' @param quantiles quantiles of empirical distribution used for discretization
-#' @param bins number of bins with equal width used for discretization
-#' @param limits user determined limits on values used for discretization
-#' @param nboot number of bootstrap replications; default is 300
-#' @param burn number of observations that are dropped from the beginning of
-#'             the bootstrapped Markov chain; default is 50
-#' @param quiet if FALSE (default), the function gives feedback
+#'           that can be used by \code{\link[pbapply]{pbapply}}. Specifies the
+#'           number of cores computations are to distributed over.
+#' @param type specifies the type of discretization applied to the observed time
+#'             series:'quantiles', 'bins' or 'limits'. Default is
+#'             \code{type = 'quantiles'}.
+#' @param quantiles specifies the quantiles of the empirical distribution of the
+#'                  respective time series used for discretization.
+#'                  Default is \code{quantiles = c(5,95)}.
+#' @param bins specifies the number of bins with equal width used for
+#'             discretization. Default is \code{bins = NULL}.
+#' @param limits specifies the limits on values used for discretization.
+#'               Default is \code{limits = NULL}.
+#' @param nboot the number of bootstrap replications for each direction of
+#'              the estimated transfer entropy. Default is \code{nboot = 300}.
+#' @param burn the number of observations that are dropped from the beginning of
+#'             the bootstrapped Markov chain. Default is \code{burn = 50}.
+#' @param quiet if FALSE (default), the function gives feedback.
 #' @param seed a seed that seeds the PRNG (will internally just call set.seed),
-#'             default is NULL
+#'             default is \code{seed = NULL}.
 #'
-#' @return an object of class TEResult, containing the entropy measure, the
-#'         effective transfer entropy measure, standard errors, p-values,
-#'         indication of statistical significance, quantiles of bootstrap
-#'         sample (if nboot > 0)
+#' @return an object of class TEResult, containing the transfer entropy
+#'         estimates in both directions, the effective transfer entropy
+#'         estimates in both directions, standard errors and p-values based on
+#'         bootstrap replications of the Markov chains under the null hypothesis
+#'         of statistical independence, an indication of statistical
+#'         significance, and quantiles of the bootstrap samples
+#'         (if \code{nboot > 0}).
 #' @export
 #'
 #' @seealso \code{\link{coef}}, \code{\link{print.TEResult}}
