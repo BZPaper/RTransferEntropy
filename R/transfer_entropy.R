@@ -152,7 +152,7 @@ transfer_entropy <- function(x,
   }
 
   # Check number of bootstrap replications
-  if (nboot < 100)
+  if (nboot > 0 && nboot < 100)
     warning("Number of bootstrap replications is below 100. Use a higher number of bootstrap replications, you are relying on asymptotic arguments here.")
 
   if (!quiet) cat(sprintf("Calculating %s's entropy ", fupper(entropy)))

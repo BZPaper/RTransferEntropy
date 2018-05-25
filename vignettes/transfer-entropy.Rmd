@@ -12,6 +12,7 @@ vignette: >
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
+  cache = TRUE,
   comment = "#>",
   fig.width = 7,
   fig.height = 5
@@ -291,6 +292,37 @@ print(ete)
 As can be seen, the value is indeed approaching `r format(round(shannon_te3$coef[1,1],4), nsmall=4)` as $q\rightarrow 1$.
 
 ## Application to financial time series
+
+## Speed considerations
+If the `transfer_entropy` function is called repeatedly, it makes sense to save the time it takes R to create and stop the cluster in each function-call. We have therefore provided the option to directly specify the cluster using the `cl`-argument.
+
+For example
+```{r, eval = F}
+transfer_entropy(x1, y1, cl = parallel::detectCores())
+transfer_entropy(x2, y2, cl = parallel::detectCores())
+transfer_entropy(x3, y3, cl = parallel::detectCores())
+transfer_entropy(x4, y4, cl = parallel::detectCores())
+...
+```
+
+can be simplified to the following, which will reduce the computing time.
+```{r, eval = F}
+# initialise the cluster
+cl <- parallel::makeCluster(parallel::detectCores())
+# stop the cluster automatically after execution
+on.exit(parallel::stopCluster(cl), add = T)
+
+transfer_entropy(x1, y1, cl = cl)
+transfer_entropy(x2, y2, cl = cl)
+transfer_entropy(x3, y3, cl = cl)
+transfer_entropy(x4, y4, cl = cl)
+...
+```
+
+Turning the function to `quiet = TRUE` might further help to reduce time when the function is called repeatedly.
+
+
+
 
 ## Comparison with existing package
 
