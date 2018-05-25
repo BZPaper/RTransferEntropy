@@ -1,6 +1,6 @@
 ---
 title: "RTransferEntropy"
-author: "Simon Behrendt, Thomas Dimpfl, Fanzsika J. Peter, David J. Zimmermann"
+author: "Simon Behrendt, Thomas Dimpfl, Franziska J. Peter, David J. Zimmermann"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 
 The measurement of  information transfer between different time series is the basis of research questions in various research areas, including  biometrics, economics, ecological modelling, neuroscience, sociology, and thermodynamics. The quantification of information transfer commonly relies on measures that have been derived from the subject-specific assumptions and restrictions concerning the underlying stochastic processes or theoretical models. With the development of transfer entropy, information theory based measures have become a popular alternative to quantify information flows within various disciplines. Transfer entropy is a non-parametric measure of directed, time-asymmetric information transfer between two processes.
 
-We show how to test for and quantify the information flow between two time series with Shannon transfer entropy and Rényi transfer entropy using the package `RTransferEntropy`. Let us first have a brief look on the methodology, the bias correction applied to calculate effective transfer entropy and describe our approach to statistical inference. Afterwards, we introduce the package in detail and demonstrate its functionality in several applications to simulated processes as well as an application to financial time series.
+We show how to test for and quantify the information flow between two time series with Shannon transfer entropy and R\'{e}nyi transfer entropy using the package `RTransferEntropy`. Let us first have a brief look on the methodology, the bias correction applied to calculate effective transfer entropy and describe our approach to statistical inference. Afterwards, we introduce the package in detail and demonstrate its functionality in several applications to simulated processes as well as an application to financial time series.
 
 ## Measuring information flows using transfer entropy
 
@@ -41,28 +41,28 @@ where $i^{(k)}_t=(i_t,...,i_{t-k+1})$ (analogously for process $J$). In the biva
 $$
   T_{J \rightarrow I}(k,l) = \sum_{i,j} p\left(i_{t+1}, i_t^{(k)}, j_t^{(l)}\right) \times log \left(\frac{p\left(i_{t+1}| i_t^{(k)}, j_t^{(l)}\right)}{p\left(i_{t+1}|i_t^{(k)}\right)}\right),
 $$
-where $T_{J\rightarrow I}$ consequently measures the information flow from $J$ to $I$ ( $T_{I \rightarrow J}$ as a measure for the information flow from $I$ to $J$ can be derived analogously). Transfer entropy can also be based on Rényi entropy rather than Shannon entropy, which depends on a weighting parameter $q$ and can be calculated as
+where $T_{J\rightarrow I}$ consequently measures the information flow from $J$ to $I$ ( $T_{I \rightarrow J}$ as a measure for the information flow from $I$ to $J$ can be derived analogously). Transfer entropy can also be based on R\'{e}nyi entropy rather than Shannon entropy, which depends on a weighting parameter $q$ and can be calculated as
 
 $$
   H^q_J = \frac{1}{1-q} log \left(\sum_j p^q(j)\right), 
 $$
-with  $q >0$. For $q\rightarrow 1$ Rényi entropy converges to Shannon entropy. For $0<q<1$  tail events receive more weight, while for $q>1$ the weights on center observations dominate. Consequently, Rényi entropy provides a more flexible tool for estimating uncertainty, since different areas of a distribution can be emphasized, depending on the parameter $q$. Using the escort distribution $\phi_q(j)=\frac{p^q(j)}{\sum_j p^q(j))}$ with $q >0$ to normalize the weighted distributions, the R?nyi transfer entropy measure is given by
+with  $q >0$. For $q\rightarrow 1$ R\'{e}nyi entropy converges to Shannon entropy. For $0<q<1$  tail events receive more weight, while for $q>1$ the weights on center observations dominate. Consequently, R\'{e}nyi entropy provides a more flexible tool for estimating uncertainty, since different areas of a distribution can be emphasized, depending on the parameter $q$. Using the escort distribution $\phi_q(j)=\frac{p^q(j)}{\sum_j p^q(j))}$ with $q >0$ to normalize the weighted distributions, the R\'{e}nyi transfer entropy measure is given by
 
 $$
   RT_{J \rightarrow I}(k,l) = \frac{1}{1-q} log \left(\frac{\sum_i \phi_q\left(i_t^{(k)}\right)p^q\left(i_{t+1}|i^{(k)}_t\right)}{\sum_{i,j} \phi_q\left(i^{(k)}_t,j^{(l)}_t\right)p^q\left(i_{t+1}|i^{(k)},j^{(l)}_t \right)}\right).
 $$
-Analogously to (Shannon) transfer entropy Rényi entropy  measures the information flow from $J$ to $I$.
+Analogously to (Shannon) transfer entropy R\'{e}nyi entropy  measures the information flow from $J$ to $I$.
 
 These transfer entropy estimates  are commonly biased due to small sample effects. A remedy is provided by the effective transfer entropy, which is computed in the following way 
 
 $$
   ET_{J \rightarrow I}(k,l):=  T_{J \rightarrow I}(k,l)- T_{J_{\text{shuffled}} \rightarrow I}(k,l),
 $$
-where $T_{J_{\text{shuffled}} \rightarrow I}(k,l)$ indicates the transfer entropy using a shuffled  version of the time series of $J$. Shuffling implies randomly drawing values from the time series of $J$ and realigning them to generate a new time series. This procedure destroys the time series dependencies of $J$ as well as the statistical dependencies between $J$ and $I$. As a result $T_{J_{\text{shuffled}} \rightarrow I}(k,l)$ converges to zero with increasing sample size and any nonzero value of $T_{J_{\text{shuffled}} \rightarrow I}(k,l)$ is due to small sample effects. The transfer entropy estimates from shuffled data can therefore be used as an estimator for the bias induced by these small sample effects. To derive a consistent estimator, shuffling is repeated many times and the average of the resulting shuffled transfer entropy estimates across all replications is subtracted from the Shannon or Rényi transfer entropy estimate to obtain a bias corrected effective transfer entropy estimate.
+where $T_{J_{\text{shuffled}} \rightarrow I}(k,l)$ indicates the transfer entropy using a shuffled  version of the time series of $J$. Shuffling implies randomly drawing values from the time series of $J$ and realigning them to generate a new time series. This procedure destroys the time series dependencies of $J$ as well as the statistical dependencies between $J$ and $I$. As a result $T_{J_{\text{shuffled}} \rightarrow I}(k,l)$ converges to zero with increasing sample size and any nonzero value of $T_{J_{\text{shuffled}} \rightarrow I}(k,l)$ is due to small sample effects. The transfer entropy estimates from shuffled data can therefore be used as an estimator for the bias induced by these small sample effects. To derive a consistent estimator, shuffling is repeated many times and the average of the resulting shuffled transfer entropy estimates across all replications is subtracted from the Shannon or R\'{e}nyi transfer entropy estimate to obtain a bias corrected effective transfer entropy estimate.
 
-In order to assess the statistical significance of transfer entropy estimates, we rely on  a Markov block bootstrap. In contrast to shuffling, the Markov block bootstrap retains the dependencies within each series. Thereby, it generates the distribution of transfer entropy estimates under the null hypothesis of no information transfer, i.e. randomly drawn blocks of process $J$ are realigned to form a simulated series, which retains the univariate dependencies of $J$ but eliminates the statistical dependencies between $J$ and $I$. Shannon or Rényi transfer entropy is then estimated based on the simulated time series. Repeating this procedure yields the distribution of the transfer entropy estimate under the null of no information flow. The p-value associated with the null hypothesis of no information transfer is given by $1-\hat{q}_{TE}$, where $\hat{q}_{TE}$ denotes the quantile of the simulated distribution that corresponds to the original transfer entropy estimate.
+In order to assess the statistical significance of transfer entropy estimates, we rely on  a Markov block bootstrap. In contrast to shuffling, the Markov block bootstrap retains the dependencies within each series. Thereby, it generates the distribution of transfer entropy estimates under the null hypothesis of no information transfer, i.e. randomly drawn blocks of process $J$ are realigned to form a simulated series, which retains the univariate dependencies of $J$ but eliminates the statistical dependencies between $J$ and $I$. Shannon or R\'{e}nyi transfer entropy is then estimated based on the simulated time series. Repeating this procedure yields the distribution of the transfer entropy estimate under the null of no information flow. The p-value associated with the null hypothesis of no information transfer is given by $1-\hat{q}_{TE}$, where $\hat{q}_{TE}$ denotes the quantile of the simulated distribution that corresponds to the original transfer entropy estimate.
 
-The calculation of Shannon and Rényi transfer entropy is based on discrete data. If the data does not exhibit a discrete structure that allows for transfer entropy estimation, it has to be discretized. This can be achieved by symbolic recoding, i.e. by partitioning the data into a finite number of bins, which can be based by either defining upper and lower bounds for the bins a priori or by choosing specific quantiles of the empirical distribution of the data. Denote the bounds specified for the $n$ bins by $q_1, q_2, ..., q_n$, where $q_1< q_2< ... <q_n$, and consider a time series  denoted by $y_t$,  the data is recoded as
+The calculation of Shannon and R\'{e}nyi transfer entropy is based on discrete data. If the data does not exhibit a discrete structure that allows for transfer entropy estimation, it has to be discretized. This can be achieved by symbolic recoding, i.e. by partitioning the data into a finite number of bins, which can be based by either defining upper and lower bounds for the bins a priori or by choosing specific quantiles of the empirical distribution of the data. Denote the bounds specified for the $n$ bins by $q_1, q_2, ..., q_n$, where $q_1< q_2< ... <q_n$, and consider a time series  denoted by $y_t$,  the data is recoded as
 
 $$
   S_t=
@@ -78,7 +78,7 @@ Thereby, each value in the observed time series $y_t$ is replaced by an integer 
 
 ## The `RTransferEntropy` package
 
-Testing for and quantifying the information flow between two time series with Shannon and Rényi transfer entropy, as outlined above, can now easily be implemented with the package `RTransferEntropy`. The package is installed and loaded in the usual way.
+Testing for and quantifying the information flow between two time series with Shannon and R\'{e}nyi transfer entropy, as outlined above, can now easily be implemented with the package `RTransferEntropy`. The package is installed and loaded in the usual way.
 
 ```{r, include=F}
   library(RTransferEntropy)
@@ -162,10 +162,9 @@ shannon_te
 ## Some examples using simulated time series
 
 Consider the above example again, results show a significant information flow from $X$ to $Y$, but not vice versa. Similar conclusions could be drawn from using a vector autoregressive model and testing for Granger causality. However, the main advantage of using transfer entropy is that it is not limited to linear relationships. Consider the following nonlinear relation between $X$ and $Y$, where, again, only $Y$ depends on $X$:
-
 \begin{eqnarray*}
 x_t & = & 0.2x_{t-1} + \varepsilon_{x,t}\\
-y_t & = & |x_{t-1}| + \varepsilon_{y,t},
+y_t & = & sqrt{\mid x_{t-1}\mid} + \varepsilon_{y,t},
 \end{eqnarray*}
 
 with $\varepsilon_{x,t}$ and $\varepsilon_{y,t}$ being standard normally distributed. We simulate these processes, discarding the first 200 observations.
@@ -178,7 +177,7 @@ y <- rnorm(1, 0, 1)
 
 for (i in 2:(n+200)){
   x <- append(x, 0.2 * x[i-1] + rnorm(1, 0, 1))
-  y <- append(y, abs(x[i-1]) + rnorm(1, 0, 1))
+  y <- append(y, sqrt(abs(x[i-1])) + rnorm(1, 0, 1))
 }
 
 x <- x[201:(n+200)]
@@ -188,7 +187,6 @@ y <- y[201:(n+200)]
 Also in this example, we focus on Shannon transfer entropy.
 
 ```{r, eval=T}
-set.seed(12345 + 1)
 shannon_te2 <- transfer_entropy(x = x,
                                 y = y)
 
@@ -211,11 +209,11 @@ print(svf$varresult$y$coefficients)
 
 The VAR cannot detect the nonlinear dependence of $Y$ on $X$ which leads to a parameter estimate x.l1 which is not statistically significant. The autoregressive nature of $X$ is, of course, readily identified. 
 
-As shown above, the question how to determine the quantiles is important as it impacts on the order of magnitude of the transfer entropy. A different approach is provided by Rényi transfer entropy which allows to put more weight on the tails in calculating transfer entropy. This is particularly convenient when the distribution is assumed to be more informative in the tails. To illustrate this effect, we simulate data for which the dependence of $Y$ on $X$ changes with the level the innovation.
+As shown above, the question how to determine the quantiles is important as it impacts on the order of magnitude of the transfer entropy. A different approach is provided by R\'{e}nyi transfer entropy which allows to put more weight on the tails in calculating transfer entropy. This is particularly convenient when the distribution is assumed to be more informative in the tails. To illustrate this effect, we simulate data for which the dependence of $Y$ on $X$ changes with the level the innovation.
 
 \begin{eqnarray*}
 x_t & = & 0.2x_{t-1} + \varepsilon_{x,t}\\
-y_t & = & \begin{cases} x_{t-1} + \varepsilon_{y,t} \quad \text{if } |\varepsilon_{y,t}| > s \\ 0.3x_{t-1} + \varepsilon_{y,t} \quad \text{if } |\varepsilon_{y,t}| < s
+y_t & = & \begin{cases} \phantom{0.3}x_{t-1} + \varepsilon_{y,t} \quad \text{if } |\varepsilon_{y,t}| > s \\ 0.3x_{t-1} + \varepsilon_{y,t} \quad \text{if } |\varepsilon_{y,t}| < s
 \end{cases},
 \end{eqnarray*}
 
@@ -250,7 +248,7 @@ shannon_te3 <- transfer_entropy(x = x,
 shannon_te3
 ```
 
-Giving more weights to the tails should reveal that the information flow is largely occuring in the tails. Therefore, we set q=0.3 and invoque the estimatio of Rényi transfer entropy as follows:
+Giving more weights to the tails should reveal that the information flow is largely occuring in the tails. Therefore, we set q=0.3 and invoque the estimatio of R\'{e}nyi transfer entropy as follows:
 
 ```{r, eval=F}
 set.seed(12345 + 1)
@@ -262,9 +260,9 @@ renyi_te <- transfer_entropy(x = x,
 renyi_te
 ```
 
-The result indicates that the tails are indeed more informative. The estimated Rényi effective transfer entropy is slightly higher than the Shannon ETE. Again, the information flow from $Y$ to $X$ is correctly identified as being zero.
+The result indicates that the tails are indeed more informative. The estimated R\'{e}nyi effective transfer entropy is slightly higher than the Shannon ETE. Again, the information flow from $Y$ to $X$ is correctly identified as being zero.
 
-Since Rényi transfer entropy approaches Shannon transfer entropy as $q \rightarrow 1$, we illustrate this property using different values of $q$. Note that this result is illustrated using the normal transfer entropy estimate and not the effective transfer entropy estimates because the latter depend on the shuffling procedure. 
+Since R\'{e}nyi transfer entropy approaches Shannon transfer entropy as $q \rightarrow 1$, we illustrate this property using different values of $q$. Note that this result is illustrated using the normal transfer entropy estimate and not the effective transfer entropy estimates because the latter depend on the shuffling procedure. 
 
 ```{r, include=F}
 qs <- c(seq(0.1,0.9,0.1),0.99)
@@ -284,7 +282,7 @@ for (i in 1:length(qs)){
 names(ete) <- lab
 ```
 
-As presented above, the Shannon transfer entropy from $X$ to $Y$ is estimated as `r format(round(shannon_te3$coef[1,1],4), nsmall=4)`. Using different values of $q$ we obtain the following results for the Rényi transfer entropy.
+As presented above, the Shannon transfer entropy from $X$ to $Y$ is estimated as `r format(round(shannon_te3$coef[1,1],4), nsmall=4)`. Using different values of $q$ we obtain the following results for the R\'{e}nyi transfer entropy.
 
 ```{r, echo=F}
 print(ete)
