@@ -295,6 +295,37 @@ As can be seen, the value is indeed approaching `r format(round(shannon_te3$coef
 
 ## Application to financial time series
 
+## Speed considerations
+If the `transfer_entropy` function is called repeatedly, it makes sense to save the time it takes R to create and stop the cluster in each function-call. We have therefore provided the option to directly specify the cluster using the `cl`-argument.
+
+For example
+```{r, eval = F}
+transfer_entropy(x1, y1, cl = parallel::detectCores())
+transfer_entropy(x2, y2, cl = parallel::detectCores())
+transfer_entropy(x3, y3, cl = parallel::detectCores())
+transfer_entropy(x4, y4, cl = parallel::detectCores())
+...
+```
+
+can be simplified to the following, which will reduce the computing time.
+```{r, eval = F}
+# initialise the cluster
+cl <- parallel::makeCluster(parallel::detectCores())
+# stop the cluster automatically after execution
+on.exit(parallel::stopCluster(cl), add = T)
+
+transfer_entropy(x1, y1, cl = cl)
+transfer_entropy(x2, y2, cl = cl)
+transfer_entropy(x3, y3, cl = cl)
+transfer_entropy(x4, y4, cl = cl)
+...
+```
+
+Turning the function to `quiet = TRUE` might further help to reduce time when the function is called repeatedly.
+
+
+
+
 ## Comparison with existing package
 
 <!-- Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format: -->
