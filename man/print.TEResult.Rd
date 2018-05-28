@@ -13,7 +13,7 @@
 
 \item{boot}{if the bootstrapped results should be printed, defautls to TRUE}
 
-\item{...}{}
+\item{...}{additional arguments, currently not in use}
 }
 \value{
 invisible the text

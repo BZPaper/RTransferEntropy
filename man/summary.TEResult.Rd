@@ -4,12 +4,12 @@
 \alias{summary.TEResult}
 \title{Prints a summary of a transfer-entropy result}
 \usage{
-\method{summary}{TEResult}(x, ...)
+\method{summary}{TEResult}(object, ...)
 }
 \arguments{
-\item{x}{a TEResult}
+\item{object}{a TEResult}
 
-\item{...}{additional arguments}
+\item{...}{additional arguments, currently not in use}
 }
 \value{
 invisible the text

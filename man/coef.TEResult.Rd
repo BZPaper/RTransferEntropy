@@ -4,10 +4,12 @@
 \alias{coef.TEResult}
 \title{Extract the Coefficient Matrix from a TEResult}
 \usage{
-\method{coef}{TEResult}(x)
+\method{coef}{TEResult}(object, ...)
 }
 \arguments{
-\item{x}{a TEResult}
+\item{object}{a TEResult}
+
+\item{...}{additional arguments, currently not in use}
 }
 \value{
 a Matrix containing the coefficients

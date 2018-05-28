@@ -3,7 +3,7 @@
 #' @param x a TEResult
 #' @param digits the number of digits to display, defaults to 4
 #' @param boot if the bootstrapped results should be printed, defautls to TRUE
-#' @param ...
+#' @param ... additional arguments, currently not in use
 #'
 #' @return invisible the text
 #' @export
@@ -67,7 +67,7 @@ print.TEResult <- function(x, digits = 4, boot = TRUE, ...) {
     paste0(sprintf("Number of Observations: %s", x$nobs),
            ifelse(x$entropy == "renyi", sprintf("\nQ: %s", x$q), "")),
     line,
-    "p-values: < 0.001 ‘***’, < 0.01 ‘**’, < 0.05 ‘*’, < 0.1 ‘.’"
+    "p-values: < 0.001 '***', < 0.01 '**', < 0.05 '*', < 0.1 '.'"
   )
   str <- paste(str, collapse = "\n")
   cat(str)
@@ -103,18 +103,18 @@ textify_mat <- function(mat, digits, width = 10, stars = TRUE) {
 
 #' Prints a summary of a transfer-entropy result
 #'
-#' @param x a TEResult
-#' @param ... additional arguments
+#' @param object a TEResult
+#' @param ... additional arguments, currently not in use
 #'
 #' @return invisible the text
 #' @export
 #'
 #' @examples
 #' # see ?transfer_entropy
-summary.TEResult <- function(x, ...) {
+summary.TEResult <- function(object, ...) {
   str <- c(
     "Transfer Entropy Result:",
-    sprintf("Number of Observations: %s", length(x$nobs))
+    sprintf("Number of Observations: %s", length(object$nobs))
   )
   str <- paste(str, collapse = "\n")
   cat(str)
@@ -136,7 +136,8 @@ is.TEResult <- function(x) {
 
 #' Extract the Coefficient Matrix from a TEResult
 #'
-#' @param x a TEResult
+#' @param object a TEResult
+#' @param ... additional arguments, currently not in use
 #'
 #' @return a Matrix containing the coefficients
 #' @export
@@ -157,7 +158,7 @@ is.TEResult <- function(x) {
 #'
 #' te_result <- transfer_entropy(x, y)
 #' coef(te_result)
-coef.TEResult <- function(x) {
-  if (!is.TEResult(x)) stop("x must be a TEResult")
-  return(x$coef)
+coef.TEResult <- function(object, ...) {
+  if (!is.TEResult(object)) stop("object must be a TEResult")
+  return(object$coef)
 }
