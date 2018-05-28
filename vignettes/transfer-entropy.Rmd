@@ -328,96 +328,53 @@ Turning the function to `quiet = TRUE` might further help to reduce time when th
 
 ## Comparison with existing package
 
-<!-- Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format: -->
+The authors of this package have found only one other package that calculates transfer entropy, being the [`TransferEntropy`-package](https://github.com/Healthcast/TransEnt).
+The `TransferEntropy`-package allows the user to compute the transfer entropy-measure using the `computeTE()`-function and returns a single value for the calculated transfer entropy.
 
-<!-- - Never uses retina figures -->
-<!-- - Has a smaller default figure size -->
-<!-- - Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style -->
-<!-- Some Examples: -->
+This package has a broader approach to transfer entropy, including the by-default computation of transfer entropy, effective transfer entropy (Eff. TE), standard errors, and p-values, for both the x-y and y-x direction, as well as bootstrapped TE quantiles.
+Furthermore, this package gives the users more flexibility in specifying details of the computation including calculating R\'{e}nyi's transfer entropy, specifying different lags for x and y, different quantiles of the empirical distribution, or the number of bins.
+As this involves more computing, this package uses `Rcpp` and parallel processing to decrease computing time.
 
-<!-- ## Vignette Info -->
+As a direct comparison, we use the data-generating-process from above to test the two different libraries
 
-<!-- Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette. -->
+```{r}
+set.seed(12345)
+n <- 2500
+x <- rep(0, n + 1)
+y <- rep(0, n + 1)
 
-<!-- ## Styles -->
+for (i in seq(n)) {
+     x[i + 1] <- 0.2 * x[i] + rnorm(1, 0, 2)
+     y[i + 1] <- x[i] + rnorm(1, 0, 2)
+  }
+ 
+x <- x[-1]
+y <- y[-1]
 
-<!-- The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows: -->
+(res1 <- TransferEntropy::computeTE(x, y, embedding = 2, k = 2))
 
-<!--     output:  -->
-<!--       rmarkdown::html_vignette: -->
-<!--         css: mystyles.css -->
+(res2 <- RTransferEntropy::transfer_entropy(x, y, quiet = T))
+```
 
-<!-- ## Figures -->
-<!-- We define the `mean_`-function as  (note the `eval=F` in the code: This code will not be run (the function in this case will not be sourced)! It will be displayed only!) -->
-<!-- ```{r part1, eval=F} -->
-<!-- mean_ <- function(x) sum(x) / length(x) -->
-<!-- ``` -->
+We see that the values are relatively close with `r round(res1$TE, 5)` from the `TransferEntropy::computeTE()`-function and `r round(res2$coef[1, 1], 5)` from our package.
 
-<!-- The figure sizes have been customised so that you can easily put two images side-by-side.  -->
+Taking the example from the `computeTE` help-file
+```{r}
+x <- rep(0, 10000 + 1)
+y <- rep(0, 10000 + 1)
+## Create two linked random processes. Y is independent of X,
+## while X is determined in part by the previous values of Y.
+for (i in 1:10000) {
+  y[i + 1] <- 0.6 * y[i] + rnorm(1)
+  x[i + 1] <- 0.4 * x[i] + 0.6 * y[i] + rnorm(1)
+}
+x <- x[101:10000]
+y <- y[101:10000]
 
-<!-- ```{r, fig.show='hold'} -->
-<!-- plot(1:10) -->
-<!-- plot(10:1) -->
-<!-- ``` -->
+(res3 <- TransferEntropy::computeTE(x, y, 3, 1, "MI_diff"))
 
-<!-- You can enable figure captions by `fig_caption: yes` in YAML: -->
+(res4 <- RTransferEntropy::transfer_entropy(x, y, quiet = T))
+```
 
-<!--     output: -->
-<!--       rmarkdown::html_vignette: -->
-<!--         fig_caption: yes -->
-
-<!-- Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**. -->
-
-<!-- ## More Examples -->
-
-<!-- You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`. -->
-
-<!-- ```{r, echo=FALSE, results='asis'} -->
-<!-- knitr::kable(head(mtcars, 10)) -->
-<!-- ``` -->
-
-<!-- Also a quote using `>`: -->
-
-<!-- > "He who gives up [code] safety for [code] speed deserves neither." -->
-<!-- ([via](https://twitter.com/hadleywickham/status/504368538874703872)) -->
-
-
-
-<!-- # Some David Stuff -->
-
-
-<!-- Some Examples: -->
-
-<!-- We define the `mean_`-function as  (note the `eval=F` in the code: This code will not be run (the function in this case will not be sourced)! It will be displayed only!) -->
-<!-- ```{r part1, eval=F} -->
-<!-- mean_ <- function(x) sum(x) / length(x) -->
-<!-- ``` -->
-
-<!-- If we want to output something and show the code, we can leave the options empty -->
-
-<!-- ```{r part2} -->
-<!-- x <- rnorm(10) -->
-<!-- summary(x) -->
-<!-- ``` -->
-
-<!-- If we only want to show some output but do not want to show the code, we can use the `echo=F` option -->
-
-<!-- ```{r part3, echo=F} -->
-<!-- plot(1:1000, rnorm(1000, sd = 0.01), type = "l", xlab = "Time", ylab = "Return") -->
-<!-- ``` -->
-
-
-<!-- # Equations -->
-
-<!-- To write an equation: -->
-
-<!-- \begin{equation} -->
-<!--   x = \sqrt{y + 1} -->
-<!-- \end{equation} -->
-
-<!-- or like this  -->
-
-<!-- $$ -->
-<!--   x = \sqrt{y + 1} -->
-<!-- $$ -->
+We see a larger difference XXX EXPLANATION WHY!!
 
