@@ -177,13 +177,13 @@ n <- 2500
 x <- rnorm(1, 0, 1)
 y <- rnorm(1, 0, 1)
 
-for (i in 2:(n+200)){
-  x <- append(x, 0.2 * x[i-1] + rnorm(1, 0, 1))
-  y <- append(y, abs(x[i-1]) + rnorm(1, 0, 1))
+for (i in 2:(n + 200)) {
+  x <- append(x, 0.2 * x[i - 1] + rnorm(1, 0, 1))
+  y <- append(y, abs(x[i - 1]) + rnorm(1, 0, 1))
 }
 
-x <- x[201:(n+200)]
-y <- y[201:(n+200)]
+x <- x[201:(n + 200)]
+y <- y[201:(n + 200)]
 ```
 
 Also in this example, we focus on Shannon transfer entropy.
@@ -227,18 +227,18 @@ set.seed(12345)
 x <- rnorm(1, 0, 1)
 y <- rnorm(1, 0, 1)
 
-for (i in 2:(n + 200)){
+for (i in 2:(n + 200)) {
   eps_x <- rnorm(1, 0, 1)
-  x <- append(x, 0.2 * x[i-1] + eps_x)
-  if (eps_x > 2){
-    y <- append(y, x[i-1] + rnorm(1, 0, 1))
-  }else{
-    y <- append(y, .3*x[i-1] + rnorm(1, 0, 1))
+  x <- append(x, 0.2 * x[i - 1] + eps_x)
+  if (eps_x > 2) {
+    y <- append(y, x[i - 1] + rnorm(1, 0, 1))
+  } else {
+    y <- append(y, .3*x[i - 1] + rnorm(1, 0, 1))
   }
 }
 
-x <- x[201:(n+200)]
-y <- y[201:(n+200)]
+x <- x[201:(n + 200)]
+y <- y[201:(n + 200)]
 ```
 
 For comparison, we first estimate Shannon Transfer Entropy using the standard settings which results in the following effective transfer entropy estimates:
