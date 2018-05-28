@@ -1,6 +1,6 @@
 ---
 title: "RTransferEntropy"
-author: "Simon Behrendt, Thomas Dimpfl, Fanzsika J. Peter, David J. Zimmermann"
+author: "Simon Behrendt, Thomas Dimpfl, Franziska J. Peter, David J. Zimmermann"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -163,10 +163,9 @@ shannon_te
 ## Some examples using simulated time series
 
 Consider the above example again, results show a significant information flow from $X$ to $Y$, but not vice versa. Similar conclusions could be drawn from using a vector autoregressive model and testing for Granger causality. However, the main advantage of using transfer entropy is that it is not limited to linear relationships. Consider the following nonlinear relation between $X$ and $Y$, where, again, only $Y$ depends on $X$:
-
 \begin{eqnarray*}
 x_t & = & 0.2x_{t-1} + \varepsilon_{x,t}\\
-y_t & = & |x_{t-1}| + \varepsilon_{y,t},
+y_t & = & sqrt{\mid x_{t-1}\mid} + \varepsilon_{y,t},
 \end{eqnarray*}
 
 with $\varepsilon_{x,t}$ and $\varepsilon_{y,t}$ being standard normally distributed. We simulate these processes, discarding the first 200 observations.
@@ -178,8 +177,8 @@ x <- rnorm(1, 0, 1)
 y <- rnorm(1, 0, 1)
 
 for (i in 2:(n + 200)) {
-  x <- append(x, 0.2 * x[i - 1] + rnorm(1, 0, 1))
-  y <- append(y, abs(x[i - 1]) + rnorm(1, 0, 1))
+  x <- append(x, 0.2 * x[i-1] + rnorm(1, 0, 1))
+  y <- append(y, sqrt(abs(x[i-1])) + rnorm(1, 0, 1))
 }
 
 x <- x[201:(n + 200)]
@@ -189,7 +188,6 @@ y <- y[201:(n + 200)]
 Also in this example, we focus on Shannon transfer entropy.
 
 ```{r, eval=T}
-set.seed(12345 + 1)
 shannon_te2 <- transfer_entropy(x = x,
                                 y = y)
 
@@ -216,7 +214,7 @@ As shown above, the question how to determine the quantiles is important as it i
 
 \begin{eqnarray*}
 x_t & = & 0.2x_{t-1} + \varepsilon_{x,t}\\
-y_t & = & \begin{cases} x_{t-1} + \varepsilon_{y,t} \quad \text{if } |\varepsilon_{y,t}| > s \\ 0.3x_{t-1} + \varepsilon_{y,t} \quad \text{if } |\varepsilon_{y,t}| < s
+y_t & = & \begin{cases} \phantom{0.3}x_{t-1} + \varepsilon_{y,t} \quad \text{if } |\varepsilon_{y,t}| > s \\ 0.3x_{t-1} + \varepsilon_{y,t} \quad \text{if } |\varepsilon_{y,t}| < s
 \end{cases},
 \end{eqnarray*}
 
