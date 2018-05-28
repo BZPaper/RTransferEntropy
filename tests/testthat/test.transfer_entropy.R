@@ -1,6 +1,6 @@
 # construct two time-series
 set.seed(1234567890)
-n <- 10000
+n <- 1000
 x <- rep(0, n + 1)
 y <- rep(0, n + 1)
 for (i in seq(n)) {
@@ -44,9 +44,9 @@ test_that("te_result is correctly specified", {
 
   context("check values")
   exp_coefs <- matrix(
-    c(0.0996107279340461, 0.00128027810811011, 0.0986370632185543,
-      0.000392488584173327, 0.000386084463301625, 0.000489447148659146,
-      0, 0.2), nrow = 2, ncol = 4,
+    c(0.112027796364799, 0.00764288597650148, 0.105442320436181,
+      0.00179846620598153, 0.0026375806414119, 0.00289890292470592,
+      0, 0.4), nrow = 2, ncol = 4,
     dimnames = list(c("X->Y", "Y->X"), c("te", "ete", "se", "p-value"))
   )
   expect_equal(coefs, exp_coefs, tolerance = 1e-6)
@@ -85,9 +85,8 @@ test_that("te_result is correctly specified", {
 
   context("check values")
   exp_coefs <- matrix(
-    c(0.0941334355990759, 0.0298813788644767, 0.0765819430684522,
-      0.0149377788357564, 0.01477246415148, 0.0098556260764617, 0,
-      0.1),
+    c(0.12144794402804, 0.0124702971050821, 0.0424547456439137,
+      0, 0.0293591162956084, 0.0418520051264712, 0.1, 0.9),
     nrow = 2, ncol = 4,
     dimnames = list(c("X->Y", "Y->X"), c("te", "ete", "se", "p-value"))
   )
