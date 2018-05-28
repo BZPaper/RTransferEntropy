@@ -93,7 +93,8 @@ Testing for and quantifying the information flow between two time series with Sh
 The main function is `transfer_entropy()`, which creates an object of class `TEResult` that contains the respective transfer entropy estimates (both in $J \rightarrow I$ and $I \rightarrow J$ direction), the related effective transfer entropy estimates, standard errors and p-values for the estimated values, an indication of statistical significance, and quantiles of the bootstrap samples (if the number of bootstrap replications is specified to be greater than zero). Some sub-functions are written in `C++` to speed up computations and an option for parallel computing is available, allowing for more efficient programming when `transfer_entropy()` is called multiple times or fairly long time series make calculations of effective transfer entropies and bootstrap inference time consuming. Let us describe the usage of `transfer_entropy()` and its options.
 
 ```{r, eval=F}
-transfer_entropy(x, y, lx = 1, ly = 1, q = 0.1, 
+transfer_entropy(x, y, 
+                 lx = 1, ly = 1, q = 0.1, 
                  entropy = c('Shannon', 'Renyi'), shuffles = 100, 
                  cl = parallel::detectCores() - 1, 
                  type = c('quantiles', 'bins', 'limits'),
@@ -177,8 +178,8 @@ x <- rnorm(1, 0, 1)
 y <- rnorm(1, 0, 1)
 
 for (i in 2:(n + 200)) {
-  x <- append(x, 0.2 * x[i-1] + rnorm(1, 0, 1))
-  y <- append(y, sqrt(abs(x[i-1])) + rnorm(1, 0, 1))
+  x <- append(x, 0.2 * x[i - 1] + rnorm(1, 0, 1))
+  y <- append(y, sqrt(abs(x[i - 1])) + rnorm(1, 0, 1))
 }
 
 x <- x[201:(n + 200)]
@@ -188,10 +189,7 @@ y <- y[201:(n + 200)]
 Also in this example, we focus on Shannon transfer entropy.
 
 ```{r, eval=T}
-shannon_te2 <- transfer_entropy(x = x,
-                                y = y)
-
-shannon_te2
+(shannon_te2 <- transfer_entropy(x, y))
 ```
 
 Again, the Shannon Transfer Entropy estimate indicates that there is a significant information flow from $X$ to $Y$, but not in the other direction. 
@@ -231,7 +229,7 @@ for (i in 2:(n + 200)) {
   if (eps_x > 2) {
     y <- append(y, x[i - 1] + rnorm(1, 0, 1))
   } else {
-    y <- append(y, .3*x[i - 1] + rnorm(1, 0, 1))
+    y <- append(y, 0.3 * x[i - 1] + rnorm(1, 0, 1))
   }
 }
 
@@ -243,20 +241,14 @@ For comparison, we first estimate Shannon Transfer Entropy using the standard se
 
 ```{r, eval=T}
 set.seed(12345 + 1)
-shannon_te3 <- transfer_entropy(x = x,
-                                y = y)
-
-shannon_te3
+(shannon_te3 <- transfer_entropy(x, y))
 ```
 
 Giving more weights to the tails should reveal that the information flow is largely occuring in the tails. Therefore, we set q=0.3 and invoque the estimatio of R\'{e}nyi transfer entropy as follows:
 
 ```{r, eval=F}
 set.seed(12345 + 1)
-renyi_te <- transfer_entropy(x = x,
-                             y = y,
-                             entropy = "Renyi",
-                             q = 0.3)
+renyi_te <- transfer_entropy(x, y, entropy = "Renyi", q = 0.3)
 
 renyi_te
 ```
@@ -269,14 +261,14 @@ Since R\'{e}nyi transfer entropy approaches Shannon transfer entropy as $q \righ
 qs <- c(seq(0.1,0.9,0.1),0.99)
 ete <- NULL
 lab <- NULL
-for (i in 1:length(qs)){
-  renyi_te <- transfer_entropy(x = x,
-                             y = y,
-                             lx = 1,
-                             ly = 1,
-                             entropy = "Renyi",
-                             q = qs[i],
-                             nboot = 1)
+for (i in 1:length(qs)) {
+  renyi_te <- transfer_entropy(x, y, 
+                               lx = 1,
+                               ly = 1,
+                               entropy = "Renyi",
+                               q = qs[i],
+                               nboot = 1)
+  
   ete <- append(ete,renyi_te$coef[1,1])
   lab <- append(lab, paste0("q=",qs[i]))
 }
