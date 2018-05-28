@@ -1,12 +1,14 @@
 Package: RTransferEntropy
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Calculating Shannon's and R\'{e}nyi's Transfer Entropy for Time Series
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Authors@R: c(
+    person("Simon", "Behrendt", , "simon.behrendt@zu.de", role = c("aut", "cre")),
+    person("David", "Zimmermann", role = c("aut")),
+    person("Thomas", "Dimpfl", role = c("aut")),
+    person("Franziska", "Peter", role = c("aut")))
+Description: The `RTransferEntropy` library enables the user to calculate 
+    Shannon's and R\'{e}nyi's entropy measures for time series on multiple cores.
 License: GPL-3
 Encoding: UTF-8
 Imports:
