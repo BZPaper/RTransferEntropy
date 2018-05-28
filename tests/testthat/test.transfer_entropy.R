@@ -14,12 +14,13 @@ y <- y[-1]
 # Shannon Entropy
 #################################
 
+
 test_that("te_result is correctly specified", {
   context("Shannon")
 
-  expect_warning(
+  suppressWarnings(
     res <- transfer_entropy(x, y, lx = 1, ly = 1, nboot = 10, quiet = T,
-                            seed = 12345667)
+                            seed = 12345667, cl = 1)
   )
 
   context("check types")
@@ -44,8 +45,8 @@ test_that("te_result is correctly specified", {
   context("check values")
   exp_coefs <- matrix(
     c(0.0996107279340461, 0.00128027810811011, 0.0986370632185543,
-      0.000300938474270658, 0.000241203175866799, 0.000374404200044591,
-      0, 0.3), nrow = 2, ncol = 4,
+      0.000392488584173327, 0.000386084463301625, 0.000489447148659146,
+      0, 0.2), nrow = 2, ncol = 4,
     dimnames = list(c("X->Y", "Y->X"), c("te", "ete", "se", "p-value"))
   )
   expect_equal(coefs, exp_coefs, tolerance = 1e-6)
@@ -59,9 +60,9 @@ test_that("te_result is correctly specified", {
 test_that("te_result is correctly specified", {
   context("Renyi")
 
-  expect_warning(
+  suppressWarnings(
     res <- transfer_entropy(x, y, lx = 1, ly = 1, entropy = "renyi", q = 0.5,
-                            nboot = 10, quiet = T, seed = 12345667)
+                            nboot = 10, quiet = T, seed = 12345667, cl = 1)
   )
   context("check types")
   expect_true(is.TEResult(res))
@@ -85,8 +86,8 @@ test_that("te_result is correctly specified", {
   context("check values")
   exp_coefs <- matrix(
     c(0.0941334355990759, 0.0298813788644767, 0.0765819430684522,
-      0.0127561675183127, 0.0101667534228851, 0.00941786319982731,
-      0, 0),
+      0.0149377788357564, 0.01477246415148, 0.0098556260764617, 0,
+      0.1),
     nrow = 2, ncol = 4,
     dimnames = list(c("X->Y", "Y->X"), c("te", "ete", "se", "p-value"))
   )
