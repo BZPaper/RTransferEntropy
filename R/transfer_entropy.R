@@ -157,13 +157,26 @@ transfer_entropy <- function(x,
 
   if (!quiet) cat(sprintf("Calculating %s's entropy ", fupper(entropy)))
 
+  if (quiet) {
+    pbapply::pboptions(type = "none")
+  } else {
+    cat(sprintf("on %s cores ", cl))
+    pbapply::pboptions(type = "timer")
+  }
+
   # Set-up the parallelization of computations
   if (is.numeric(cl)) {
     if (cl == 1) {
       cl <- NULL
       if (!quiet) cat("sequentially ")
     } else {
-      cl <- min(cl, parallel::detectCores())
+
+      # check if its a CRAN check, then limit to 2 cores else use detectCores
+      chk <- Sys.getenv("_R_CHECK_LIMIT_CORES_", "")
+      n_workers <- if (nzchar(chk) && chk == TRUE) 2L else parallel::detectCores()
+
+      cl <- min(cl, n_workers)
+
       if (!quiet) cat(sprintf("on %s cores ", cl))
       cl <- parallel::makeCluster(cl)
       on.exit(parallel::stopCluster(cl), add = T)
@@ -172,13 +185,6 @@ transfer_entropy <- function(x,
     if (!quiet) cat(sprintf("on %s cores ", length(cl)))
   } else  {
     stop("cl must be either a cluster (i.e., parallel::makeCluster()), or a numeric value")
-  }
-
-  # Only if a cluster is specified, set the pboptions
-  # Otherwise, interference with potential pboptions set by the user
-  if (!is.null(cl)) {
-    pbapply::pboptions(type = "timer")
-    if (quiet) pbapply::pboptions(type = "none")
   }
 
   # Remove missing values
