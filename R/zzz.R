@@ -1,7 +1,7 @@
 #' @useDynLib RTransferEntropy
 #' @importFrom Rcpp sourceCpp
+#' @importFrom stats quantile sd
 NULL
-
 
 star <- function(x) {
   ifelse(is.null(x) || is.na(x), "",
