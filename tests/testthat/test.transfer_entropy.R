@@ -16,8 +16,11 @@ y <- y[-1]
 
 test_that("te_result is correctly specified", {
   context("Shannon")
-  res <- transfer_entropy(x, y, lx = 1, ly = 1, nboot = 10, quiet = T,
-                          seed = 12345667)
+
+  expect_warning(
+    res <- transfer_entropy(x, y, lx = 1, ly = 1, nboot = 10, quiet = T,
+                            seed = 12345667)
+  )
 
   context("check types")
   expect_true(is.TEResult(res))
@@ -55,9 +58,11 @@ test_that("te_result is correctly specified", {
 
 test_that("te_result is correctly specified", {
   context("Renyi")
-  res <- transfer_entropy(x, y, lx = 1, ly = 1, entropy = "renyi", q = 0.5,
-                          nboot = 10, quiet = T, seed = 12345667)
 
+  expect_warning(
+    res <- transfer_entropy(x, y, lx = 1, ly = 1, entropy = "renyi", q = 0.5,
+                            nboot = 10, quiet = T, seed = 12345667)
+  )
   context("check types")
   expect_true(is.TEResult(res))
 

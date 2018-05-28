@@ -151,8 +151,7 @@ We estimate Shannon transfer entropy with the defaults for all function argument
 
 ```{r, eval=T}
 set.seed(12345 + 1)
-shannon_te <- transfer_entropy(x = x,
-                               y = y)
+(shannon_te <- transfer_entropy(x, y))
 ```
 
 While estimating the Shannon transfer entropies, `RTransferEntropy` provides information on the type of transfer entropy that is currently being estimated, the number of cores used for parallel computing, the number of shuffles and bootstrap estimations (for each direction) as well es the length of the time series and the number of removed `NAs` (if any). Progress bars and counters indicate how long estimation and bootstrapping will take. The total time in seconds is displyed after the estimation is done. The output of `transfer_entropy()` (see below) is closely modelled to the typical regression output tables in `R` and summarizes all important information. For each direction of the (possible) information flow, the Shannon transfer entropy is given in the `TE` column. Effective transfer entropy estimates for both direction can be found in the `Eff. TE` column. Standard errors and p-values in the fourth and fifth columns are based on the bootstrap samples, whose quantiles are depicted in the lower part of the ourput table. The `TE` estimates are compared to the quantiles of the bootstrap samples to calculate p-values and to provide an easy to read indication of statistical significance in the last column, according to the definition below the output table. From the output below, we can easily see that there is a significant information flow from $X$ to $Y$ but not vice versa, as simulated.
