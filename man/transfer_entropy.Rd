@@ -98,6 +98,13 @@ te_result
 te_result <- transfer_entropy(x, y, nboot = 0)
 te_result
 
+# explicitly create a cluster for multiple use
+cl <- parallel::makeCluster(2)
+# or instead of 2 cores, use
+# cl <- parallel::makeCluster(parallel::detectCores())
+on.exit(parallel::stopCluster(cl), add = TRUE)
+te_result <- transfer_entropy(x, y, cl = cl)
+
 is.TEResult(te_result)
 }
 \seealso{

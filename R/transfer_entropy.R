@@ -71,6 +71,13 @@
 #' te_result <- transfer_entropy(x, y, nboot = 0)
 #' te_result
 #'
+#' # explicitly create a cluster for multiple use
+#' cl <- parallel::makeCluster(2)
+#' # or instead of 2 cores, use
+#' # cl <- parallel::makeCluster(parallel::detectCores())
+#' on.exit(parallel::stopCluster(cl), add = TRUE)
+#' te_result <- transfer_entropy(x, y, cl = cl)
+#'
 #' is.TEResult(te_result)
 transfer_entropy <- function(x,
                              y,
@@ -157,12 +164,7 @@ transfer_entropy <- function(x,
 
   if (!quiet) cat(sprintf("Calculating %s's entropy ", fupper(entropy)))
 
-  if (quiet) {
-    pbapply::pboptions(type = "none")
-  } else {
-    cat(sprintf("on %s cores ", cl))
-    pbapply::pboptions(type = "timer")
-  }
+  pbapply::pboptions(type = ifelse(quiet, "none", "timer"))
 
   # Set-up the parallelization of computations
   if (is.numeric(cl)) {
