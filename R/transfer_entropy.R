@@ -85,10 +85,10 @@
 #'
 #'
 #' # General set of quiet
-#' set_quiet(T)
+#' set_quiet(TRUE)
 #' a <- transfer_entropy(x, y, nboot = 0)
 #'
-#' set_quiet(F)
+#' set_quiet(FALSE)
 #' a <- transfer_entropy(x, y, nboot = 0)
 transfer_entropy <- function(x,
                              y,
