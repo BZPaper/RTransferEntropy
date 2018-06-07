@@ -109,6 +109,13 @@ plan(sequential)
 te_result2 <- transfer_entropy(x, y)
 te_result2
 
+
+# General set of quiet
+set_quiet(T)
+a <- transfer_entropy(x, y, nboot = 0)
+
+set_quiet(F)
+a <- transfer_entropy(x, y, nboot = 0)
 }
 \seealso{
 \code{\link{coef}}, \code{\link{print.TEResult}}

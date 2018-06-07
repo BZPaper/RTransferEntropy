@@ -4,6 +4,10 @@
 #' @importFrom future plan multisession sequential
 NULL
 
+.onAttach <- function(...) {
+  set_quiet(FALSE)
+}
+
 # for some p-values (x) return the stars
 star <- function(x) {
   ifelse(is.null(x) || is.na(x), "",

@@ -298,7 +298,7 @@ plan(sequential)
 te2 <- transfer_entropy(x, y)
 ```
 
-Turning the function to `quiet = TRUE` might further help to reduce time when the function is called repeatedly.
+Turning the function to `quiet = TRUE` might further help to reduce time when the function is called repeatedly. If you want to disable output for all calls, you can use `set_quiet(TRUE)`.
 
 
 

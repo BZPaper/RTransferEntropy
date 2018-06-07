@@ -82,6 +82,13 @@
 #' te_result2 <- transfer_entropy(x, y)
 #' te_result2
 #'
+#'
+#' # General set of quiet
+#' set_quiet(T)
+#' a <- transfer_entropy(x, y, nboot = 0)
+#'
+#' set_quiet(F)
+#' a <- transfer_entropy(x, y, nboot = 0)
 transfer_entropy <- function(x,
                              y,
                              lx = 1,
@@ -95,7 +102,7 @@ transfer_entropy <- function(x,
                              limits = NULL,
                              nboot = 300,
                              burn = 50,
-                             quiet = FALSE,
+                             quiet = NULL,
                              seed = NULL,
                              cl = NULL) {
 
@@ -106,6 +113,7 @@ transfer_entropy <- function(x,
   if (length(x) != length(y)) {
     stop("x and y must be of same length.")
   }
+  if (is.null(quiet)) quiet <- as.logical(options("RTransferEntropy::quiet"))
 
   # Check that type is specified correctly
   type <- tolower(type)
