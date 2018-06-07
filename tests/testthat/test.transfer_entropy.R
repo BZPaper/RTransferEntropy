@@ -44,9 +44,8 @@ test_that("te_result is correctly specified", {
 
   context("check values")
   exp_coefs <- matrix(
-    c(0.112027796364799, 0.00764288597650148, 0.105442320436181,
-      0.00179846620598153, 0.0026375806414119, 0.00289890292470592,
-      0, 0.4), nrow = 2, ncol = 4,
+    c(0.0157868988194173, 0.00173401913231719, 0.0126125335635818,
+      0, 0.00197686371110982, 0.00130962987420229, 0, 0.9), nrow = 2, ncol = 4,
     dimnames = list(c("X->Y", "Y->X"), c("te", "ete", "se", "p-value"))
   )
   expect_equal(coefs, exp_coefs, tolerance = 1e-6)
@@ -86,8 +85,8 @@ test_that("te_result is correctly specified", {
 
   context("check values")
   exp_coefs <- matrix(
-    c(0.12144794402804, 0.0124702971050821, 0.0424547456439137,
-      0, 0.0293591162956084, 0.0418520051264712, 0.1, 0.9),
+    c(0.0607475858536458, 0.0112538569883853, 0.0120269808040249,
+      0, 0.021012313171769, 0.0191147381370581, 0.2, 1),
     nrow = 2, ncol = 4,
     dimnames = list(c("X->Y", "Y->X"), c("te", "ete", "se", "p-value"))
   )
