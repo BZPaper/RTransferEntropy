@@ -17,10 +17,6 @@
 #'                \code{entropy = 'Shannon'}.
 #' @param shuffles the number of shuffles used to calculate the effective
 #'                 transfer entropy. Default is \code{shuffles = 100}.
-#' @param cl a numeric value (default is number of cores - 1),
-#'           or a cluster as created by \code{\link[parallel]{makeCluster}}
-#'           that can be used by \code{\link[pbapply]{pbapply}}. Specifies the
-#'           number of cores computations are to distributed over.
 #' @param type specifies the type of discretization applied to the observed time
 #'             series:'quantiles', 'bins' or 'limits'. Default is
 #'             \code{type = 'quantiles'}.
@@ -38,6 +34,7 @@
 #' @param quiet if FALSE (default), the function gives feedback.
 #' @param seed a seed that seeds the PRNG (will internally just call set.seed),
 #'             default is \code{seed = NULL}.
+#' @param cl deprecated, for parallel processing use \code{future::\link[future]{plan}}
 #'
 #' @return an object of class TEResult, containing the transfer entropy
 #'         estimates in both directions, the effective transfer entropy
@@ -65,20 +62,26 @@
 #' x <- x[-1]
 #' y <- y[-1]
 #'
+#' # Calculate the Transfer Entropy
 #' te_result <- transfer_entropy(x, y)
 #' te_result
 #'
 #' te_result <- transfer_entropy(x, y, nboot = 0)
 #' te_result
 #'
-#' # explicitly create a cluster for multiple use
-#' cl <- parallel::makeCluster(2)
-#' # or instead of 2 cores, use
-#' # cl <- parallel::makeCluster(parallel::detectCores())
-#' on.exit(parallel::stopCluster(cl), add = TRUE)
-#' te_result <- transfer_entropy(x, y, cl = cl)
 #'
-#' is.TEResult(te_result)
+#' # Parallel Processing using the future-package
+#' plan(multisession)
+#'
+#' te_result2 <- transfer_entropy(x, y)
+#' te_result2
+#'
+#' # revert back to sequential execution
+#' plan(sequential)
+#'
+#' te_result2 <- transfer_entropy(x, y)
+#' te_result2
+#'
 transfer_entropy <- function(x,
                              y,
                              lx = 1,
@@ -86,7 +89,6 @@ transfer_entropy <- function(x,
                              q = 0.1,
                              entropy = "Shannon",
                              shuffles = 100,
-                             cl = parallel::detectCores() - 1,
                              type = "quantiles",
                              quantiles = c(5, 95),
                              bins = NULL,
@@ -94,7 +96,8 @@ transfer_entropy <- function(x,
                              nboot = 300,
                              burn = 50,
                              quiet = FALSE,
-                             seed = NULL) {
+                             seed = NULL,
+                             cl = NULL) {
 
   if (!is.null(seed)) set.seed(seed)
 
@@ -149,6 +152,8 @@ transfer_entropy <- function(x,
     }
   }
 
+  if (!is.null(cl)) warning("cl is deprecated, use future::plan(multisession) instead")
+
   # Check quantiles
   if (type == "quantiles" && (min(quantiles) < 0 || max(quantiles) > 100))
     stop("Quantiles must be between 0 and 100")
@@ -162,42 +167,22 @@ transfer_entropy <- function(x,
   if (nboot > 0 && nboot < 100)
     warning("Number of bootstrap replications is below 100. Use a higher number of bootstrap replications, you are relying on asymptotic arguments here.")
 
-  if (!quiet) cat(sprintf("Calculating %s's entropy ", fupper(entropy)))
-
-  pbapply::pboptions(type = ifelse(quiet, "none", "timer"))
-
-  # Set-up the parallelization of computations
-  if (is.numeric(cl)) {
-    if (cl == 1) {
-      cl <- NULL
-      if (!quiet) cat("sequentially ")
-    } else {
-
-      # check if its a CRAN check, then limit to 2 cores else use detectCores
-      chk <- Sys.getenv("_R_CHECK_LIMIT_CORES_", "")
-      n_workers <- if (nzchar(chk) && chk == TRUE) 2L else parallel::detectCores()
-
-      cl <- min(cl, n_workers)
-
-      if (!quiet) cat(sprintf("on %s cores ", cl))
-      cl <- parallel::makeCluster(cl)
-      on.exit(parallel::stopCluster(cl), add = T)
-    }
-  } else if ("cluster" %in% class(cl)) {
-    if (!quiet) cat(sprintf("on %s cores ", length(cl)))
-  } else  {
-    stop("cl must be either a cluster (i.e., parallel::makeCluster()), or a numeric value")
-  }
-
   # Remove missing values
   mis_values <- is.na(x) | is.na(y)
   x <- x[!mis_values]
   y <- y[!mis_values]
 
-  if (!quiet) cat(sprintf("with %s shuffle(s) and %s bootstrap(s)\nThe timeseries have length %s (%s NAs removed)\n",
-                          shuffles, nboot, length(x), sum(mis_values)))
+  if (length(x) == 0) stop("x and y must have non-missing values.")
 
-  if (length(x) == 0) return(NA)
+  if (!quiet) {
+    cat(sprintf(
+      "%s's entropy on %s core%s with %s shuffle%s. The timeseries have length %s (%s NAs removed)\n",
+      fupper(entropy),
+      future::nbrOfWorkers(), mult_s(future::nbrOfWorkers()),
+      shuffles, mult_s(shuffles),
+      length(x), sum(mis_values)
+    ))
+  }
 
   # Call either te_shannon or te_renyi
   if (entropy == "shannon") {
@@ -206,7 +191,6 @@ transfer_entropy <- function(x,
                      y = y,
                      ly = ly,
                      shuffles = shuffles,
-                     cl = cl,
                      type = type,
                      quantiles = quantiles,
                      bins = bins,
@@ -221,7 +205,6 @@ transfer_entropy <- function(x,
                    ly = ly,
                    q = q,
                    shuffles = shuffles,
-                   cl = cl,
                    type = type,
                    quantiles = quantiles,
                    bins = bins,

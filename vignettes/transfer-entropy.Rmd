@@ -95,7 +95,6 @@ The main function is `transfer_entropy()`, which creates an object of class `TER
 transfer_entropy(x, y, 
                  lx = 1, ly = 1, q = 0.1, 
                  entropy = c('Shannon', 'Renyi'), shuffles = 100, 
-                 cl = parallel::detectCores() - 1, 
                  type = c('quantiles', 'bins', 'limits'),
                  quantiles = c(5, 95), bins = NULL, limits = NULL,
                  nboot = 300, burn = 50, quiet = FALSE, seed = NULL)
@@ -112,7 +111,6 @@ The function takes the following arguments:
 * `q`: a weighting parameter used to estimate Renyi transfer entropy, parameter is between 0 and 1. For `q = 1`, Renyi transfer entropy converges to Shannon transfer entropy. Default is `q = 0.1`.
 * `entropy`: specifies the transfer entropy measure that is estimated, either `'Shannon'` or `'Renyi'`. The first character can be used to specify the type of transfer entropy as well. Default is `entropy = 'Shannon'`.
 * `shuffles`: the number of shuffles used to calculate the effective transfer entropy. Default is `shuffles = 100`.
-* `cl`: a numeric value (default is number of cores - 1), or a cluster as created by `makeCluster` that can be used by `pbapply`. Specifies the number of cores computations are to distributed over.
 * `type`: specifies the type of discretization applied to the observed time series:`'quantiles'`, `'bins'` or `'limits'`. Default is `type = 'quantiles'`.
 * `quantiles`: specifies the quantiles of the empirical distribution of the respective time series used for discretization. Default is `quantiles = c(5,95)`.
 * `bins`: specifies the number of bins with equal width used for discretization. Default is `bins = NULL`.
@@ -283,30 +281,21 @@ As can be seen, the value is indeed approaching `r format(round(shannon_te3$coef
 
 ## Application to financial time series
 
-## Speed considerations
-If the `transfer_entropy` function is called repeatedly, it makes sense to save the time it takes R to create and stop the cluster in each function-call. We have therefore provided the option to directly specify the cluster using the `cl`-argument.
+## Parallel Execution
 
-For example
-```{r, eval = F}
-transfer_entropy(x1, y1, cl = parallel::detectCores())
-transfer_entropy(x2, y2, cl = parallel::detectCores())
-transfer_entropy(x3, y3, cl = parallel::detectCores())
-transfer_entropy(x4, y4, cl = parallel::detectCores())
-...
-```
+`RTransferEntropy` uses the [`future`](https://cran.r-project.org/web/packages/future/index.html) package internally that allows for parallel execution.
+To enable parallel execution, you have to select a plan (see also [`?future::plan`](https://www.rdocumentation.org/packages/future/versions/1.8.1/topics/plan)).
+The following code first executes the function calls sequential, then uses multiple cores, lastly it sets the plan to sequential again.
+```{r, eval = T}
+library(future)
 
-can be simplified to the following, which will reduce the computing time.
-```{r, eval = F}
-# initialise the cluster
-cl <- parallel::makeCluster(parallel::detectCores())
-# stop the cluster automatically after execution
-on.exit(parallel::stopCluster(cl), add = T)
+# enable parallelism
+plan(multisession)
+te2 <- transfer_entropy(x, y)
 
-transfer_entropy(x1, y1, cl = cl)
-transfer_entropy(x2, y2, cl = cl)
-transfer_entropy(x3, y3, cl = cl)
-transfer_entropy(x4, y4, cl = cl)
-...
+# execute sequential again
+plan(sequential)
+te2 <- transfer_entropy(x, y)
 ```
 
 Turning the function to `quiet = TRUE` might further help to reduce time when the function is called repeatedly.

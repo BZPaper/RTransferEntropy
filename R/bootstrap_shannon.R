@@ -6,13 +6,7 @@ bootstrap_shannon <- function(x,
                               lx,
                               y,
                               ly,
-                              burn = 50,
-                              cl = NULL) {
-
-  if (is.null(cl[[1]])) {
-    opb <- pbapply::pboptions(type = "none")
-    on.exit(pbapply::pboptions(opb), add = T)
-  }
+                              burn = 50) {
 
   bootx <- markov_boot_step(x, lx, burn)
   booty <- markov_boot_step(y, ly, burn)

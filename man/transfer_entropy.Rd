@@ -6,9 +6,9 @@
 series x and y.}
 \usage{
 transfer_entropy(x, y, lx = 1, ly = 1, q = 0.1, entropy = "Shannon",
-  shuffles = 100, cl = parallel::detectCores() - 1, type = "quantiles",
-  quantiles = c(5, 95), bins = NULL, limits = NULL, nboot = 300,
-  burn = 50, quiet = FALSE, seed = NULL)
+  shuffles = 100, type = "quantiles", quantiles = c(5, 95), bins = NULL,
+  limits = NULL, nboot = 300, burn = 50, quiet = NULL, seed = NULL,
+  cl = NULL)
 }
 \arguments{
 \item{x}{a vector of numeric values, ordered by time.}
@@ -34,11 +34,6 @@ to specify the type of transfer entropy as well. Default is
 \item{shuffles}{the number of shuffles used to calculate the effective
 transfer entropy. Default is \code{shuffles = 100}.}
 
-\item{cl}{a numeric value (default is number of cores - 1),
-or a cluster as created by \code{\link[parallel]{makeCluster}}
-that can be used by \code{\link[pbapply]{pbapply}}. Specifies the
-number of cores computations are to distributed over.}
-
 \item{type}{specifies the type of discretization applied to the observed time
 series:'quantiles', 'bins' or 'limits'. Default is
 \code{type = 'quantiles'}.}
@@ -63,6 +58,8 @@ the bootstrapped Markov chain. Default is \code{burn = 50}.}
 
 \item{seed}{a seed that seeds the PRNG (will internally just call set.seed),
 default is \code{seed = NULL}.}
+
+\item{cl}{deprecated, for parallel processing use \code{future::\link[future]{plan}}}
 }
 \value{
 an object of class TEResult, containing the transfer entropy
@@ -92,20 +89,26 @@ for (i in seq(n)) {
 x <- x[-1]
 y <- y[-1]
 
+# Calculate the Transfer Entropy
 te_result <- transfer_entropy(x, y)
 te_result
 
 te_result <- transfer_entropy(x, y, nboot = 0)
 te_result
 
-# explicitly create a cluster for multiple use
-cl <- parallel::makeCluster(2)
-# or instead of 2 cores, use
-# cl <- parallel::makeCluster(parallel::detectCores())
-on.exit(parallel::stopCluster(cl), add = TRUE)
-te_result <- transfer_entropy(x, y, cl = cl)
 
-is.TEResult(te_result)
+# Parallel Processing using the future-package
+plan(multisession)
+
+te_result2 <- transfer_entropy(x, y)
+te_result2
+
+# revert back to sequential execution
+plan(sequential)
+
+te_result2 <- transfer_entropy(x, y)
+te_result2
+
 }
 \seealso{
 \code{\link{coef}}, \code{\link{print.TEResult}}

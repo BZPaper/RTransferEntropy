@@ -12,7 +12,8 @@ Description: The `RTransferEntropy` library enables the user to calculate
 License: GPL-3
 Encoding: UTF-8
 Imports:
-    pbapply,
+    future,
+    future.apply,
     Rcpp
 LazyData: true
 RoxygenNote: 6.0.1

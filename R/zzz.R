@@ -1,8 +1,10 @@
 #' @useDynLib RTransferEntropy
 #' @importFrom Rcpp sourceCpp
 #' @importFrom stats quantile sd
+#' @importFrom future plan multisession sequential
 NULL
 
+# for some p-values (x) return the stars
 star <- function(x) {
   ifelse(is.null(x) || is.na(x), "",
          ifelse(x < 0.001, "***",
@@ -11,4 +13,8 @@ star <- function(x) {
                               ifelse(x < 0.1, ".", "")))))
 }
 
+# first to upper
 fupper <- function(x) paste0(toupper(substr(x, 1, 1)), substr(x, 2, nchar(x)))
+
+# returns an s if n > 1 (i.e., sprintf("we have n = %s sample%s", n, mult_s(n)))
+mult_s <- function(n) ifelse(n > 1, "s", "")
