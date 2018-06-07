@@ -14,8 +14,27 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.width = 7,
-  fig.height = 5
+  fig.height = 4
 )
+library(ggplot2)
+library(data.table)
+plot_4_way <- function(x, y) {
+  d <- data.table(x = x, y = y, type = "level-level")
+  dt <- rbindlist(list(
+    d,
+    copy(d)[, ':=' (x = shift(x), type = "lag-level")],
+    copy(d)[, ':=' (y = shift(y), type = "level-lag")]
+  ))[, type := factor(type, levels = c("level-lag", "level-level", "lag-level"),
+                      labels = c("Lag Y", "Level-Level", "Lag X"))]
+  p <- ggplot(dt, aes(x = x, y = y)) + 
+    geom_smooth() +
+    geom_point(alpha = 0.5, size = 0.5) +
+    facet_grid(~type) +
+    theme_light() +
+    labs(title = "X-Y Relations for Different Lags") +
+    coord_fixed(ratio = 1)
+  return(p)
+}
 ```
 
 ## Introduction to RTransferEntropy
@@ -80,13 +99,13 @@ Thereby, each value in the observed time series $y_t$ is replaced by an integer 
 
 Testing for and quantifying the information flow between two time series with Shannon and Rényi transfer entropy, as outlined above, can now easily be implemented with the package `RTransferEntropy`. The package is installed and loaded in the usual way.
 
-```{r, include=F}
-  library(RTransferEntropy)
+```{r, echo=F}
+library(RTransferEntropy)
 ```
 
 ```{r, eval=F}
-  install.packages('RTransferEntropy')
-  library(RTransferEntropy)
+install.packages('RTransferEntropy')
+library(RTransferEntropy)
 ```
 
 The main function is `transfer_entropy()`, which creates an object of class `TEResult` that contains the respective transfer entropy estimates (both in $J \rightarrow I$ and $I \rightarrow J$ direction), the related effective transfer entropy estimates, standard errors and p-values for the estimated values, an indication of statistical significance, and quantiles of the bootstrap samples (if the number of bootstrap replications is specified to be greater than zero). Some sub-functions are written in `C++` to speed up computations and an option for parallel computing is available, allowing for more efficient programming when `transfer_entropy()` is called multiple times or fairly long time series make calculations of effective transfer entropies and bootstrap inference time consuming. Let us describe the usage of `transfer_entropy()` and its options.
@@ -129,7 +148,7 @@ y_t & = & x_{t-1} + \varepsilon_{y,t},
 
 with $\varepsilon_{x,t}$ and $\varepsilon_{y,t}$ being normally distributed with a mean of 1 and a variance of 2. In this case, $X$ serves as a predictor for $Y$, but not vice versa. These processes are readily implemented taking, for example, 2500 observations.
 
-```{r, eval=T}
+```{r}
 set.seed(12345)
 n <- 2500
 x <- rep(0, n + 1)
@@ -144,9 +163,17 @@ x <- x[-1]
 y <- y[-1]
 ```
 
-We estimate Shannon transfer entropy with the defaults for all function arguments and by setting up a cluster.
+If plotted, the two series look like this
+```{r echo=F, message=FALSE, warning=FALSE}
+plot_4_way(x, y)
+```
 
-```{r, eval=T}
+
+We estimate Shannon transfer entropy with the defaults for all function arguments and by using the parallel processing option provided by the [`future`](https://cran.r-project.org/web/packages/future/index.html) package, we provide more information about the parallel backend later in this vignette.
+
+```{r}
+library(future)
+plan(multisession)
 set.seed(12345 + 1)
 (shannon_te <- transfer_entropy(x, y))
 ```
@@ -174,12 +201,16 @@ x <- rnorm(1, 0, 1)
 y <- rnorm(1, 0, 1)
 
 for (i in 2:(n + 200)) {
-  x <- append(x, 0.2 * x[i - 1] + rnorm(1, 0, 1))
-  y <- append(y, sqrt(abs(x[i - 1])) + rnorm(1, 0, 1))
+  x <- c(x, 0.2 * x[i - 1] + rnorm(1, 0, 1))
+  y <- c(y, sqrt(abs(x[i - 1])) + rnorm(1, 0, 1))
 }
 
 x <- x[201:(n + 200)]
 y <- y[201:(n + 200)]
+```
+
+```{r echo=F, message=FALSE, warning=FALSE}
+plot_4_way(x, y)
 ```
 
 Also in this example, we focus on Shannon transfer entropy.
@@ -194,7 +225,7 @@ In the same situation, using a VAR would, however, not reveal any relationship b
 
 ```{r, include=F}
 library(vars)
-varfit <- VAR(cbind(x, y), p = 1, type = c("const"))
+varfit <- VAR(cbind(x, y), p = 1, type = "const")
 svf <- summary(varfit)
 ```
 
@@ -221,16 +252,20 @@ y <- rnorm(1, 0, 1)
 
 for (i in 2:(n + 200)) {
   eps_x <- rnorm(1, 0, 1)
-  x <- append(x, 0.2 * x[i - 1] + eps_x)
+  x <- c(x, 0.2 * x[i - 1] + eps_x)
   if (eps_x > 2) {
-    y <- append(y, x[i - 1] + rnorm(1, 0, 1))
+    y <- c(y, x[i - 1] + rnorm(1, 0, 1))
   } else {
-    y <- append(y, 0.3 * x[i - 1] + rnorm(1, 0, 1))
+    y <- c(y, 0.3 * x[i - 1] + rnorm(1, 0, 1))
   }
 }
 
 x <- x[201:(n + 200)]
 y <- y[201:(n + 200)]
+```
+
+```{r echo=F, message=FALSE, warning=FALSE}
+plot_4_way(x, y)
 ```
 
 For comparison, we first estimate Shannon Transfer Entropy using the standard settings which results in the following effective transfer entropy estimates:
@@ -240,13 +275,11 @@ set.seed(12345 + 1)
 (shannon_te3 <- transfer_entropy(x, y))
 ```
 
-Giving more weights to the tails should reveal that the information flow is largely occuring in the tails. Therefore, we set q=0.3 and invoque the estimatio of Rényi transfer entropy as follows:
+Giving more weights to the tails should reveal that the information flow is largely occuring in the tails. Therefore, we set $q=0.3$ and invoque the estimation of Rényi transfer entropy as follows:
 
-```{r, eval=F}
+```{r}
 set.seed(12345 + 1)
-renyi_te <- transfer_entropy(x, y, entropy = "Renyi", q = 0.3)
-
-renyi_te
+(renyi_te <- transfer_entropy(x, y, entropy = "Renyi", q = 0.3))
 ```
 
 The result indicates that the tails are indeed more informative. The estimated Rényi effective transfer entropy is slightly higher than the Shannon ETE. Again, the information flow from $Y$ to $X$ is correctly identified as being zero.
@@ -255,26 +288,26 @@ Since Rényi transfer entropy approaches Shannon transfer entropy as $q \rightar
 
 ```{r, include=F}
 qs <- c(seq(0.1,0.9,0.1),0.99)
-ete <- NULL
-lab <- NULL
-for (i in 1:length(qs)) {
-  renyi_te <- transfer_entropy(x, y, 
-                               lx = 1,
-                               ly = 1,
-                               entropy = "Renyi",
-                               q = qs[i],
-                               nboot = 1)
-  
-  ete <- append(ete,renyi_te$coef[1,1])
-  lab <- append(lab, paste0("q=",qs[i]))
-}
-names(ete) <- lab
+
+te <- sapply(qs, function(q) calc_te(x, y, entropy = "renyi", q = q))
+names(te) <- sprintf("q = %.2f", qs)
 ```
 
 As presented above, the Shannon transfer entropy from $X$ to $Y$ is estimated as `r format(round(shannon_te3$coef[1,1],4), nsmall=4)`. Using different values of $q$ we obtain the following results for the Rényi transfer entropy.
 
 ```{r, echo=F}
-print(ete)
+print(te)
+
+ggplot(data.table(x = qs, y = te), aes(x = x, y = y)) +
+  geom_line() +
+  theme_light() +
+  labs(x = "Values for q", y = "Renyi's Transfer Entropy",
+       title = "Renyi's Transfer Entropy for different Values of q") +
+  geom_hline(yintercept = shannon_te3$coef[1,1], color = "red", linetype = "dashed") +
+  geom_text(data = data.table(x = 0.25, y = shannon_te3$coef[1,1], 
+                              lab = sprintf("Shannon's TE = %.4f", shannon_te3$coef[1,1])),
+            aes(label = lab), color = "red", nudge_y = 0.01)
+
 ```
 
 As can be seen, the value is indeed approaching `r format(round(shannon_te3$coef[1,1],4), nsmall=4)` as $q\rightarrow 1$.
@@ -291,16 +324,21 @@ library(future)
 
 # enable parallelism
 plan(multisession)
-te2 <- transfer_entropy(x, y)
+te <- transfer_entropy(x, y)
 
 # execute sequential again
 plan(sequential)
-te2 <- transfer_entropy(x, y)
+te <- transfer_entropy(x, y)
 ```
 
 Turning the function to `quiet = TRUE` might further help to reduce time when the function is called repeatedly. If you want to disable output for all calls, you can use `set_quiet(TRUE)`.
+```{r}
+set_quiet(TRUE)
+te <- transfer_entropy(x, y, nboot = 0)
 
-
+set_quiet(FALSE)
+te <- transfer_entropy(x, y, nboot = 0)
+```
 
 
 ## Comparison with existing package
