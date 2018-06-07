@@ -98,6 +98,7 @@ te_result
 
 
 # Parallel Processing using the future-package
+library(future)
 plan(multisession)
 
 te_result2 <- transfer_entropy(x, y)
