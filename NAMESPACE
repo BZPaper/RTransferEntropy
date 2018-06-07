@@ -3,6 +3,8 @@
 S3method(coef,TEResult)
 S3method(print,TEResult)
 S3method(summary,TEResult)
+export(calc_ete)
+export(calc_te)
 export(is.TEResult)
 export(set_quiet)
 export(transfer_entropy)
