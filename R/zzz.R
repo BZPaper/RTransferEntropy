@@ -1,7 +1,7 @@
 #' @useDynLib RTransferEntropy
 #' @importFrom Rcpp sourceCpp
 #' @importFrom stats quantile sd
-#' @importFrom future plan multisession sequential
+#' @import future
 NULL
 
 .onAttach <- function(...) {
@@ -131,6 +131,7 @@ calc_te_ete <- function(restype = "te",
       stexy <- texy - consty
     }
   }
+
   if (restype == "ete") {
     return(stexy)
   } else {
