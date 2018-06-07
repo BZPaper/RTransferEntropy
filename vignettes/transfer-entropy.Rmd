@@ -139,7 +139,9 @@ The function takes the following arguments:
 * `quiet`: if FALSE (default), the function gives feedback.
 * `seed` a seed that seeds the PRNG (will internally just call set.seed), default is `seed = NULL`.
 
-Before we turn to different applications below, we already provide a simple example here, in order to demonstrate how the output of `transfer_entropy()` looks like. Let us consider a linear relationship between two random variables $X$ and $Y$, where $Y$ depends on $X$ with one lag and $X$ is orthogonal to $Y$:
+Additionally, we provide two functions `calc_te` and `calc_ete` that calculate only the transfer entropy and the effective transfer entropy for the $X\rightarrow Y$ direction and leave out additional bootstraps etc. Each function takes the same arguments as the `transfer_entropy` function but return only a single value.
+
+Before we turn to different applications below, we already provide a simple example here, in order to demonstrate how the output of the functions look like. Let us consider a linear relationship between two random variables $X$ and $Y$, where $Y$ depends on $X$ with one lag and $X$ is orthogonal to $Y$:
 
 \begin{eqnarray*}
 x_t & = & 0.2x_{t-1} + \varepsilon_{x,t}\\
@@ -183,6 +185,19 @@ While estimating the Shannon transfer entropies, `RTransferEntropy` provides inf
 ```{r, eval=T}
 shannon_te
 ```
+
+If we only want to calculate the transfer entropy from $X$ to $Y$ (for the opposite flow we would simple have to reverse the input parameters) and leave out the bootstraps and other calculations, we can use the `calc_te` or the `calc_ete` function for the effective transfer entropy.
+```{r}
+# X->Y
+calc_te(x, y)
+calc_ete(x, y)
+
+# and Y->X
+calc_te(y, x)
+calc_ete(y, x)
+```
+
+Note that the effective transfer entropy relies on a random component, thus the results might be slightly different.
 
 ## Some examples using simulated time series
 
