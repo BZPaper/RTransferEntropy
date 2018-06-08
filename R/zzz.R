@@ -110,17 +110,19 @@ calc_te_ete <- function(restype = "te",
 
   # only calculate the X->Y direction
   if (entropy == "shannon") {
-    texy <- calc_te_shannon(y, lx = ly, x, ly = lx)
+    te <- calc_te_shannon(y, lx = ly, x, ly = lx)
     if (restype == "ete") {
       consty <- shuffle_shannon(x = y,
                                 lx = ly,
                                 y = x,
                                 ly = lx,
                                 shuffles = shuffles)
-      stexy <- texy - consty
+      ete <- te - consty
+      ete <- max(0, ete)
     }
+    te <- max(0, te)
   } else {# RENYI
-    texy <- calc_te_renyi(y, lx = ly, x, ly = lx, q = q)
+    te <- calc_te_renyi(y, lx = ly, x, ly = lx, q = q)
     if (restype == "ete") {
       consty <- shuffle_renyi(x = y,
                               lx = ly,
@@ -128,13 +130,13 @@ calc_te_ete <- function(restype = "te",
                               ly = lx,
                               shuffles = shuffles,
                               q = q)
-      stexy <- texy - consty
+      ete <- te - consty
     }
   }
 
   if (restype == "ete") {
-    return(stexy)
+    return(ete)
   } else {
-    return(texy)
+    return(te)
   }
 }
