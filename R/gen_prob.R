@@ -8,9 +8,8 @@ gen_prob <- function(x, lx) {
 
   if (is.numeric(x)) x <- as.character(x)
 
-  # Calculate state probabilities (relative frequencies of coded values)
   px <- freq_table(x)
-  transprob = calculate_transition_probabilities(x, lx)
+  transprob <- calculate_transition_probabilities(x, lx)
 
   return(list(px = px, transprob = transprob))
 }
