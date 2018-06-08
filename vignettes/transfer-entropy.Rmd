@@ -17,19 +17,20 @@ knitr::opts_chunk$set(
   fig.height = 4
 )
 library(ggplot2)
-library(data.table)
 plot_4_way <- function(x, y) {
-  d <- data.table(x = x, y = y, type = "level-level")
-  dt <- rbindlist(list(
-    d,
-    copy(d)[, ':=' (x = shift(x), type = "lag-level")],
-    copy(d)[, ':=' (y = shift(y), type = "level-lag")]
-  ))[, type := factor(type, levels = c("level-lag", "level-level", "lag-level"),
-                      labels = c("Lag Y", "Level-Level", "Lag X"))]
+
+  dt <- do.call(rbind, list(
+    data.frame(x = x, y = y, dir = "Level-Level", stringsAsFactors = FALSE),
+    data.frame(x = x, y = c(NA, y[1:(length(y) - 1)]), dir = "Lag Y\nY->X", stringsAsFactors = FALSE),
+    data.frame(x = c(NA, x[1:(length(x) - 1)]), y = y, dir = "Lag X\nX->Y", stringsAsFactors = FALSE)
+  ))
+  dt$dir <- factor(dt$dir, levels = c("Lag X\nX->Y", "Level-Level", "Lag Y\nY->X"))
+  
+  
   p <- ggplot(dt, aes(x = x, y = y)) + 
     geom_smooth() +
     geom_point(alpha = 0.5, size = 0.5) +
-    facet_grid(~type) +
+    facet_grid(~dir) +
     theme_light() +
     labs(title = "X-Y Relations for Different Lags") +
     coord_fixed(ratio = 1)
@@ -175,6 +176,7 @@ We estimate Shannon transfer entropy with the defaults for all function argument
 
 ```{r}
 library(future)
+# enable parallel processing for all transfer_entropy calls
 plan(multisession)
 set.seed(12345 + 1)
 (shannon_te <- transfer_entropy(x, y))
@@ -313,13 +315,13 @@ As presented above, the Shannon transfer entropy from $X$ to $Y$ is estimated as
 ```{r, echo=F}
 print(te)
 
-ggplot(data.table(x = qs, y = te), aes(x = x, y = y)) +
+ggplot(data.frame(x = qs, y = te), aes(x = x, y = y)) +
   geom_line() +
   theme_light() +
   labs(x = "Values for q", y = "Renyi's Transfer Entropy",
        title = "Renyi's Transfer Entropy for different Values of q") +
   geom_hline(yintercept = shannon_te3$coef[1,1], color = "red", linetype = "dashed") +
-  geom_text(data = data.table(x = 0.25, y = shannon_te3$coef[1,1], 
+  geom_text(data = data.frame(x = 0.25, y = shannon_te3$coef[1,1], 
                               lab = sprintf("Shannon's TE = %.4f", shannon_te3$coef[1,1])),
             aes(label = lab), color = "red", nudge_y = 0.01)
 
@@ -333,17 +335,17 @@ As can be seen, the value is indeed approaching `r format(round(shannon_te3$coef
 
 `RTransferEntropy` uses the [`future`](https://cran.r-project.org/web/packages/future/index.html) package internally that allows for parallel execution.
 To enable parallel execution, you have to select a plan (see also [`?future::plan`](https://www.rdocumentation.org/packages/future/versions/1.8.1/topics/plan)).
-The following code first executes the function calls sequential, then uses multiple cores, lastly it sets the plan to sequential again.
+The following code uses multiple cores as set by `plan(multisession)` then it reverts to sequential execution.
 ```{r, eval = T}
 library(future)
 
 # enable parallelism
 plan(multisession)
-te <- transfer_entropy(x, y)
+te <- transfer_entropy(x, y, nboot = 100)
 
 # execute sequential again
 plan(sequential)
-te <- transfer_entropy(x, y)
+te <- transfer_entropy(x, y, nboot = 100)
 ```
 
 Turning the function to `quiet = TRUE` might further help to reduce time when the function is called repeatedly. If you want to disable output for all calls, you can use `set_quiet(TRUE)`.
