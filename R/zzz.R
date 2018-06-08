@@ -118,7 +118,6 @@ calc_te_ete <- function(restype = "te",
                                 ly = lx,
                                 shuffles = shuffles)
       ete <- te - consty
-      ete <- max(0, ete)
     }
     te <- max(0, te)
   } else {# RENYI
