@@ -34,8 +34,12 @@ and none from y to x.
 ### Simulating a Time-Series
 ```{r}
 library(RTransferEntropy)
+library(future)
+# enable parallel processing
+plan(multisession)
+
 set.seed(20180108)
-n <- 100000
+n <- 2000
 x <- rep(0, n + 1)
 y <- rep(0, n + 1)
 
@@ -48,8 +52,9 @@ x <- x[-1]
 y <- y[-1]
 ```
 
+
 ### Visualisation
-```{r contemp_plot}
+```{r contemp_plot, message=FALSE, warning=FALSE}
 library(data.table)
 library(ggplot2)
 library(latex2exp)
@@ -72,46 +77,52 @@ ggplot(df, aes(x = x, y = y, color = grp)) +
 ### Shannon Transfer Entropy
 ```{r}
 set.seed(20180108 + 1)
-n_cores <- parallel::detectCores() - 1
 
-shannon_te <- transfer_entropy(x = x,
-                               y = y,
-                               lx = 1,
-                               ly = 1,
-                               nboot = n_cores,
-                               cl = n_cores)
+(shannon_te <- transfer_entropy(x = x, y = y))
+```
 
-shannon_te
+Alternatively, you can only calculate the transfer entropy or the effective transfer entropy with
+```{r}
+calc_te(x, y)
+calc_te(y, x)
+
+calc_ete(x, y)
+calc_ete(y, x)
 ```
 
 
 ### Renyi Transfer Entropy
 ```{r}
 set.seed(20180108 + 1)
-n_cores <- parallel::detectCores() - 1
 
-renyi_te <- transfer_entropy(x = x,
-                             y = y,
-                             lx = 1,
-                             ly = 1,
-                             entropy = "renyi",
-                             q = 0.5,
-                             nboot = n_cores,
-                             cl = n_cores)
+(renyi_te <- transfer_entropy(x = x, y = y, entropy = "renyi", q = 0.5))
 
-renyi_te
+calc_te(x, y, entropy = "renyi", q = 0.5)
+calc_te(y, x, entropy = "renyi", q = 0.5)
+
+calc_ete(x, y, entropy = "renyi", q = 0.5)
+calc_ete(y, x, entropy = "renyi", q = 0.5)
 ```
 
+If you want to turn-off all feedback from functions, you can do so by using `set_quiet(TRUE)`
+```{r}
+set_quiet(TRUE)
+te <- transfer_entropy(x, y)
+te
+# revert back with
+set_quiet(FALSE)
+```
 
-# Efficient Programming
-If you know that you will call the function multiple times, you can outsource the cluster creation, i.e., the following code might save you time
+# Parallel Programming
+
+Using `future`s plans we can execute all computations in parallel like so
 ```{r, warning=F}
-mycl <- parallel::makeCluster(parallel::detectCores() - 1)
+library(future)
+plan(multisession)
+te <- transfer_entropy(x, y)
+te <- transfer_entropy(x, y, entropy = "renyi", q = 0.5)
 
-# stop the cluster when the whole programm exits
-# on.exit({parallel::stopCluster(mycl)}, add = T)
-
-te <- transfer_entropy(x, y, nboot = length(mycl), cl = mycl)
-te <- transfer_entropy(x, y, nboot = length(mycl), entropy = "renyi", cl = mycl)
+# revert to sequential mode
+plan(sequential)
+te <- transfer_entropy(x, y, nboot = 100)
 ```
-

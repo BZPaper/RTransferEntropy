@@ -15,13 +15,36 @@ y <- y[-1]
 #################################
 
 
-test_that("te_result is correctly specified", {
-  context("Shannon")
+test_that("transfer_entropy shannon is correctly specified", {
+  context("calc_te X->Y")
+  res <- calc_te(x, y)
+  expect_type(res, "double")
+  expect_length(res, 1)
+  expect_equal(res, 0.1120278, tolerance = 1e-6)
 
-  suppressWarnings(
+  context("calc_te Y->X")
+  res <- calc_te(y, x)
+  expect_type(res, "double")
+  expect_length(res, 1)
+  expect_equal(res, 0.007642886, tolerance = 1e-6)
+
+  context("calc_ete X->Y")
+  res <- calc_ete(x, y, seed = 1234567890)
+  expect_type(res, "double")
+  expect_length(res, 1)
+  expect_equal(res, 0.1052868, tolerance = 1e-6)
+
+  context("calc_ete Y->X")
+  res <- calc_ete(y, x, seed = 1234567890)
+  expect_type(res, "double")
+  expect_length(res, 1)
+  expect_equal(res, 0.00187351, tolerance = 1e-6)
+
+  context("transfer_entropy")
+  suppressWarnings({
     res <- transfer_entropy(x, y, lx = 1, ly = 1, nboot = 10, quiet = T,
-                            seed = 12345667, cl = 1)
-  )
+                            seed = 12345667)
+  })
 
   context("check types")
   expect_true(is.TEResult(res))
@@ -44,26 +67,49 @@ test_that("te_result is correctly specified", {
 
   context("check values")
   exp_coefs <- matrix(
-    c(0.112027796364799, 0.00764288597650148, 0.105442320436181,
-      0.00179846620598153, 0.0026375806414119, 0.00289890292470592,
-      0, 0.4), nrow = 2, ncol = 4,
-    dimnames = list(c("X->Y", "Y->X"), c("te", "ete", "se", "p-value"))
+    c(0.112028, 0.007643, 0.105148, 0.002364, 0.004295, 0.002488, 0, 0.3),
+    nrow = 2, ncol = 4,
+    dimnames = list(c("X->Y", "Y->X"), c("te", "ete", "se", "p-value")
+    )
   )
   expect_equal(coefs, exp_coefs, tolerance = 1e-6)
 })
-
 
 #################################
 # Renyi Entropy
 #################################
 
-test_that("te_result is correctly specified", {
-  context("Renyi")
+test_that("transfer_entropy renyi is correctly specified", {
+  context("calc_te X->Y")
+  res <- calc_te(x, y, entropy = "renyi")
+  expect_type(res, "double")
+  expect_length(res, 1)
+  expect_equal(res, 0.2530839, tolerance = 1e-6)
 
-  suppressWarnings(
+  context("calc_te Y->X")
+  res <- calc_te(y, x, entropy = "renyi")
+  expect_type(res, "double")
+  expect_length(res, 1)
+  expect_equal(res, 0.02494136, tolerance = 1e-6)
+
+  context("calc_ete X->Y")
+  res <- calc_ete(x, y, seed = 1234567890, entropy = "renyi")
+  expect_type(res, "double")
+  expect_length(res, 1)
+  # expect_equal(res, , tolerance = 1e-6) # ERROR HERE, ete negative
+
+  context("calc_ete Y->X")
+  res <- calc_ete(y, x, entropy = "renyi")
+  expect_type(res, "double")
+  expect_length(res, 1)
+  # expect_equal(res, , tolerance = 1e-6) # ERROR HERE, ete negative
+
+  context("transfer_entropy")
+  suppressWarnings({
     res <- transfer_entropy(x, y, lx = 1, ly = 1, entropy = "renyi", q = 0.5,
-                            nboot = 10, quiet = T, seed = 12345667, cl = 1)
-  )
+                            nboot = 10, quiet = T, seed = 12345667)
+  })
+
   context("check types")
   expect_true(is.TEResult(res))
 
@@ -85,8 +131,7 @@ test_that("te_result is correctly specified", {
 
   context("check values")
   exp_coefs <- matrix(
-    c(0.12144794402804, 0.0124702971050821, 0.0424547456439137,
-      0, 0.0293591162956084, 0.0418520051264712, 0.1, 0.9),
+    c(0.121448, 0.01247, 0.043398, 0, 0.041596, 0.039388, 0.4, 0.6),
     nrow = 2, ncol = 4,
     dimnames = list(c("X->Y", "Y->X"), c("te", "ete", "se", "p-value"))
   )

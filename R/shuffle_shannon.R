@@ -3,24 +3,23 @@
 # the respective shuffled transfer entropy. Used internally by transfer_entropy;
 # same arguments.
 #
-shuffle_shannon <- function(x,
-                            lx,
-                            y,
-                            ly,
-                            shuffles,
-                            cl = NULL) {
+shuffle_shannon <- function(x, lx, y, ly, shuffles) {
 
-  seeds <- sample(.Machine$integer.max, shuffles)
   n <- length(x)
 
-  shuffle <- pbapply::pblapply(seeds, function(seed) {
-    set.seed(seed)
-    res <- calc_te_shannon(x = x, y = sample(y, n, replace = TRUE),
-                           lx = lx, ly = ly)
-    return(res)
-  }, cl = cl)
+  if (shuffles > 200) {
+    shuffle <- future.apply::future_replicate(
+      shuffles,
+      calc_te_shannon(x = x, y = sample(y, n, replace = TRUE), lx = lx, ly = ly)
+    )
+  } else {
+    shuffle <- replicate(
+      shuffles,
+      calc_te_shannon(x = x, y = sample(y, n, replace = TRUE), lx = lx, ly = ly)
+    )
+  }
 
-  ste <- mean(unlist(shuffle))
+  ste <- mean(shuffle)
 
   return(ste)
 }

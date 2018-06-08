@@ -6,7 +6,6 @@ te_shannon <- function(x,
                        y,
                        ly,
                        shuffles,
-                       cl,
                        type,
                        quantiles,
                        bins,
@@ -20,40 +19,40 @@ te_shannon <- function(x,
   y <- code_sample(y, type, quantiles, bins, limits)
 
   # Lead = y
-  if (!quiet) cat("Calculate the X->Y transfer entropy\n")
+  if (!quiet) cat("  [calculate] X->Y transfer entropy\n")
   texy <- calc_te_shannon(y, lx = ly, x, ly = lx)
   consty <- shuffle_shannon(x = y,
                             lx = ly,
                             y = x,
                             ly = lx,
-                            shuffles = shuffles,
-                            cl = cl)
+                            shuffles = shuffles)
   stexy <- texy - consty
 
   # Lead = x
-  if (!quiet) cat("Calculate the Y->X transfer entropy\n")
+  if (!quiet) cat("  [calculate] Y->X transfer entropy\n")
   teyx <- calc_te_shannon(x, lx = lx, y, ly = ly)
   constx <- shuffle_shannon(x = x,
                             lx = lx,
                             y = y,
                             ly = ly,
-                            shuffles = shuffles,
-                            cl = cl)
+                            shuffles = shuffles)
   steyx <- teyx - constx
 
   # Bootstrap
-  if (!quiet) cat("Bootstrap the transfer entropies\n")
   if (nboot > 0) {
+    if (!quiet) cat(sprintf("  [bootstrap] %s time%s\n",
+                            nboot, mult_s(nboot)))
     seeds <- sample(.Machine$integer.max, nboot)
-    boot <- pbapply::pbsapply(seeds, function(seed) {
+
+    boot <- future.apply::future_sapply(seeds, function(seed) {
       set.seed(seed)
       bootstrap_shannon(x = x,
                         lx = lx,
                         y = y,
                         ly = ly,
-                        burn = burn,
-                        cl = NULL)
-    }, cl = cl)
+                        burn = burn)
+    })
+
   } else {
     boot <- NA
   }
