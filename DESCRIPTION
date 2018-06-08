@@ -18,8 +18,9 @@ Imports:
 LazyData: true
 RoxygenNote: 6.0.1
 LinkingTo: Rcpp
-Suggests: testthat,
+Suggests: ggplot2,
     knitr,
     rmarkdown,
+    testthat,
     vars
 VignetteBuilder: knitr

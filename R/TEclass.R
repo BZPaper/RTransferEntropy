@@ -56,7 +56,7 @@ print.TEResult <- function(x, digits = 4, boot = TRUE, ...) {
     )
   }
 
-  str <- c(
+  text <- c(
     paste(fupper(x$entropy), "Transfer Entropy Results:"),
     line,
     header,
@@ -69,9 +69,9 @@ print.TEResult <- function(x, digits = 4, boot = TRUE, ...) {
     line,
     "p-values: < 0.001 '***', < 0.01 '**', < 0.05 '*', < 0.1 '.'"
   )
-  str <- paste(str, collapse = "\n")
-  cat(str)
-  return(invisible(str))
+  text <- paste(text, collapse = "\n")
+  cat(text)
+  return(invisible(text))
 }
 
 # mat the matrix that contains the coefficients
@@ -112,8 +112,8 @@ textify_mat <- function(mat, digits, width = 10, stars = TRUE) {
 #' @examples
 #' # see ?transfer_entropy
 summary.TEResult <- function(object, ...) {
-  print(object, ...)
-  return(invisible(str))
+  text <- print(object, ...)
+  return(invisible(text))
 }
 
 #' Checks if an object is a TEResult
