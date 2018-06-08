@@ -3,12 +3,18 @@
 RTransferEntropy
 ================
 
-The goal of RTransferEntropy is to implement transfer entropy for the Shannon and the Renyi-methodology.
+The goal of `RTransferEntropy` is to implement the calculation of the transfer entropy metric using Shannon's or the Renyi's methodology.
 
 Installation
 ------------
 
-You can install RTransferEntropy from github with:
+You can install `RTransferEntropy` with
+
+``` r
+install.packages("RTransferEntropy")
+```
+
+or the development version from github with
 
 ``` r
 # install.packages("devtools")
@@ -45,23 +51,24 @@ y <- y[-1]
 ### Visualisation
 
 ``` r
-library(data.table)
 library(ggplot2)
-library(latex2exp)
 theme_set(theme_light())
 
-df <- rbindlist(list(
-  data.table(x, y, grp = "Contemporaneous Effect"),
-  data.table(shift(x, 1), y, grp = "Time-Delayed Effect")
+dt <- do.call(rbind, list(
+  data.frame(x = x, y = y, dir = "Level-Level", stringsAsFactors = FALSE),
+  data.frame(x = x, y = c(NA, y[1:(length(y) - 1)]), dir = "Lag Y\nY->X", stringsAsFactors = FALSE),
+  data.frame(x = c(NA, x[1:(length(x) - 1)]), y = y, dir = "Lag X\nX->Y", stringsAsFactors = FALSE)
 ))
+dt$dir <- factor(dt$dir, levels = c("Lag X\nX->Y", "Level-Level", "Lag Y\nY->X"))
 
-ggplot(df, aes(x = x, y = y, color = grp)) + 
-  geom_point(alpha = 0.1) +
+
+ggplot(dt, aes(x = x, y = y)) + 
   geom_smooth() +
-  facet_wrap(~grp) +
-  labs(x = TeX("Left: x_t Right: x_{t-1}"), y = TeX("y_t"), 
-       title = "Scatterplot of the Time-Series") +
-  scale_color_brewer(palette = "Set1", guide = F)
+  geom_point(alpha = 0.5, size = 0.5) +
+  facet_grid(~dir) +
+  theme_light() +
+  labs(title = "X-Y Relations for Different Lags") +
+  coord_fixed(ratio = 1)
 ```
 
 ![](README-contemp_plot-1.png)
@@ -71,18 +78,20 @@ ggplot(df, aes(x = x, y = y, color = grp)) +
 ``` r
 set.seed(20180108 + 1)
 
-(shannon_te <- transfer_entropy(x = x, y = y))
+shannon_te <- transfer_entropy(x = x, y = y)
 #> Shannon's entropy on 8 cores with 100 shuffles. The timeseries have length 2000 (0 NAs removed)
 #>   [calculate] X->Y transfer entropy
 #>   [calculate] Y->X transfer entropy
 #>   [bootstrap] 300 times
-#> Done - Total time 7.54 seconds
+#> Done - Total time 7.24 seconds
+
+shannon_te
 #> Shannon Transfer Entropy Results:
 #> -----------------------------------------------------------------
 #>  Direction          TE     Eff. TE    Std.Err.     p-value    sig
 #> -----------------------------------------------------------------
 #>       X->Y      0.1245      0.1213      0.0015      0.0000    ***
-#>       Y->X      0.0020      0.0000      0.0016      0.8433       
+#>       Y->X      0.0020     -0.0015      0.0016      0.8433       
 #> -----------------------------------------------------------------
 #> Bootstrapped TE Quantiles (300 replications):
 #> -----------------------------------------------------------------
@@ -96,7 +105,7 @@ set.seed(20180108 + 1)
 #> p-values: < 0.001 '***', < 0.01 '**', < 0.05 '*', < 0.1 '.'
 ```
 
-Alternatively, you can only calculate the transfer entropy or the effective transfer entropy with
+Alternatively, you can calculate only the transfer entropy or the effective transfer entropy with
 
 ``` r
 calc_te(x, y)
@@ -115,18 +124,20 @@ calc_ete(y, x)
 ``` r
 set.seed(20180108 + 1)
 
-(renyi_te <- transfer_entropy(x = x, y = y, entropy = "renyi", q = 0.5))
+renyi_te <- transfer_entropy(x = x, y = y, entropy = "renyi", q = 0.5)
 #> Renyi's entropy on 8 cores with 100 shuffles. The timeseries have length 2000 (0 NAs removed)
 #>   [calculate] X->Y transfer entropy
 #>   [calculate] Y->X transfer entropy
 #>   [bootstrap] 300 times
-#> Done - Total time 6.85 seconds
+#> Done - Total time 6.95 seconds
+
+renyi_te
 #> Renyi Transfer Entropy Results:
 #> -----------------------------------------------------------------
 #>  Direction          TE     Eff. TE    Std.Err.     p-value    sig
 #> -----------------------------------------------------------------
 #>       X->Y      0.0852      0.0421      0.0213      0.0233      *
-#>       Y->X      0.0276      0.0000      0.0225      0.7000       
+#>       Y->X      0.0276     -0.0135      0.0225      0.7000       
 #> -----------------------------------------------------------------
 #> Bootstrapped TE Quantiles (300 replications):
 #> -----------------------------------------------------------------
@@ -151,60 +162,100 @@ calc_ete(y, x, entropy = "renyi", q = 0.5)
 #> [1] -0.01225754
 ```
 
-If you want to turn-off all feedback from functions, you can do so by using `set_quiet(TRUE)`
+Function Verbosity aka `quiet = TRUE`
+=====================================
+
+To disable the verbosity of a function you can use the argument `quiet`. Note that we have set `nboot = 0` as we don't need bootstrapped quantiles for this example.
 
 ``` r
-set_quiet(TRUE)
-te <- transfer_entropy(x, y)
-te
+te_s <- transfer_entropy(x, y, nboot = 0, quiet = T)
+
+te_s
 #> Shannon Transfer Entropy Results:
 #> -----------------------------------------------------------------
 #>  Direction          TE     Eff. TE    Std.Err.     p-value    sig
 #> -----------------------------------------------------------------
-#>       X->Y      0.1245      0.1212      0.0014      0.0000    ***
-#>       Y->X      0.0020      0.0000      0.0014      0.8300       
+#>       X->Y      0.1245      0.1212          NA          NA       
+#>       Y->X      0.0020     -0.0016          NA          NA       
 #> -----------------------------------------------------------------
-#> Bootstrapped TE Quantiles (300 replications):
-#> -----------------------------------------------------------------
-#> Direction        0%       25%       50%       75%      100%
-#> -----------------------------------------------------------------
-#>     X->Y    0.0009    0.0024    0.0031    0.0040    0.0096
-#>     Y->X    0.0004    0.0023    0.0029    0.0039    0.0088
+#> For calculation of standard errors and p-values set nboot > 0
 #> -----------------------------------------------------------------
 #> Number of Observations: 2000
 #> -----------------------------------------------------------------
 #> p-values: < 0.001 '***', < 0.01 '**', < 0.05 '*', < 0.1 '.'
+```
+
+If you want to disable feedback from `transfer_entropy` functions, you can do so by using `set_quiet(TRUE)`
+
+``` r
+set_quiet(TRUE)
+te_s <- transfer_entropy(x, y, nboot = 0)
+te_r <- transfer_entropy(x, y, entropy = "renyi", nboot = 0)
+
+te_s
+#> Shannon Transfer Entropy Results:
+#> -----------------------------------------------------------------
+#>  Direction          TE     Eff. TE    Std.Err.     p-value    sig
+#> -----------------------------------------------------------------
+#>       X->Y      0.1245      0.1213          NA          NA       
+#>       Y->X      0.0020     -0.0014          NA          NA       
+#> -----------------------------------------------------------------
+#> For calculation of standard errors and p-values set nboot > 0
+#> -----------------------------------------------------------------
+#> Number of Observations: 2000
+#> -----------------------------------------------------------------
+#> p-values: < 0.001 '***', < 0.01 '**', < 0.05 '*', < 0.1 '.'
+te_r
+#> Renyi Transfer Entropy Results:
+#> -----------------------------------------------------------------
+#>  Direction          TE     Eff. TE    Std.Err.     p-value    sig
+#> -----------------------------------------------------------------
+#>       X->Y      0.1861     -0.0336          NA          NA       
+#>       Y->X      0.1215     -0.0795          NA          NA       
+#> -----------------------------------------------------------------
+#> For calculation of standard errors and p-values set nboot > 0
+#> -----------------------------------------------------------------
+#> Number of Observations: 2000
+#> Q: 0.1
+#> -----------------------------------------------------------------
+#> p-values: < 0.001 '***', < 0.01 '**', < 0.05 '*', < 0.1 '.'
+
 # revert back with
 set_quiet(FALSE)
+te_s <- transfer_entropy(x, y, nboot = 0)
+#> Shannon's entropy on 8 cores with 100 shuffles. The timeseries have length 2000 (0 NAs removed)
+#>   [calculate] X->Y transfer entropy
+#>   [calculate] Y->X transfer entropy
+#> Done - Total time 0.45 seconds
 ```
 
 Parallel Programming
 ====================
 
-Using `future`s plans we can execute all computations in parallel like so
+Using the `future` package and its `plan`s we can execute all computations in parallel like so
 
 ``` r
 library(future)
 plan(multisession)
-te <- transfer_entropy(x, y)
+te_s <- transfer_entropy(x, y, nboot = 100)
 #> Shannon's entropy on 8 cores with 100 shuffles. The timeseries have length 2000 (0 NAs removed)
 #>   [calculate] X->Y transfer entropy
 #>   [calculate] Y->X transfer entropy
-#>   [bootstrap] 300 times
-#> Done - Total time 7.15 seconds
-te <- transfer_entropy(x, y, entropy = "renyi", q = 0.5)
+#>   [bootstrap] 100 times
+#> Done - Total time 3.58 seconds
+te_r <- transfer_entropy(x, y, entropy = "renyi", nboot = 100)
 #> Renyi's entropy on 8 cores with 100 shuffles. The timeseries have length 2000 (0 NAs removed)
 #>   [calculate] X->Y transfer entropy
 #>   [calculate] Y->X transfer entropy
-#>   [bootstrap] 300 times
-#> Done - Total time 7.01 seconds
+#>   [bootstrap] 100 times
+#> Done - Total time 3.12 seconds
 
 # revert to sequential mode
 plan(sequential)
-te <- transfer_entropy(x, y, nboot = 100)
+te_s <- transfer_entropy(x, y, nboot = 100)
 #> Shannon's entropy on 1 core with 100 shuffles. The timeseries have length 2000 (0 NAs removed)
 #>   [calculate] X->Y transfer entropy
 #>   [calculate] Y->X transfer entropy
 #>   [bootstrap] 100 times
-#> Done - Total time 8.95 seconds
+#> Done - Total time 8.21 seconds
 ```

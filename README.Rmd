@@ -14,11 +14,16 @@ knitr::opts_chunk$set(
 
 # RTransferEntropy
 
-The goal of RTransferEntropy is to implement transfer entropy for the Shannon and the Renyi-methodology.
+The goal of `RTransferEntropy` is to implement the calculation of the transfer entropy metric using Shannon's or the Renyi's methodology.
 
 ## Installation
 
-You can install RTransferEntropy from github with:
+You can install `RTransferEntropy` with
+```{r, eval = FALSE}
+install.packages("RTransferEntropy")
+```
+
+or the development version from github with
 
 ```{r gh_installation, eval = FALSE}
 # install.packages("devtools")
@@ -55,33 +60,36 @@ y <- y[-1]
 
 ### Visualisation
 ```{r contemp_plot, message=FALSE, warning=FALSE}
-library(data.table)
 library(ggplot2)
-library(latex2exp)
 theme_set(theme_light())
 
-df <- rbindlist(list(
-  data.table(x, y, grp = "Contemporaneous Effect"),
-  data.table(shift(x, 1), y, grp = "Time-Delayed Effect")
+dt <- do.call(rbind, list(
+  data.frame(x = x, y = y, dir = "Level-Level", stringsAsFactors = FALSE),
+  data.frame(x = x, y = c(NA, y[1:(length(y) - 1)]), dir = "Lag Y\nY->X", stringsAsFactors = FALSE),
+  data.frame(x = c(NA, x[1:(length(x) - 1)]), y = y, dir = "Lag X\nX->Y", stringsAsFactors = FALSE)
 ))
+dt$dir <- factor(dt$dir, levels = c("Lag X\nX->Y", "Level-Level", "Lag Y\nY->X"))
 
-ggplot(df, aes(x = x, y = y, color = grp)) + 
-  geom_point(alpha = 0.1) +
+
+ggplot(dt, aes(x = x, y = y)) + 
   geom_smooth() +
-  facet_wrap(~grp) +
-  labs(x = TeX("Left: x_t Right: x_{t-1}"), y = TeX("y_t"), 
-       title = "Scatterplot of the Time-Series") +
-  scale_color_brewer(palette = "Set1", guide = F)
+  geom_point(alpha = 0.5, size = 0.5) +
+  facet_grid(~dir) +
+  theme_light() +
+  labs(title = "X-Y Relations for Different Lags") +
+  coord_fixed(ratio = 1)
 ```
 
 ### Shannon Transfer Entropy
 ```{r}
 set.seed(20180108 + 1)
 
-(shannon_te <- transfer_entropy(x = x, y = y))
+shannon_te <- transfer_entropy(x = x, y = y)
+
+shannon_te
 ```
 
-Alternatively, you can only calculate the transfer entropy or the effective transfer entropy with
+Alternatively, you can calculate only the transfer entropy or the effective transfer entropy with
 ```{r}
 calc_te(x, y)
 calc_te(y, x)
@@ -95,7 +103,9 @@ calc_ete(y, x)
 ```{r}
 set.seed(20180108 + 1)
 
-(renyi_te <- transfer_entropy(x = x, y = y, entropy = "renyi", q = 0.5))
+renyi_te <- transfer_entropy(x = x, y = y, entropy = "renyi", q = 0.5)
+
+renyi_te
 
 calc_te(x, y, entropy = "renyi", q = 0.5)
 calc_te(y, x, entropy = "renyi", q = 0.5)
@@ -104,25 +114,39 @@ calc_ete(x, y, entropy = "renyi", q = 0.5)
 calc_ete(y, x, entropy = "renyi", q = 0.5)
 ```
 
-If you want to turn-off all feedback from functions, you can do so by using `set_quiet(TRUE)`
+# Function Verbosity aka `quiet = TRUE`
+
+To disable the verbosity of a function you can use the argument `quiet`. Note that we have set `nboot = 0` as we don't need bootstrapped quantiles for this example.
+```{r}
+te_s <- transfer_entropy(x, y, nboot = 0, quiet = T)
+
+te_s
+```
+
+If you want to disable feedback from `transfer_entropy` functions, you can do so by using `set_quiet(TRUE)`
 ```{r}
 set_quiet(TRUE)
-te <- transfer_entropy(x, y)
-te
+te_s <- transfer_entropy(x, y, nboot = 0)
+te_r <- transfer_entropy(x, y, entropy = "renyi", nboot = 0)
+
+te_s
+te_r
+
 # revert back with
 set_quiet(FALSE)
+te_s <- transfer_entropy(x, y, nboot = 0)
 ```
 
 # Parallel Programming
 
-Using `future`s plans we can execute all computations in parallel like so
+Using the `future` package and its `plan`s we can execute all computations in parallel like so
 ```{r, warning=F}
 library(future)
 plan(multisession)
-te <- transfer_entropy(x, y)
-te <- transfer_entropy(x, y, entropy = "renyi", q = 0.5)
+te_s <- transfer_entropy(x, y, nboot = 100)
+te_r <- transfer_entropy(x, y, entropy = "renyi", nboot = 100)
 
 # revert to sequential mode
 plan(sequential)
-te <- transfer_entropy(x, y, nboot = 100)
+te_s <- transfer_entropy(x, y, nboot = 100)
 ```
