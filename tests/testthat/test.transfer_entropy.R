@@ -96,13 +96,13 @@ test_that("transfer_entropy renyi is correctly specified", {
   res <- calc_ete(x, y, seed = 1234567890, entropy = "renyi")
   expect_type(res, "double")
   expect_length(res, 1)
-  # expect_equal(res, , tolerance = 1e-6) # ERROR HERE, ete negative
+  expect_equal(res, -0.074507, tolerance = 1e-6)
 
   context("calc_ete Y->X")
   res <- calc_ete(y, x, entropy = "renyi")
   expect_type(res, "double")
   expect_length(res, 1)
-  # expect_equal(res, , tolerance = 1e-6) # ERROR HERE, ete negative
+  expect_equal(res, -0.174042, tolerance = 1e-6)
 
   context("transfer_entropy")
   suppressWarnings({
@@ -131,7 +131,7 @@ test_that("transfer_entropy renyi is correctly specified", {
 
   context("check values")
   exp_coefs <- matrix(
-    c(0.121448, 0.01247, 0.043398, 0, 0.041596, 0.039388, 0.4, 0.6),
+    c(0.121448, 0.01247, 0.043398, -0.034465, 0.041596, 0.039388, 0.4, 0.6),
     nrow = 2, ncol = 4,
     dimnames = list(c("X->Y", "Y->X"), c("te", "ete", "se", "p-value"))
   )
