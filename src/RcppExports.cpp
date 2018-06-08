@@ -5,6 +5,29 @@
 
 using namespace Rcpp;
 
+// calculate_transition_probabilities
+List calculate_transition_probabilities(CharacterVector x, int lx);
+RcppExport SEXP _RTransferEntropy_calculate_transition_probabilities(SEXP xSEXP, SEXP lxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type lx(lxSEXP);
+    rcpp_result_gen = Rcpp::wrap(calculate_transition_probabilities(x, lx));
+    return rcpp_result_gen;
+END_RCPP
+}
+// freq_table
+Rcpp::NumericVector freq_table(std::vector<std::string> x);
+RcppExport SEXP _RTransferEntropy_freq_table(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::vector<std::string> >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(freq_table(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cluster_gen
 Rcpp::List cluster_gen(Rcpp::IntegerVector x, int lx, Rcpp::Nullable<Rcpp::IntegerVector> y, Rcpp::Nullable<int> ly, bool prog);
 RcppExport SEXP _RTransferEntropy_cluster_gen(SEXP xSEXP, SEXP lxSEXP, SEXP ySEXP, SEXP lySEXP, SEXP progSEXP) {
@@ -22,6 +45,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_RTransferEntropy_calculate_transition_probabilities", (DL_FUNC) &_RTransferEntropy_calculate_transition_probabilities, 2},
+    {"_RTransferEntropy_freq_table", (DL_FUNC) &_RTransferEntropy_freq_table, 1},
     {"_RTransferEntropy_cluster_gen", (DL_FUNC) &_RTransferEntropy_cluster_gen, 5},
     {NULL, NULL, 0}
 };

@@ -83,7 +83,7 @@ shannon_te <- transfer_entropy(x = x, y = y)
 #>   [calculate] X->Y transfer entropy
 #>   [calculate] Y->X transfer entropy
 #>   [bootstrap] 300 times
-#> Done - Total time 7.24 seconds
+#> Done - Total time 4.05 seconds
 
 shannon_te
 #> Shannon Transfer Entropy Results:
@@ -129,7 +129,7 @@ renyi_te <- transfer_entropy(x = x, y = y, entropy = "renyi", q = 0.5)
 #>   [calculate] X->Y transfer entropy
 #>   [calculate] Y->X transfer entropy
 #>   [bootstrap] 300 times
-#> Done - Total time 6.95 seconds
+#> Done - Total time 3.66 seconds
 
 renyi_te
 #> Renyi Transfer Entropy Results:
@@ -226,7 +226,7 @@ te_s <- transfer_entropy(x, y, nboot = 0)
 #> Shannon's entropy on 8 cores with 100 shuffles. The timeseries have length 2000 (0 NAs removed)
 #>   [calculate] X->Y transfer entropy
 #>   [calculate] Y->X transfer entropy
-#> Done - Total time 0.45 seconds
+#> Done - Total time 0.41 seconds
 ```
 
 Parallel Programming
@@ -242,13 +242,13 @@ te_s <- transfer_entropy(x, y, nboot = 100)
 #>   [calculate] X->Y transfer entropy
 #>   [calculate] Y->X transfer entropy
 #>   [bootstrap] 100 times
-#> Done - Total time 3.58 seconds
+#> Done - Total time 2.64 seconds
 te_r <- transfer_entropy(x, y, entropy = "renyi", nboot = 100)
 #> Renyi's entropy on 8 cores with 100 shuffles. The timeseries have length 2000 (0 NAs removed)
 #>   [calculate] X->Y transfer entropy
 #>   [calculate] Y->X transfer entropy
 #>   [bootstrap] 100 times
-#> Done - Total time 3.12 seconds
+#> Done - Total time 2.34 seconds
 
 # revert to sequential mode
 plan(sequential)
@@ -257,5 +257,5 @@ te_s <- transfer_entropy(x, y, nboot = 100)
 #>   [calculate] X->Y transfer entropy
 #>   [calculate] Y->X transfer entropy
 #>   [bootstrap] 100 times
-#> Done - Total time 8.21 seconds
+#> Done - Total time 3.6 seconds
 ```

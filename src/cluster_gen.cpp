@@ -61,6 +61,7 @@ std::vector<std::string> generate_clusters(Rcpp::IntegerVector x,
 }
 
 // Calculates the frequency for a given input of strings
+// [[Rcpp::export]]
 Rcpp::NumericVector freq_table(std::vector<std::string> x) {
   std::map<std::string, int> counts;
 
