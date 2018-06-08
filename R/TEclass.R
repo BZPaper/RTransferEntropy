@@ -112,12 +112,7 @@ textify_mat <- function(mat, digits, width = 10, stars = TRUE) {
 #' @examples
 #' # see ?transfer_entropy
 summary.TEResult <- function(object, ...) {
-  str <- c(
-    "Transfer Entropy Result:",
-    sprintf("Number of Observations: %s", length(object$nobs))
-  )
-  str <- paste(str, collapse = "\n")
-  cat(str)
+  print(object, ...)
   return(invisible(str))
 }
 
