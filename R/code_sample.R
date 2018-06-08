@@ -16,16 +16,12 @@ code_sample <- function(x,
 
     # find the respective OSeq for the time series
     if (type == "bins") {
-      if(is.null(bins)) {
-        stop(cat(paste("Warning: Bins not defined", "\n",
-                       "Execution halted","\n")))
-      }
+      if (is.null(bins)) stop("Warning: Bins not defined\nExecution halted\n")
+
       OSeq <- LB + ((UB - LB) / bins) * (0:(bins))
     } else {
-      if(is.null(limits)) {
-        stop(cat(paste("Warning: Limits not defined", "\n",
-                       "Execution halted","\n")))
-      }
+      if (is.null(limits)) stop("Warning: Bins not defined\nExecution halted\n")
+
       limits <- sort(limits)
       OSeq <- c(LB, limits, UB)
     }
@@ -40,7 +36,7 @@ code_sample <- function(x,
     Qtl <- c(Qtl, max(x))
     Qlength <- length(Qtl)
 
-    for (j in 1:Qlength){
+    for (j in 1:Qlength) {
       x[x <= Qtl[j]] <- j * scale
     }
   }

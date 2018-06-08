@@ -18,9 +18,10 @@ test_that("gen_prob is correctly specified", {
 
 
   context("Check values")
-  # gen$px is a table... not a named vector... as it is created using the table-function
+  # gen$px is a table... not a named vector...
+  # as it is created using the table-function
   expect_equal(as.numeric(gen$px), c(0.2, 0.4, 0.4))
   expect_equal(gen$transprob[[1]], c("12" = 0.5, "13" = 0.5))
-  expect_equal(gen$transprob[[2]], c("22" = 1/3, "23" = 2/3))
+  expect_equal(gen$transprob[[2]], c("22" = 1 / 3, "23" = 2 / 3))
   expect_equal(gen$transprob[[3]], c("31" = 0.25, "32" = 0.5, "33" = 0.25))
 })

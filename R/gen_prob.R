@@ -10,7 +10,7 @@ gen_prob <- function(x,
   n <- length(x)
 
   # Calculate state probabilities (relative frequencies of coded values)
-  px <- table(x)/n
+  px <- table(x) / n
 
   # Calculate transition probabilities (relative frequencies of blocks
   # containing current and lagged values of coded time series)
@@ -22,7 +22,7 @@ gen_prob <- function(x,
   }
 
   clust <- unlist(lapply(clustlist, function(x) paste(x, collapse = "")))
-  mprob <- table(clust)/nclust
+  mprob <- table(clust) / nclust
   nprob <- length(mprob)
 
   values <- names(mprob)
@@ -33,7 +33,7 @@ gen_prob <- function(x,
     p1 <- mprob[i]
     select <- substr(values[i], 1, 1)
     p2 <- sum(mprob[grep(paste("^", select, sep = ""), values, value = TRUE)])
-    pvec[i] <- p1/p2
+    pvec[i] <- p1 / p2
   }
 
   # Collect transition probabilities

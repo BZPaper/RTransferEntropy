@@ -2,7 +2,7 @@
 #'
 #' @param x a TEResult
 #' @param digits the number of digits to display, defaults to 4
-#' @param boot if the bootstrapped results should be printed, defautls to TRUE
+#' @param boot if the bootstrapped results should be printed, defaults to TRUE
 #' @param ... additional arguments, currently not in use
 #'
 #' @return invisible the text

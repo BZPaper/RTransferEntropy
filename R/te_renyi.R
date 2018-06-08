@@ -21,7 +21,7 @@ te_renyi <- function(x,
 
   # Lead = y
   if (!quiet) cat("  [calculate] X->Y transfer entropy\n")
-  texy <- calc_te_renyi(x = y , lx = ly, y = x, ly = lx, q = q)
+  texy <- calc_te_renyi(x = y, lx = ly, y = x, ly = lx, q = q)
   consty <- shuffle_renyi(x = y,
                           lx = ly,
                           y = x,

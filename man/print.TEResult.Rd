@@ -11,7 +11,7 @@
 
 \item{digits}{the number of digits to display, defaults to 4}
 
-\item{boot}{if the bootstrapped results should be printed, defautls to TRUE}
+\item{boot}{if the bootstrapped results should be printed, defaults to TRUE}
 
 \item{...}{additional arguments, currently not in use}
 }

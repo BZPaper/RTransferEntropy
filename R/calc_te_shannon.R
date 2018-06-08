@@ -4,10 +4,7 @@
 # transfer entropy measure is Shannon transfer entropy. Used internally by
 # transfer_entropy; same arguments.
 #
-calc_te_shannon <- function(x,
-                            lx,
-                            y,
-                            ly) {
+calc_te_shannon <- function(x, lx, y, ly) {
 
   # Frequencies
   #------------------------------
@@ -17,11 +14,9 @@ calc_te_shannon <- function(x,
 
   # x(k+1)
   k1 <- cluster_gen(x, lx = lx)$frequency
-  nck1 <- length(k1)
 
   # x(k) and y(j)
   k_j <- cluster_gen(x, lx = lx, y, ly = ly, prog = FALSE)$frequency
-  nck_j <- length(k_j)
 
   # x(k)
   k <- cluster_gen(x, lx = lx, prog = FALSE)$frequency
@@ -29,7 +24,7 @@ calc_te_shannon <- function(x,
   # Transfer entropy
   #------------------------------
   entropy <- numeric(nck1_j)
-  for(i in 1:nck1_j){
+  for (i in 1:nck1_j) {
     p1 <- k1[paste(strsplit(names(k1_j[i]), " ")[[1]][1:(lx + 1)],
                    collapse = " ")]
     p2 <- k_j[paste(strsplit(names(k1_j[i]), " ")[[1]][-(lx + 1)],

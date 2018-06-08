@@ -8,7 +8,6 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -21,10 +20,13 @@ plot_4_way <- function(x, y) {
 
   dt <- do.call(rbind, list(
     data.frame(x = x, y = y, dir = "Level-Level", stringsAsFactors = FALSE),
-    data.frame(x = x, y = c(NA, y[1:(length(y) - 1)]), dir = "Lag Y\nY->X", stringsAsFactors = FALSE),
-    data.frame(x = c(NA, x[1:(length(x) - 1)]), y = y, dir = "Lag X\nX->Y", stringsAsFactors = FALSE)
+    data.frame(x = x, y = c(NA, y[1:(length(y) - 1)]), dir = "Lag Y\nY->X", 
+               stringsAsFactors = FALSE),
+    data.frame(x = c(NA, x[1:(length(x) - 1)]), y = y, dir = "Lag X\nX->Y",
+               stringsAsFactors = FALSE)
   ))
-  dt$dir <- factor(dt$dir, levels = c("Lag X\nX->Y", "Level-Level", "Lag Y\nY->X"))
+  dt$dir <- factor(dt$dir, 
+                   levels = c("Lag X\nX->Y", "Level-Level", "Lag Y\nY->X"))
   
   
   p <- ggplot(dt, aes(x = x, y = y)) + 
@@ -304,7 +306,7 @@ The result indicates that the tails are indeed more informative. The estimated R
 Since Rényi transfer entropy approaches Shannon transfer entropy as $q \rightarrow 1$, we illustrate this property using different values of $q$. Note that this result is illustrated using the normal transfer entropy estimate and not the effective transfer entropy estimates because the latter depend on the shuffling procedure. 
 
 ```{r, include=F}
-qs <- c(seq(0.1,0.9,0.1),0.99)
+qs <- c(seq(0.1, 0.9, 0.1), 0.99)
 
 te <- sapply(qs, function(q) calc_te(x, y, entropy = "renyi", q = q))
 names(te) <- sprintf("q = %.2f", qs)
@@ -320,9 +322,11 @@ ggplot(data.frame(x = qs, y = te), aes(x = x, y = y)) +
   theme_light() +
   labs(x = "Values for q", y = "Renyi's Transfer Entropy",
        title = "Renyi's Transfer Entropy for different Values of q") +
-  geom_hline(yintercept = shannon_te3$coef[1,1], color = "red", linetype = "dashed") +
+  geom_hline(yintercept = shannon_te3$coef[1,1], 
+             color = "red", linetype = "dashed") +
   geom_text(data = data.frame(x = 0.25, y = shannon_te3$coef[1,1], 
-                              lab = sprintf("Shannon's TE = %.4f", shannon_te3$coef[1,1])),
+                              lab = sprintf("Shannon's TE = %.4f", 
+                                            shannon_te3$coef[1,1])),
             aes(label = lab), color = "red", nudge_y = 0.01)
 
 ```

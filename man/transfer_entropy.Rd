@@ -59,7 +59,8 @@ the bootstrapped Markov chain. Default is \code{burn = 50}.}
 \item{seed}{a seed that seeds the PRNG (will internally just call set.seed),
 default is \code{seed = NULL}.}
 
-\item{cl}{deprecated, for parallel processing use \code{future::\link[future]{plan}}}
+\item{cl}{deprecated, for parallel processing use
+\code{future::\link[future]{plan}}}
 }
 \value{
 an object of class TEResult, containing the transfer entropy

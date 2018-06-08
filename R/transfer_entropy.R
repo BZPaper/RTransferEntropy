@@ -34,7 +34,8 @@
 #' @param quiet if FALSE (default), the function gives feedback.
 #' @param seed a seed that seeds the PRNG (will internally just call set.seed),
 #'             default is \code{seed = NULL}.
-#' @param cl deprecated, for parallel processing use \code{future::\link[future]{plan}}
+#' @param cl deprecated, for parallel processing use
+#'            \code{future::\link[future]{plan}}
 #'
 #' @return an object of class TEResult, containing the transfer entropy
 #'         estimates in both directions, the effective transfer entropy
@@ -133,13 +134,23 @@ transfer_entropy <- function(x,
 
   # Check/Restrict number of classes and Markov order/lags
   if (length(quantiles) > 20 || length(bins) > 20 || length(limits) > 20)
-    stop("Number of classes should not exceed 20. Do not expect sensical results when using too many classes and/or lags.")
+    stop(paste(
+      "Number of classes should not exceed 20.",
+      "Do not expect sensical results when using too many classes and/or lags."
+    ))
 
   if (lx > 20 || ly > 20)
-    stop("Markov order/number of lags should not exceed 20. Do not expect sensical results when using too many classes and/or lags.")
+    stop(paste(
+      "Markov order/number of lags should not exceed 20.",
+      "Do not expect sensical results when using too many classes and/or lags."
+    ))
 
   if (lx != ly)
-    warning("Markov order/number of lags should be identical for both time series to facilitate interpretation of results. Consider setting lx = ly.")
+    warning(paste(
+      "Markov order/number of lags should be identical for both",
+      "time series to facilitate interpretation of results.",
+      "Consider setting lx = ly."
+    ))
 
   # Check that transfer entropy measure is specified correctly
   entropy <- tolower(entropy)
@@ -156,25 +167,35 @@ transfer_entropy <- function(x,
     if (q < 0) {
       stop("q must follow 0 < q < 1")
     } else if (q >= 1) {
-      warning("As q-->1, Renyi transfer entropy converges to Shannon transfer entropy. Shannon transfer entropy is calculated.")
+      warning(paste(
+        "As q-->1, Renyi transfer entropy converges to Shannon transfer",
+        "entropy. Shannon transfer entropy is calculated."
+      ))
       entropy <- "shannon"
     }
   }
 
-  if (!is.null(cl)) warning("cl is deprecated, use future::plan(multisession) instead")
+  if (!is.null(cl))
+    warning("cl is deprecated, use future::plan(multisession) instead")
 
   # Check quantiles
   if (type == "quantiles" && (min(quantiles) < 0 || max(quantiles) > 100))
     stop("Quantiles must be between 0 and 100")
 
   if (type == "quantiles" && max(quantiles) <= 1) {
-    warning("Expected quantiles between 0 and 100 but found between 0 and 1, multiplying by 100.")
+    warning(paste(
+      "Expected quantiles between 0 and 100 but found between 0 and 1,",
+      "multiplying by 100."
+    ))
     quantiles <- quantiles * 100
   }
 
   # Check number of bootstrap replications
   if (nboot > 0 && nboot < 100)
-    warning("Number of bootstrap replications is below 100. Use a higher number of bootstrap replications, you are relying on asymptotic arguments here.")
+    warning(paste(
+      "Number of bootstrap replications is below 100. Use a higher number of",
+      "bootstrap replications, you are relying on asymptotic arguments here."
+      ))
 
   # Remove missing values
   mis_values <- is.na(x) | is.na(y)
@@ -185,12 +206,13 @@ transfer_entropy <- function(x,
 
   if (!quiet) {
     cat(sprintf(
-      "%s's entropy on %s core%s with %s shuffle%s. The timeseries have length %s (%s NAs removed)\n",
+      "%s's entropy on %s core%s with %s shuffle%s. ",
       fupper(entropy),
       future::nbrOfWorkers(), mult_s(future::nbrOfWorkers()),
-      shuffles, mult_s(shuffles),
-      length(x), sum(mis_values)
+      shuffles, mult_s(shuffles)
     ))
+    cat(sprintf("The timeseries have length %s (%s NAs removed)\n",
+                length(x), sum(mis_values)))
   }
 
   # Call either te_shannon or te_renyi
