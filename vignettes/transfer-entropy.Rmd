@@ -364,10 +364,11 @@ te <- transfer_entropy(x, y, nboot = 0)
 
 ## Comparison with existing package
 
-The authors of this package have found only one other package that calculates transfer entropy, being the [`TransferEntropy`-package](https://github.com/Healthcast/TransEnt).
-The `TransferEntropy`-package allows the user to compute the transfer entropy-measure using the `computeTE()`-function and returns a single value for the calculated transfer entropy.
+The authors of this package are aware of one other package that calculates transfer entropy, the [`TransferEntropy`-package](https://github.com/Healthcast/TransEnt). This package allows the user to compute the Shannon transfer entropy-measure using the `computeTE()`-function and returns a single value for the calculated transfer entropy.
+The present package also provides the computation of Shannon transfer entropy, but is not limited to it. By default (using the `transfer_entropy`-function), it computes transfer entropy, effective transfer entropy (Eff. TE), standard errors, and p-values for both directions between the input time series. Standard errors are based on a bootstrap and bootstrapped TE quantiles are also provided by default. The focus of this package, therefore, is to allow the researcher to conduct inference about hypotheses regarding ETE.
 
-This package has a broader approach to transfer entropy, including the by-default computation of transfer entropy, effective transfer entropy (Eff. TE), standard errors, and p-values, for both the x-y and y-x direction, as well as bootstrapped TE quantiles.
-Furthermore, this package gives the users more flexibility in specifying details of the computation including calculating Rényi's transfer entropy, specifying different lags for x and y, different quantiles of the empirical distribution, or the number of bins.
-As this involves more computing, this package uses `Rcpp` and parallel processing to decrease computing time.
+Furthermore, the present package also allows the calculation of Rényi transfer entropy. The latter is particularly useful if the tails are assumed to be more informative than the centre of the distribution.
 
+The important difference between the [`TransferEntropy`-package](https://github.com/Healthcast/TransEnt) and this package is the way the data are discretized. The former package relies on the k-nearest neighbor approach of Kraskov to estimate mutual information. This package uses symbolic encoding based on selected bins or quantiles of the empirical distribution of the data to estimate empirical frequencies.
+
+As in particular the bootstrap is computationally intensive, this package uses `Rcpp` and parallel processing to decrease computing time.
