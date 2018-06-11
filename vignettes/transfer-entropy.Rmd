@@ -318,12 +318,12 @@ As presented above, the Shannon transfer entropy from $X$ to $Y$ is estimated as
 print(te)
 
 ggplot(data.frame(x = qs, y = te), aes(x = x, y = y)) +
-  geom_line() +
+  geom_hline(yintercept = shannon_te3$coef[1,1], 
+             color = "red", linetype = "dashed") +
+  geom_smooth(se = F, color = "black", size = 0.5) +
   theme_light() +
   labs(x = "Values for q", y = "Renyi's Transfer Entropy",
        title = "Renyi's Transfer Entropy for different Values of q") +
-  geom_hline(yintercept = shannon_te3$coef[1,1], 
-             color = "red", linetype = "dashed") +
   geom_text(data = data.frame(x = 0.25, y = shannon_te3$coef[1,1], 
                               lab = sprintf("Shannon's TE = %.4f", 
                                             shannon_te3$coef[1,1])),
