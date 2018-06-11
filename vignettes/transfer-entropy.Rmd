@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 )
 library(ggplot2)
 plot_4_way <- function(x, y) {
-
+  
   dt <- do.call(rbind, list(
     data.frame(x = x, y = y, dir = "Level-Level", stringsAsFactors = FALSE),
     data.frame(x = x, y = c(NA, y[1:(length(y) - 1)]), dir = "Lag Y\nY->X", 
@@ -25,67 +25,67 @@ plot_4_way <- function(x, y) {
     data.frame(x = c(NA, x[1:(length(x) - 1)]), y = y, dir = "Lag X\nX->Y",
                stringsAsFactors = FALSE)
   ))
+  
   dt$dir <- factor(dt$dir, 
                    levels = c("Lag X\nX->Y", "Level-Level", "Lag Y\nY->X"))
-  
   
   p <- ggplot(dt, aes(x = x, y = y)) + 
     geom_smooth() +
     geom_point(alpha = 0.5, size = 0.5) +
     facet_grid(~dir) +
-    theme_light() +
     labs(title = "X-Y Relations for Different Lags") +
     coord_fixed(ratio = 1)
   return(p)
 }
 ```
-
+  
 ## Introduction to RTransferEntropy
-
+  
 The measurement of  information transfer between different time series is the basis of research questions in various research areas, including  biometrics, economics, ecological modelling, neuroscience, sociology, and thermodynamics. The quantification of information transfer commonly relies on measures that have been derived from the subject-specific assumptions and restrictions concerning the underlying stochastic processes or theoretical models. With the development of transfer entropy, information theory based measures have become a popular alternative to quantify information flows within various disciplines. Transfer entropy is a non-parametric measure of directed, time-asymmetric information transfer between two processes.
-
+  
 We show how to test for and quantify the information flow between two time series with Shannon transfer entropy and Rényi transfer entropy using the package `RTransferEntropy`. Let us first have a brief look on the methodology, the bias correction applied to calculate effective transfer entropy and describe our approach to statistical inference. Afterwards, we introduce the package in detail and demonstrate its functionality in several applications to simulated processes as well as an application to financial time series.
-
+  
 ## Measuring information flows using transfer entropy
-
+  
 Let $log$ denote the base 2 logarithm, then informational gain is measured in bits. Shannon entropy states that for a discrete variable $J$ with probability distribution $p(j)$, where j stands for the different outcomes the random variable $J$ can take, the average number of bits required to optimally encode independent draws from the distribution of J can be calculated as 
-
+  
 $$
   H_J = - \sum_j p(j) \times log \left(p(j)\right).
 $$
+    
 Strictly speaking, Shannon's formula  is a measure for uncertainty, which increases with the number of bits needed to optimally encode a sequence of realizations of $J$. In order to measure information flow between two processes, Shannon entropy is combined with the concept of the Kullback-Leibler distance and by assuming the underlying processes evolve over time according to a Markov process. Let  $I$ and $J$ denote two discrete variables with marginal probability distributions $p(i)$ and $p(j)$, joint probability $p(i,j)$, whose dynamical structures correspond to stationary Markov processes of order $k$ (process $I$) and $l$ (process $J$). The Markov property implies that the probability to observe $I$ at time $t+1$ in state $i$ conditional on the $k$ previous observations is $p(i_{t+1}|i_t,...,i_{t-k+1})=p(i_{t+1}|i_t,...,i_{t-k})$. The average number of bits needed to encode the observation in $t+1$ if the previous $k$ values are known is given by
-
+  
 $$
   h_I(k)=- \sum_i p\left(i_{t+1}, i_t^{(k)}\right) \times log \left(p\left(i_{t+1}|i_t^{(k)}\right)\right),
 $$
 where $i^{(k)}_t=(i_t,...,i_{t-k+1})$ (analogously for process $J$). In the bivariate case, information flow from process $J$ to process $I$ is measured by quantifying the deviation from the generalized Markov property $p(i_{t+1}| i_t^{(k)})=p(i_{t+1}| i_t^{(k)},j_t^{(l)})$ relying on the Kullback-Leibler distance. Thus, (Shannon) transfer entropy is given by 
-
+  
 $$
   T_{J \rightarrow I}(k,l) = \sum_{i,j} p\left(i_{t+1}, i_t^{(k)}, j_t^{(l)}\right) \times log \left(\frac{p\left(i_{t+1}| i_t^{(k)}, j_t^{(l)}\right)}{p\left(i_{t+1}|i_t^{(k)}\right)}\right),
 $$
 where $T_{J\rightarrow I}$ consequently measures the information flow from $J$ to $I$ ( $T_{I \rightarrow J}$ as a measure for the information flow from $I$ to $J$ can be derived analogously). Transfer entropy can also be based on Rényi entropy rather than Shannon entropy, which depends on a weighting parameter $q$ and can be calculated as
-
+  
 $$
   H^q_J = \frac{1}{1-q} log \left(\sum_j p^q(j)\right), 
 $$
 with  $q >0$. For $q\rightarrow 1$ Rényi entropy converges to Shannon entropy. For $0<q<1$  tail events receive more weight, while for $q>1$ the weights on center observations dominate. Consequently, Rényi entropy provides a more flexible tool for estimating uncertainty, since different areas of a distribution can be emphasized, depending on the parameter $q$. Using the escort distribution $\phi_q(j)=\frac{p^q(j)}{\sum_j p^q(j))}$ with $q >0$ to normalize the weighted distributions, the Rényi transfer entropy measure is given by
-
+  
 $$
   RT_{J \rightarrow I}(k,l) = \frac{1}{1-q} log \left(\frac{\sum_i \phi_q\left(i_t^{(k)}\right)p^q\left(i_{t+1}|i^{(k)}_t\right)}{\sum_{i,j} \phi_q\left(i^{(k)}_t,j^{(l)}_t\right)p^q\left(i_{t+1}|i^{(k)},j^{(l)}_t \right)}\right).
 $$
 Analogously to (Shannon) transfer entropy Rényi entropy  measures the information flow from $J$ to $I$.
-
+  
 These transfer entropy estimates  are commonly biased due to small sample effects. A remedy is provided by the effective transfer entropy, which is computed in the following way 
-
+  
 $$
   ET_{J \rightarrow I}(k,l):=  T_{J \rightarrow I}(k,l)- T_{J_{\text{shuffled}} \rightarrow I}(k,l),
 $$
 where $T_{J_{\text{shuffled}} \rightarrow I}(k,l)$ indicates the transfer entropy using a shuffled  version of the time series of $J$. Shuffling implies randomly drawing values from the time series of $J$ and realigning them to generate a new time series. This procedure destroys the time series dependencies of $J$ as well as the statistical dependencies between $J$ and $I$. As a result $T_{J_{\text{shuffled}} \rightarrow I}(k,l)$ converges to zero with increasing sample size and any nonzero value of $T_{J_{\text{shuffled}} \rightarrow I}(k,l)$ is due to small sample effects. The transfer entropy estimates from shuffled data can therefore be used as an estimator for the bias induced by these small sample effects. To derive a consistent estimator, shuffling is repeated many times and the average of the resulting shuffled transfer entropy estimates across all replications is subtracted from the Shannon or Rényi transfer entropy estimate to obtain a bias corrected effective transfer entropy estimate.
-
+  
 In order to assess the statistical significance of transfer entropy estimates, we rely on  a Markov block bootstrap. In contrast to shuffling, the Markov block bootstrap retains the dependencies within each series. Thereby, it generates the distribution of transfer entropy estimates under the null hypothesis of no information transfer, i.e. randomly drawn blocks of process $J$ are realigned to form a simulated series, which retains the univariate dependencies of $J$ but eliminates the statistical dependencies between $J$ and $I$. Shannon or Rényi transfer entropy is then estimated based on the simulated time series. Repeating this procedure yields the distribution of the transfer entropy estimate under the null of no information flow. The p-value associated with the null hypothesis of no information transfer is given by $1-\hat{q}_{TE}$, where $\hat{q}_{TE}$ denotes the quantile of the simulated distribution that corresponds to the original transfer entropy estimate.
-
+  
 The calculation of Shannon and Rényi transfer entropy is based on discrete data. If the data does not exhibit a discrete structure that allows for transfer entropy estimation, it has to be discretized. This can be achieved by symbolic recoding, i.e. by partitioning the data into a finite number of bins, which can be based by either defining upper and lower bounds for the bins a priori or by choosing specific quantiles of the empirical distribution of the data. Denote the bounds specified for the $n$ bins by $q_1, q_2, ..., q_n$, where $q_1< q_2< ... <q_n$, and consider a time series  denoted by $y_t$,  the data is recoded as
-
+  
 $$
   S_t=
   \begin{cases}
@@ -97,22 +97,22 @@ $$
   \end{cases}.
 $$
 Thereby, each value in the observed time series $y_t$ is replaced by an integer ($1$,$2$,...,$n$), according to how $S_t$ relates to the interval specified by the lower and upper bounds $q_1$ to $q_n$. The choice of the bins should be motivated by the distribution of the data.
-
+  
 ## The `RTransferEntropy` package
-
+  
 Testing for and quantifying the information flow between two time series with Shannon and Rényi transfer entropy, as outlined above, can now easily be implemented with the package `RTransferEntropy`. The package is installed and loaded in the usual way.
-
+  
 ```{r load_packages, echo=F}
 library(RTransferEntropy)
 ```
-
+  
 ```{r, eval=F}
 install.packages('RTransferEntropy')
 library(RTransferEntropy)
 ```
-
+  
 The main function is `transfer_entropy()`, which creates an object of class `TEResult` that contains the respective transfer entropy estimates (both in $J \rightarrow I$ and $I \rightarrow J$ direction), the related effective transfer entropy estimates, standard errors and p-values for the estimated values, an indication of statistical significance, and quantiles of the bootstrap samples (if the number of bootstrap replications is specified to be greater than zero). Some sub-functions are written in `C++` to speed up computations and an option for parallel computing is available, allowing for more efficient programming when `transfer_entropy()` is called multiple times or fairly long time series make calculations of effective transfer entropies and bootstrap inference time consuming. Let us describe the usage of `transfer_entropy()` and its options.
-
+  
 ```{r, eval=F}
 transfer_entropy(x, y, 
                  lx = 1, ly = 1, q = 0.1, 
@@ -121,38 +121,38 @@ transfer_entropy(x, y,
                  quantiles = c(5, 95), bins = NULL, limits = NULL,
                  nboot = 300, burn = 50, quiet = FALSE, seed = NULL)
 ```
-
+  
 The function takes the following arguments:
-
+  
 ### Arguments
-
-* `x`: a vector of numeric values, ordered by time.
-* `y`: a vector of numeric values, ordered by time.
-* `lx`: Markov order of x, i.e. the number of lagged values affecting the current value of x. Default is `lx = 1`.
-* `ly`: Markov order of y, i.e. the number of lagged values affecting the current value of y. Default is `ly = 1`.
-* `q`: a weighting parameter used to estimate Renyi transfer entropy, parameter is between 0 and 1. For `q = 1`, Renyi transfer entropy converges to Shannon transfer entropy. Default is `q = 0.1`.
-* `entropy`: specifies the transfer entropy measure that is estimated, either `'Shannon'` or `'Renyi'`. The first character can be used to specify the type of transfer entropy as well. Default is `entropy = 'Shannon'`.
-* `shuffles`: the number of shuffles used to calculate the effective transfer entropy. Default is `shuffles = 100`.
-* `type`: specifies the type of discretization applied to the observed time series:`'quantiles'`, `'bins'` or `'limits'`. Default is `type = 'quantiles'`.
-* `quantiles`: specifies the quantiles of the empirical distribution of the respective time series used for discretization. Default is `quantiles = c(5,95)`.
-* `bins`: specifies the number of bins with equal width used for discretization. Default is `bins = NULL`.
-* `limits`: specifies the limits on values used for discretization. Default is `limits = NULL`.
-* `nboot`: the number of bootstrap replications for each direction of the estimated transfer entropy. Default is `nboot = 300`.
-* `burn`: the number of observations that are dropped from the beginning of the bootstrapped Markov chain. Default is `burn = 50`.
-* `quiet`: if FALSE (default), the function gives feedback.
-* `seed` a seed that seeds the PRNG (will internally just call set.seed), default is `seed = NULL`.
-
+  
+  * `x`: a vector of numeric values, ordered by time.
+  * `y`: a vector of numeric values, ordered by time.
+  * `lx`: Markov order of x, i.e. the number of lagged values affecting the current value of x. Default is `lx = 1`.
+  * `ly`: Markov order of y, i.e. the number of lagged values affecting the current value of y. Default is `ly = 1`.
+  * `q`: a weighting parameter used to estimate Renyi transfer entropy, parameter is between 0 and 1. For `q = 1`, Renyi transfer entropy converges to Shannon transfer entropy. Default is `q = 0.1`.
+  * `entropy`: specifies the transfer entropy measure that is estimated, either `'Shannon'` or `'Renyi'`. The first character can be used to specify the type of transfer entropy as well. Default is `entropy = 'Shannon'`.
+  * `shuffles`: the number of shuffles used to calculate the effective transfer entropy. Default is `shuffles = 100`.
+  * `type`: specifies the type of discretization applied to the observed time series:`'quantiles'`, `'bins'` or `'limits'`. Default is `type = 'quantiles'`.
+  * `quantiles`: specifies the quantiles of the empirical distribution of the respective time series used for discretization. Default is `quantiles = c(5,95)`.
+  * `bins`: specifies the number of bins with equal width used for discretization. Default is `bins = NULL`.
+  * `limits`: specifies the limits on values used for discretization. Default is `limits = NULL`.
+  * `nboot`: the number of bootstrap replications for each direction of the estimated transfer entropy. Default is `nboot = 300`.
+  * `burn`: the number of observations that are dropped from the beginning of the bootstrapped Markov chain. Default is `burn = 50`.
+  * `quiet`: if FALSE (default), the function gives feedback.
+  * `seed` a seed that seeds the PRNG (will internally just call set.seed), default is `seed = NULL`.
+  
 Additionally, we provide two functions `calc_te` and `calc_ete` that calculate only the transfer entropy and the effective transfer entropy for the $X\rightarrow Y$ direction and leave out additional bootstraps etc. Each function takes the same arguments as the `transfer_entropy` function but return only a single value.
-
+  
 Before we turn to different applications below, we already provide a simple example here, in order to demonstrate how the output of the functions look like. Let us consider a linear relationship between two random variables $X$ and $Y$, where $Y$ depends on $X$ with one lag and $X$ is orthogonal to $Y$:
-
+  
 \begin{eqnarray*}
-x_t & = & 0.2x_{t-1} + \varepsilon_{x,t}\\
-y_t & = & x_{t-1} + \varepsilon_{y,t},
+  x_t & = & 0.2x_{t-1} + \varepsilon_{x,t}\\
+  y_t & = & x_{t-1} + \varepsilon_{y,t},
 \end{eqnarray*}
-
+  
 with $\varepsilon_{x,t}$ and $\varepsilon_{y,t}$ being normally distributed with a mean of 1 and a variance of 2. In this case, $X$ serves as a predictor for $Y$, but not vice versa. These processes are readily implemented taking, for example, 2500 observations.
-
+  
 ```{r gen_data1}
 set.seed(12345)
 n <- 2500
@@ -160,10 +160,10 @@ x <- rep(0, n + 1)
 y <- rep(0, n + 1)
 
 for (i in seq(n)) {
-     x[i + 1] <- 0.2 * x[i] + rnorm(1, 0, 2)
-     y[i + 1] <- x[i] + rnorm(1, 0, 2)
-  }
- 
+  x[i + 1] <- 0.2 * x[i] + rnorm(1, 0, 2)
+  y[i + 1] <- x[i] + rnorm(1, 0, 2)
+}
+
 x <- x[-1]
 y <- y[-1]
 ```
@@ -334,6 +334,149 @@ ggplot(data.frame(x = qs, y = te), aes(x = x, y = y)) +
 As can be seen, the value is indeed approaching `r format(round(shannon_te3$coef[1,1],4), nsmall=4)` as $q\rightarrow 1$.
 
 ## Application to financial time series
+
+The analysis of information flows in financial markets has a long history. Using transfer entropy widens the possibilities to detect information flows as nonlinear relationships can also be accounted for. To illustrate the application of transfer entropy, we use a dataset of 10 individual stocks comprised in the S\&P~500 index as well as the index itself. The data range from January 3, 2000, to December 29, 2017. This dataset is included as the `stocks` object in the package.
+
+A stock market index is a weighted average of individual stocks. Of course, small stocks have less weight and, hence, may only have limited impact on the index while large corporations might dominate. On the other hand, it is unclear upfront how the market environment as a whole (as measured by the index) might provide information to the individual stocks. To measure the extent to which information flows between the index and the stocks, we use transfer entropy.  As the calculation of transfer entropy requires stationary data, we calculate log-returns from the price series.
+
+```{r load_data}
+library(data.table)   # as a data.container
+lbrary(future.apply)  # to use future_lapply
+plan(multisession)    # enable multiple sessions
+
+# small wrapper function that helps to order the stocks for the plot
+order_by_other <- function(vals, nums, take = NULL) {
+  if (!is.null(take)) {
+    lvls <- vals[take]
+    nums <- nums[take]
+  } else lvls <- unique(vals)
+  factor(vals, levels = lvls[order(nums)])
+}
+
+# for each stock compute the TE between the stock and the sp500 at two quantiles
+res_list <- future_lapply(split(stocks, stocks$ticker), function(d) {
+  ticker <- d$ticker[[1]]
+  
+  # calculate the 5/95 quantile
+  tefit1 <- transfer_entropy(d$ret, d$sp500, lx = 1, ly = 1, 
+                             entropy = "Shannon", shuffles = 50, 
+                             type = "quantiles", quantiles = c(5, 95),
+                             nboot = 300, quiet = T)
+  ## gather the results into a data.table
+  res1 <- data.table(
+    stock     = ticker,
+    quantiles = "(5, 95)",
+    direction = c("X->Y", "Y->X"),
+    coef(tefit1)[1:2, 2:4]
+  )
+  
+  # calculate the 10/90 quantile
+  tefit2 <- transfer_entropy(d$ret, d$sp500, lx = 1, ly = 1, 
+                             entropy = "Shannon", shuffles = 50,
+                             type = "quantiles", quantiles = c(10, 90),
+                             nboot = 300, quiet = T)
+  res2 <- data.table(
+    stock     = ticker,
+    quantiles = "(10, 90)",
+    direction = c("X->Y", "Y->X"),
+    coef(tefit2)[1:2, 2:4]
+  )
+  rbind(res1, res2)
+})
+
+out_dt <- rbindlist(res_list)
+```
+
+
+```{r ete_plot_1}
+out_dt[, direction := factor(direction, 
+                             labels = paste("Flow towards",
+                                            c("Stock", "Market")))]
+
+dt_plot1 <- out_dt[quantiles == "(5, 95)"]
+dt_plot1[, stock := order_by_other(stock, ete, 
+                                   direction == "Flow towards Stock")]
+
+ggplot(dt_plot1, aes(x = stock, y = ete)) + 
+  geom_hline(yintercept = 0, color = "darkgray") +
+  geom_errorbar(aes(ymin = ete - qnorm(0.95) * se - 0.001, 
+                    ymax = ete + qnorm(0.95) * se + 0.001), 
+                width = 0.25, col = "blue") +
+  geom_point() +
+  facet_grid(~direction) +
+  theme(axis.text.x = element_text(angle = 90)) +
+  labs(x = NULL, y = "Effective Transfer Entropy")
+```
+
+Again, the estimated transfer entropy depends on the choice of the quantile. This is illustrated in the following Figure which reports density plots of ETE for two different choices of quantiles, namely \code{quantiles = c(5, 95)} in the upper graph and \code{quantiles = c(10, 90)} in the lower graph. The solid (dotted) line depicts the information flow from the market to the stocks (from the stocks to the market). The estimated information flow from the stocks to the market is rather robust with respect to the choice of the quantiles, the dotted lines in both graphs have a similar shape. For the other direction, the choice of the quantiles has a larger impact, but the overall information that the flow towards the individual stocks is more equilibrated than the other direction, holds for both choices.  
+
+```{r density_plot_1}
+dt_plot2 <- copy(out_dt)
+dt_plot2[, quantiles := factor(quantiles, levels = c("(5, 95)", "(10, 90)"))]
+
+ggplot(dt_plot2[ete <= 0.020], aes(x = ete, linetype = direction)) +
+  geom_density() +
+  facet_grid(quantiles~.) +
+  scale_x_continuous(lim = c(-0.003, 0.018)) +
+  labs(
+    x = "Effective Transfer Entropy", y = "Density", 
+    linetype = "TE Flow Direction",
+    title = "Distribution of ETE-values for different Directions and Quantiles"
+  )
+```
+
+
+In finance, pricing relevant information is readily associated with tail events, i.e. relatively large positive or negative returns. If these are indeed more relevant, Rényi transfer entropy provides a tool to give more weight to their contribution to the overall information flow. To illustrate this feature we use one stock and calculate Rényi transfer entropy from the index to the stock for a selection of weighting parameters $q$.
+
+```{r renyi_te}
+qs <- c(seq(0.1, 0.9, 0.1), 0.99)
+d <- stocks[ticker == "AXP"]
+
+q_list <- future_lapply(qs, function(q) {
+  # transfer_entropy will give a warning as nboot < 100
+  suppressWarnings({
+    tefit <- transfer_entropy(d$ret, d$sp500, lx = 1, ly = 1, 
+                              entropy = "Renyi", q = q, 
+                              shuffles = 50, quantiles = c(10, 90), 
+                              nboot = 20, quiet = T)
+  })
+  data.table(
+    q   = q,
+    dir = c("X->Y", "Y->X"),
+    coef(tefit)[, 2:3]
+  )
+})
+qdt <- rbindlist(q_list)
+
+sh_tefit <- transfer_entropy(d$ret, d$sp500, lx = 1, ly = 1, 
+                             entropy = "Shannon", 
+                             shuffles = 50, quantiles = c(10, 90), 
+                             nboot = 0, quiet = T)
+
+sh_dt <- data.table(
+  dir = c("X->Y", "Y->X"),
+  coef(sh_tefit)[, 2:3]
+)
+```
+
+```{r plot_renyi_te, echo=F}
+qdt[, pe := qnorm(0.95) * se]
+
+ggplot(qdt, aes(x = q, y = ete)) +
+  geom_hline(yintercept = 0, color = "darkgray") + 
+  geom_hline(data = sh_dt, aes(yintercept = ete), linetype = "dashed",
+             color = "red") +
+  geom_point() +
+  geom_errorbar(aes(ymin = ete - pe, ymax = ete + pe), 
+                width = 0.25/10, col = "blue") +
+  facet_wrap(~dir) +
+  labs(x = "Values for q", y = "Renyi's Transfer Entropy",
+       title = "Renyi's Transfer Entropy for different Values of q",
+       subtitle = "For American Express (AXP, X) and the S&P 500 Index (Y)")
+```
+
+The graph illustrates the results. For low values of $q$, the information in the tails is given a high weight which leads in the current situation to a significant ETE result. This indicates that indeed tail dependence is given between the S\&P500 and the stock. As the weight is reduced, ETE decreases and becomes insignificant for $q\geq 0.4$. This is also the result obtained when using Shannon Entropy (denoted by the red, dashed line in the graph). 
+
 
 ## Parallel Execution
 
