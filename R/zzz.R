@@ -156,3 +156,18 @@ calc_te_ete <- function(restype = "te",
     return(te)
   }
 }
+
+#' Daily stock data for 10 stocks from 2000-2017
+#'
+#' A dataset containing the daily stock returns for 10 stocks and the S\&P 500
+#' market returns for the time-period 2000-01-04 until 2017-12-29
+#'
+#' @format A data frame (or data.table if loaded) with 46940 rows and 4 variables:
+#' \describe{
+#'   \item{date}{date of the observation}
+#'   \item{ticker}{ticker of the stock}
+#'   \item{ret}{Return of the stock}
+#'   \item{sp500}{Return of the S\&P 500 stock market index}
+#' }
+#' @source yahoo finance using \code{\link[quantmod]{getSymbols}}
+"stocks"
