@@ -16,13 +16,21 @@ knitr::opts_chunk$set(
   fig.height = 4
 )
 library(ggplot2)
+theme_set(theme_light())
 plot_4_way <- function(x, y) {
   
   dt <- do.call(rbind, list(
-    data.frame(x = x, y = y, dir = "Level-Level", stringsAsFactors = FALSE),
-    data.frame(x = x, y = c(NA, y[1:(length(y) - 1)]), dir = "Lag Y\nY->X", 
+    data.frame(x = x, 
+               y = y, 
+               dir = "Level-Level", 
                stringsAsFactors = FALSE),
-    data.frame(x = c(NA, x[1:(length(x) - 1)]), y = y, dir = "Lag X\nX->Y",
+    data.frame(x = x, 
+               y = c(NA, y[1:(length(y) - 1)]), 
+               dir = "Lag Y\nY->X", 
+               stringsAsFactors = FALSE),
+    data.frame(x = c(NA, x[1:(length(x) - 1)]), 
+               y = y,
+               dir = "Lag X\nX->Y",
                stringsAsFactors = FALSE)
   ))
   
@@ -35,6 +43,7 @@ plot_4_way <- function(x, y) {
     facet_grid(~dir) +
     labs(title = "X-Y Relations for Different Lags") +
     coord_fixed(ratio = 1)
+  
   return(p)
 }
 ```
@@ -179,7 +188,7 @@ We estimate Shannon transfer entropy with the defaults for all function argument
 ```{r te_1}
 library(future)
 # enable parallel processing for all transfer_entropy calls
-plan(multisession)
+plan(multiprocess)
 set.seed(12345 + 1)
 (shannon_te <- transfer_entropy(x, y))
 ```
@@ -341,8 +350,8 @@ A stock market index is a weighted average of individual stocks. Of course, smal
 
 ```{r load_data}
 library(data.table)   # as a data.container
-lbrary(future.apply)  # to use future_lapply
-plan(multisession)    # enable multiple sessions
+library(future.apply)  # to use future_lapply
+plan(multiprocess)    # enable multiple processes
 
 # small wrapper function that helps to order the stocks for the plot
 order_by_other <- function(vals, nums, take = NULL) {
@@ -482,12 +491,12 @@ The graph illustrates the results. For low values of $q$, the information in the
 
 `RTransferEntropy` uses the [`future`](https://cran.r-project.org/web/packages/future/index.html) package internally that allows for parallel execution.
 To enable parallel execution, you have to select a plan (see also [`?future::plan`](https://www.rdocumentation.org/packages/future/versions/1.8.1/topics/plan)).
-The following code uses multiple cores as set by `plan(multisession)` then it reverts to sequential execution.
+The following code uses multiple cores as set by `plan(multiprocess)` then it reverts to sequential execution.
 ```{r future_details, eval = T}
 library(future)
 
 # enable parallelism
-plan(multisession)
+plan(multiprocess)
 te <- transfer_entropy(x, y, nboot = 100)
 
 # execute sequential again

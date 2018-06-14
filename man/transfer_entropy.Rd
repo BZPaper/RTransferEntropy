@@ -100,7 +100,7 @@ te_result
 
 # Parallel Processing using the future-package
 library(future)
-plan(multisession)
+plan(multiprocess)
 
 te_result2 <- transfer_entropy(x, y)
 te_result2

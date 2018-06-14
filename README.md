@@ -32,7 +32,7 @@ Simulate a simple model to obtain two time series that are not independent (see 
 library(RTransferEntropy)
 library(future)
 # enable parallel processing
-plan(multisession)
+plan(multiprocess)
 
 set.seed(20180108)
 n <- 2000
@@ -83,7 +83,7 @@ shannon_te <- transfer_entropy(x = x, y = y)
 #>   [calculate] X->Y transfer entropy
 #>   [calculate] Y->X transfer entropy
 #>   [bootstrap] 300 times
-#> Done - Total time 4.05 seconds
+#> Done - Total time 3.84 seconds
 
 shannon_te
 #> Shannon Transfer Entropy Results:
@@ -129,7 +129,7 @@ renyi_te <- transfer_entropy(x = x, y = y, entropy = "renyi", q = 0.5)
 #>   [calculate] X->Y transfer entropy
 #>   [calculate] Y->X transfer entropy
 #>   [bootstrap] 300 times
-#> Done - Total time 3.66 seconds
+#> Done - Total time 3.2 seconds
 
 renyi_te
 #> Renyi Transfer Entropy Results:
@@ -236,19 +236,19 @@ Using the `future` package and its `plan`s we can execute all computations in pa
 
 ``` r
 library(future)
-plan(multisession)
+plan(multiprocess)
 te_s <- transfer_entropy(x, y, nboot = 100)
 #> Shannon's entropy on 8 cores with 100 shuffles. The timeseries have length 2000 (0 NAs removed)
 #>   [calculate] X->Y transfer entropy
 #>   [calculate] Y->X transfer entropy
 #>   [bootstrap] 100 times
-#> Done - Total time 2.64 seconds
+#> Done - Total time 1.52 seconds
 te_r <- transfer_entropy(x, y, entropy = "renyi", nboot = 100)
 #> Renyi's entropy on 8 cores with 100 shuffles. The timeseries have length 2000 (0 NAs removed)
 #>   [calculate] X->Y transfer entropy
 #>   [calculate] Y->X transfer entropy
 #>   [bootstrap] 100 times
-#> Done - Total time 2.34 seconds
+#> Done - Total time 1.59 seconds
 
 # revert to sequential mode
 plan(sequential)
@@ -257,5 +257,5 @@ te_s <- transfer_entropy(x, y, nboot = 100)
 #>   [calculate] X->Y transfer entropy
 #>   [calculate] Y->X transfer entropy
 #>   [bootstrap] 100 times
-#> Done - Total time 3.6 seconds
+#> Done - Total time 3.9 seconds
 ```

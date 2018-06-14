@@ -73,7 +73,7 @@
 #'
 #' # Parallel Processing using the future-package
 #' library(future)
-#' plan(multisession)
+#' plan(multiprocess)
 #'
 #' te_result2 <- transfer_entropy(x, y)
 #' te_result2
@@ -176,7 +176,7 @@ transfer_entropy <- function(x,
   }
 
   if (!is.null(cl))
-    warning("cl is deprecated, use future::plan(multisession) instead")
+    warning("cl is deprecated, use future::plan(multiprocess) instead")
 
   # Check quantiles
   if (type == "quantiles" && (min(quantiles) < 0 || max(quantiles) > 100))

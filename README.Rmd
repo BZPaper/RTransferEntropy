@@ -41,7 +41,7 @@ and none from y to x.
 library(RTransferEntropy)
 library(future)
 # enable parallel processing
-plan(multisession)
+plan(multiprocess)
 
 set.seed(20180108)
 n <- 2000
@@ -142,7 +142,7 @@ te_s <- transfer_entropy(x, y, nboot = 0)
 Using the `future` package and its `plan`s we can execute all computations in parallel like so
 ```{r, warning=F}
 library(future)
-plan(multisession)
+plan(multiprocess)
 te_s <- transfer_entropy(x, y, nboot = 100)
 te_r <- transfer_entropy(x, y, entropy = "renyi", nboot = 100)
 
