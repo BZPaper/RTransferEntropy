@@ -21,6 +21,19 @@ List calculate_transition_probabilities(CharacterVector x, int lx = 1) {
     counts[cluster_id][cluster_val] += 1;
   }
 
+
+  // add missing elements, i.e., if there is no 2 in the series,
+  // replace the element with an empty map
+  for (int i = std::stoi(counts.begin()->first);
+       i <= std::stoi(counts.rbegin()->first);
+       ++i) {
+    auto it = counts.find(std::to_string(i));
+    if (it == counts.end()) {
+      counts[std::to_string(i)] = std::map<std::string, int>();
+    }
+  }
+
+
   // flatten map map to a vector of vectors
   std::vector<std::string> names; // contains the names of the clusters
   names.reserve(counts.size());
