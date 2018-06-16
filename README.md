@@ -83,7 +83,7 @@ shannon_te <- transfer_entropy(x = x, y = y)
 #>   [calculate] X->Y transfer entropy
 #>   [calculate] Y->X transfer entropy
 #>   [bootstrap] 300 times
-#> Done - Total time 3.84 seconds
+#> Done - Total time 3.51 seconds
 
 shannon_te
 #> Shannon Transfer Entropy Results:
@@ -91,7 +91,7 @@ shannon_te
 #>  Direction          TE     Eff. TE    Std.Err.     p-value    sig
 #> -----------------------------------------------------------------
 #>       X->Y      0.1245      0.1213      0.0015      0.0000    ***
-#>       Y->X      0.0020     -0.0015      0.0016      0.8433       
+#>       Y->X      0.0020      0.0000      0.0016      0.8433       
 #> -----------------------------------------------------------------
 #> Bootstrapped TE Quantiles (300 replications):
 #> -----------------------------------------------------------------
@@ -116,7 +116,7 @@ calc_te(y, x)
 calc_ete(x, y)
 #> [1] 0.1211241
 calc_ete(y, x)
-#> [1] -0.001310745
+#> [1] 0
 ```
 
 ### Renyi Transfer Entropy
@@ -129,7 +129,7 @@ renyi_te <- transfer_entropy(x = x, y = y, entropy = "renyi", q = 0.5)
 #>   [calculate] X->Y transfer entropy
 #>   [calculate] Y->X transfer entropy
 #>   [bootstrap] 300 times
-#> Done - Total time 3.2 seconds
+#> Done - Total time 3.17 seconds
 
 renyi_te
 #> Renyi Transfer Entropy Results:
@@ -176,7 +176,7 @@ te_s
 #>  Direction          TE     Eff. TE    Std.Err.     p-value    sig
 #> -----------------------------------------------------------------
 #>       X->Y      0.1245      0.1212          NA          NA       
-#>       Y->X      0.0020     -0.0016          NA          NA       
+#>       Y->X      0.0020      0.0000          NA          NA       
 #> -----------------------------------------------------------------
 #> For calculation of standard errors and p-values set nboot > 0
 #> -----------------------------------------------------------------
@@ -198,7 +198,7 @@ te_s
 #>  Direction          TE     Eff. TE    Std.Err.     p-value    sig
 #> -----------------------------------------------------------------
 #>       X->Y      0.1245      0.1213          NA          NA       
-#>       Y->X      0.0020     -0.0014          NA          NA       
+#>       Y->X      0.0020      0.0000          NA          NA       
 #> -----------------------------------------------------------------
 #> For calculation of standard errors and p-values set nboot > 0
 #> -----------------------------------------------------------------
@@ -226,7 +226,7 @@ te_s <- transfer_entropy(x, y, nboot = 0)
 #> Shannon's entropy on 8 cores with 100 shuffles. The timeseries have length 2000 (0 NAs removed)
 #>   [calculate] X->Y transfer entropy
 #>   [calculate] Y->X transfer entropy
-#> Done - Total time 0.41 seconds
+#> Done - Total time 0.42 seconds
 ```
 
 Parallel Programming
@@ -242,7 +242,7 @@ te_s <- transfer_entropy(x, y, nboot = 100)
 #>   [calculate] X->Y transfer entropy
 #>   [calculate] Y->X transfer entropy
 #>   [bootstrap] 100 times
-#> Done - Total time 1.52 seconds
+#> Done - Total time 1.53 seconds
 te_r <- transfer_entropy(x, y, entropy = "renyi", nboot = 100)
 #> Renyi's entropy on 8 cores with 100 shuffles. The timeseries have length 2000 (0 NAs removed)
 #>   [calculate] X->Y transfer entropy
@@ -257,5 +257,5 @@ te_s <- transfer_entropy(x, y, nboot = 100)
 #>   [calculate] X->Y transfer entropy
 #>   [calculate] Y->X transfer entropy
 #>   [bootstrap] 100 times
-#> Done - Total time 3.9 seconds
+#> Done - Total time 3.78 seconds
 ```
