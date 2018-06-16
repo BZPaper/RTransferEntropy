@@ -137,3 +137,4 @@ test_that("transfer_entropy renyi is correctly specified", {
   )
   expect_equal(coefs, exp_coefs, tolerance = 1e-6)
 })
+

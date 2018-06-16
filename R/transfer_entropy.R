@@ -269,8 +269,10 @@ transfer_entropy <- function(x,
     dimnames = list(c("X->Y", "Y->X"),
                     c("te", "ete", "se", "p-value"))
   )
-  if (entropy == "shannon") coef[, "te"] <- pmax(0, coef[, "te"])
-
+  if (entropy == "shannon") {
+    coef[, "te"]  <- pmax(0, coef[, "te"])
+    coef[, "ete"] <- pmax(0, coef[, "ete"])
+  }
   q <- ifelse(entropy == "renyi", q, NA)
 
   # Output
