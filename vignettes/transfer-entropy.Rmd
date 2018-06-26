@@ -83,9 +83,9 @@ with  $q >0$ [@JKS12]. For $q\rightarrow 1$ Rényi entropy converges to Shannon 
 $$
   RT_{J \rightarrow I}(k,l) = \frac{1}{1-q} log \left(\frac{\sum_i \phi_q\left(i_t^{(k)}\right)p^q\left(i_{t+1}|i^{(k)}_t\right)}{\sum_{i,j} \phi_q\left(i^{(k)}_t,j^{(l)}_t\right)p^q\left(i_{t+1}|i^{(k)},j^{(l)}_t \right)}\right).
 $$
-Analogously to (Shannon) transfer entropy Rényi transfer entropy  measures the information flow from $J$ to $I$.
+Analogously to (Shannon) transfer entropy Rényi transfer entropy measures the information flow from $J$ to $I$. Note that, contrary to Shannon transfer entropy, Rényi transfer entropy can produce negative estimates. In such a case, there is simply no information flow from $J$ to $I$.
   
-These transfer entropy estimates are commonly biased due to small sample effects . A remedy is provided by the effective transfer entropy [@MK02], which is computed in the following way 
+The above transfer entropy estimates are commonly biased due to small sample effects. A remedy is provided by the effective transfer entropy [@MK02], which is computed in the following way 
   
 $$
   ET_{J \rightarrow I}(k,l):=  T_{J \rightarrow I}(k,l)- T_{J_{\text{shuffled}} \rightarrow I}(k,l),
@@ -264,7 +264,7 @@ print(svf$varresult$y$coefficients)
 
 The VAR cannot detect the nonlinear dependence of $Y$ on $X$ which leads to a parameter estimate x.l1 which is not statistically significant. The autoregressive nature of $X$ is, of course, readily identified. 
 
-As shown above, the question how to determine the quantiles is important as it impacts on the order of magnitude of the transfer entropy. A different approach is provided by Rényi transfer entropy which allows to put more weight on the tails in calculating transfer entropy. This is particularly convenient when the distribution is assumed to be more informative in the tails. To illustrate this effect, we simulate data for which the dependence of $Y$ on $X$ changes with the level the innovation.
+As shown above, the question how to determine the quantiles is important as it impacts on the order of magnitude of the transfer entropy. A different approach is provided by Rényi transfer entropy which allows to put more weight on the tails in calculating transfer entropy. Again, as noted above, Rényi transfer entropy estimates can potentially turn out to be negative. In such a case, it simply means that there is no information transfer from one time series to another. This is particularly convenient when the distribution is assumed to be more informative in the tails. To illustrate this effect, we simulate data for which the dependence of $Y$ on $X$ changes with the level the innovation.
 
 \begin{eqnarray*}
 x_t & = & 0.2x_{t-1} + \varepsilon_{x,t}\\
@@ -526,4 +526,4 @@ The important difference between the [`TransferEntropy`-package](https://github.
 
 As in particular the bootstrap is computationally intensive, this package uses `Rcpp` and parallel processing to decrease computing time.
 
-# References
+## References
