@@ -347,7 +347,7 @@ As can be seen, the value is indeed approaching `r format(round(shannon_te3$coef
 
 ## Application to financial time series
 
-The analysis of information flows in financial markets has a long history. Using transfer entropy widens the possibilities to detect information flows as nonlinear relationships can also be accounted for. To illustrate the application of transfer entropy, we use a dataset of 10 individual stocks comprised in the S\&P~500 index as well as the index itself. The data range from January 3, 2000, to December 29, 2017. This dataset is included as the `stocks` object in the package.
+The analysis of information flows in financial markets has a long history. Using transfer entropy widens the possibilities to detect information flows as nonlinear relationships can also be accounted for. To illustrate the application of transfer entropy, we use a dataset of 10 individual stocks comprised in the S\&P 500 index as well as the index itself. The data range from January 3, 2000, to December 29, 2017. This dataset is included as the `stocks` object in the package.
 
 A stock market index is a weighted average of individual stocks. Of course, small stocks have less weight and, hence, may only have limited impact on the index while large corporations might dominate. On the other hand, it is unclear upfront how the market environment as a whole (as measured by the index) might provide information to the individual stocks. To measure the extent to which information flows between the index and the stocks, we use transfer entropy. As the calculation of transfer entropy requires stationary data, we calculate log-returns from the price series.
 
