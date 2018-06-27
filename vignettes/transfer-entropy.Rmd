@@ -57,7 +57,7 @@ We show how to test for and quantify the information flow between two time serie
   
 ## Measuring information flows using transfer entropy
   
-Let $log$ denote the base 2 logarithm, then informational gain is measured in bits. Shannon entropy [@S48] states that for a discrete variable $J$ with probability distribution $p(j)$, where j stands for the different outcomes the random variable $J$ can take, the average number of bits required to optimally encode independent draws from the distribution of J can be calculated as 
+Let $log$ denote the base 2 logarithm, then informational gain is measured in bits. Shannon entropy [@S48] states that for a discrete variable $J$ with probability distribution $p(j)$, where $j$ stands for the different outcomes the random variable $J$ can take, the average number of bits required to optimally encode independent draws from the distribution of $J$ can be calculated as 
   
 $$
   H_J = - \sum_j p(j) \times log \left(p(j)\right).
