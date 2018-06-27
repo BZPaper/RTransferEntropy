@@ -78,7 +78,7 @@ where $T_{J\rightarrow I}$ consequently measures the information flow from $J$ t
 $$
   H^q_J = \frac{1}{1-q} log \left(\sum_j p^q(j)\right), 
 $$
-with  $q >0$ [@JKS12]. For $q\rightarrow 1$ Rényi entropy converges to Shannon entropy. For $0<q<1$  tail events receive more weight, while for $q>1$ the weights on center observations dominate. Consequently, Rényi entropy provides a more flexible tool for estimating uncertainty, since different areas of a distribution can be emphasized, depending on the parameter $q$. Using the escort distribution [for more information, see @BeckS93] $\phi_q(j)=\frac{p^q(j)}{\sum_j p^q(j))}$ with $q >0$ to normalize the weighted distributions, @JKS12 derive the Rényi transfer entropy measure as
+with  $q >0$. For $q\rightarrow 1$ Rényi entropy converges to Shannon entropy. For $0<q<1$  tail events receive more weight, while for $q>1$ the weights on center observations dominate. Consequently, Rényi entropy provides a more flexible tool for estimating uncertainty, since different areas of a distribution can be emphasized, depending on the parameter $q$. Using the escort distribution [for more information, see @BeckS93] $\phi_q(j)=\frac{p^q(j)}{\sum_j p^q(j))}$ with $q >0$ to normalize the weighted distributions, @JKS12 derive the Rényi transfer entropy measure as
   
 $$
   RT_{J \rightarrow I}(k,l) = \frac{1}{1-q} log \left(\frac{\sum_i \phi_q\left(i_t^{(k)}\right)p^q\left(i_{t+1}|i^{(k)}_t\right)}{\sum_{i,j} \phi_q\left(i^{(k)}_t,j^{(l)}_t\right)p^q\left(i_{t+1}|i^{(k)},j^{(l)}_t \right)}\right).
