@@ -313,7 +313,7 @@ set.seed(12345 + 1)
 (renyi_te <- transfer_entropy(x, y, entropy = "Renyi", q = 0.3))
 ```
 
-The result indicates that the tails are indeed more informative. The estimated Rényi effective transfer entropy is slightly higher than the Shannon ETE. Again, the information flow from $Y$ to $X$ is correctly identified as being zero.
+The result indicates that the tails are indeed more informative. The estimated Rényi effective transfer entropy is slightly higher than the Shannon effective transfer entropy. Again, the information flow from $Y$ to $X$ is correctly identified as being zero.
 
 Since Rényi transfer entropy approaches Shannon transfer entropy as $q \rightarrow 1$, we illustrate this property using different values of $q$. Note that this result is illustrated using the normal transfer entropy estimate and not the effective transfer entropy estimates because the latter depend on the shuffling procedure. 
 
