@@ -266,26 +266,28 @@ The VAR cannot detect the nonlinear dependence of $Y$ on $X$ which leads to a pa
 
 As shown above, the question how to determine the quantiles is important as it impacts on the order of magnitude of the transfer entropy. A different approach is provided by Rényi transfer entropy which allows to put more weight on the tails in calculating transfer entropy. Again, as noted above, Rényi transfer entropy estimates can potentially turn out to be negative. In such a case, it simply means that there is no information transfer from one time series to another. This is particularly convenient when the distribution is assumed to be more informative in the tails. To illustrate this effect, we simulate data for which the dependence of $Y$ on $X$ changes with the level the innovation.
 
-\begin{eqnarray*}
+$$
+\begin{split}
 x_t & = & 0.2x_{t-1} + \varepsilon_{x,t}\\
-y_t & = & \begin{cases} \phantom{0.3}x_{t-1} + \varepsilon_{y,t} \quad \text{if } |\varepsilon_{y,t}| > s \\ 0.3x_{t-1} + \varepsilon_{y,t} \quad \text{if } |\varepsilon_{y,t}| < s
+y_t & = & \begin{cases} \phantom{0.3}x_{t-1} + \varepsilon_{y,t} \quad \text{if } |\varepsilon_{y,t}| > s \\ 0.2x_{t-1} + \varepsilon_{y,t} \quad \text{if } |\varepsilon_{y,t}| < s
 \end{cases},
-\end{eqnarray*}
+\end{split}
+$$
 
 with $\varepsilon_{x,t}$ and $\varepsilon_{y,t}$ being standard normally distributed and $s = 2\sigma_y$ and $\sigma_y$ the standard deviation of $\varepsilon_{y,t}$. As before, $X$ serves as a predictor for $Y$, but not vice versa. 
 
 ```{r gen_data_3, eval=T}
 set.seed(12345)
+
 x <- rnorm(1, 0, 1)
 y <- rnorm(1, 0, 1)
 
 for (i in 2:(n + 200)) {
-  eps_x <- rnorm(1, 0, 1)
-  x <- c(x, 0.2 * x[i - 1] + eps_x)
-  if (eps_x > 2) {
-    y <- c(y, x[i - 1] + rnorm(1, 0, 1))
+  x <- c(x, 0.2 * x[i - 1] + rnorm(1, 0, 1))
+  if (abs(x[i-1]) > 1.65) {
+    y <- c(y, x[i-1]  + rnorm(1, 0, 1))
   } else {
-    y <- c(y, 0.3 * x[i - 1] + rnorm(1, 0, 1))
+    y <- c(y, 0.2 * x[i - 1] + rnorm(1, 0, 1))
   }
 }
 
