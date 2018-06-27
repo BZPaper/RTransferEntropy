@@ -420,7 +420,7 @@ ggplot(dt_plot1, aes(x = stock, y = ete)) +
   labs(x = NULL, y = "Effective Transfer Entropy")
 ```
 
-Again, the estimated transfer entropy depends on the choice of the quantile. This is illustrated in the following Figure which reports density plots of ETE for two different choices of quantiles, namely \code{quantiles = c(5, 95)} in the upper graph and \code{quantiles = c(10, 90)} in the lower graph. The solid (dotted) line depicts the information flow from the market to the stocks (from the stocks to the market). The estimated information flow from the stocks to the market is rather robust with respect to the choice of the quantiles, the dotted lines in both graphs have a similar shape. For the other direction, the choice of the quantiles has a larger impact, but the overall information that the flow towards the individual stocks is more equilibrated than the other direction, holds for both choices.  
+Again, the estimated transfer entropy depends on the choice of the quantile. This is illustrated in the following Figure which reports density plots of effetive transfer entropies for two different choices of quantiles, namely \code{quantiles = c(5, 95)} in the upper graph and \code{quantiles = c(10, 90)} in the lower graph. The solid (dotted) line depicts the information flow from the market to the stocks (from the stocks to the market). The estimated information flow from the stocks to the market is rather robust with respect to the choice of the quantiles, the dotted lines in both graphs have a similar shape. For the other direction, the choice of the quantiles has a larger impact, but the overall information that the flow towards the individual stocks is more equilibrated than the other direction, holds for both choices.  
 
 ```{r density_plot_1}
 dt_plot2 <- copy(out_dt)
@@ -487,7 +487,7 @@ ggplot(qdt, aes(x = q, y = ete)) +
        subtitle = "For American Express (AXP, X) and the S&P 500 Index (Y)")
 ```
 
-The graph illustrates the results. For low values of $q$, the information in the tails is given a high weight which leads in the current situation to a significant ETE result. This indicates that indeed tail dependence is given between the S\&P500 and the stock. As the weight is reduced, ETE decreases and becomes insignificant for $q\geq 0.4$. This is also the result obtained when using Shannon Entropy (denoted by the red, dashed line in the graph). 
+For low values of $q$, the information in the tails is given a high weight which leads in the current situation to a significant effective transfer entropy result. This indicates that indeed tail dependence is given between the S\&P 500 and the stock. As the weight is reduced, the effective transfer entropy decreases and becomes insignificant for $q\geq 0.4$. This is also the result obtained when using Shannon Entropy (denoted by the red, dashed line in the graph). 
 
 
 ## Parallel Execution
