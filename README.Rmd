@@ -27,7 +27,7 @@ or the development version from github with
 
 ```{r gh_installation, eval = FALSE}
 # install.packages("devtools")
-devtools::install_github("BZPaper/Transfer-Entropy")
+devtools::install_github("BZPaper/RTransferEntropy")
 ```
 
 ## Example using simulated data
