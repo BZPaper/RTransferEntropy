@@ -229,7 +229,10 @@ x <- x[-1]
 y <- y[-1]
 ```
 
-If plotted, the two series look like this
+We visualize the relationship between the different lag-structures of $X$ and $Y$ in the following scatterplot.
+The left-hand-side shows the relations for lagged $X$, thus looking at $X \rightarrow Y$.
+The plot in the centre displays the level-level relationship between the two variables (no lags are used).
+The right-hand-side shows the relations for lagged $Y$, thus the effect of $Y \rightarrow X$.
 ```{r plot_data_1, echo=F, message=FALSE, warning=FALSE}
 plot_4_way(x, y)
 ```
@@ -243,7 +246,7 @@ library(future)
 # enable parallel processing for all future transfer_entropy calls
 plan(multiprocess)
 set.seed(12345)
-(shannon_te <- transfer_entropy(x, y))
+shannon_te <- transfer_entropy(x, y)
 ```
 
 During the estimation process, `RTransferEntropy` provides information on the type of transfer entropy that is currently being estimated, the number of cores used for parallel computing, the number of shuffles and bootstrap estimations (for each direction) as well es the length of the time series and the number of removed `NAs` (if any).
@@ -314,7 +317,9 @@ plot_4_way(x, y)
 Also in this example, we focus on Shannon transfer entropy.
 
 ```{r te_2, eval=T}
-(shannon_te2 <- transfer_entropy(x, y))
+shannon_te2 <- transfer_entropy(x, y)
+
+shannon_te2
 ```
 
 Again, the Shannon transfer entropy estimate indicates that there is a significant information flow from $X$ to $Y$, but not in the other direction. 
@@ -322,10 +327,11 @@ Again, the Shannon transfer entropy estimate indicates that there is a significa
 In the same situation, using a VAR would not reveal any relationship between $X$ and $Y$.
 Using the package [`vars`](https://cran.r-project.org/web/packages/vars/index.html) and one lag (the true lag structure) delivers the following estimates of the VAR(1) for the dependent variable $Y$:
 
-```{r var_comparison}
+```{r var_comparison, message=FALSE, warning=FALSE}
 library(vars)
 varfit <- VAR(cbind(x, y), p = 1, type = "const")
 svf <- summary(varfit)
+
 svf$varresult$y
 ```
 
@@ -333,30 +339,34 @@ The VAR cannot detect the nonlinear dependence of $Y$ on $X$ which leads to a pa
 The autoregressive nature of $X$ (not shown above, but can be obtained with `svf$varresult$x`) is, as expected, readily identified. 
 The precise value of the transfer entropy is influenced by the choice of the quantiles.
 To illustrate the effect, we reestimate Shannon transfer entropy for a selection of quantiles.
-The following graph reports the results for increasing $\tau$ which specifies the quantiles used as (4+$\tau/96-\tau) such that for $\tau=1$ the results correspond to the previous implementation. 
+The following graph reports the results for increasing values of quantiles.
+```{r te_2a, eval=T, echo=FALSE}
+df <- data.frame(
+  q1 = 5:25,
+  q2 = 95:75
+)
+df$ete <- apply(
+  df, 
+  1, 
+  function(el) calc_ete(x, y, quantiles = c(el[["q1"]], el[["q2"]]))
+)
 
-```{r te_2a, eval=T, include=FALSE}
-ete <- NULL
-for (i in 1:21){
- ete <- append(ete, calc_ete(x, y, quantiles = c(4+i,96-i)))
-}
-```
-```{r te_2b, eval=T}
-plot(ete, axes=FALSE, ylab="ETE(X->Y)", xlab=expression(tau))
-axis(2)
-axis(1, at = 1:length(ete), labels = 5:25)
+df$quantiles <- factor(sprintf("(%02.f, %02.f)", df$q1, df$q2))
 
+ggplot(df, aes(x = quantiles, y = ete)) + 
+  geom_point() +
+  theme(axis.text.x = element_text(angle = 90)) +
+  labs(x = "Quantiles", y = "ETE (X->Y)")
 ```
 As can be seen, the relative value of the effective transfer entropy from $X$ to $Y$ increases as the central bin gets smaller.
 Statistical significance, is, however, not affected. 
 
-
-As shown above, the question how to determine the quantiles is important as it impacts on the order of magnitude of the transfer entropy.
+As shown above, the question how to determine the quantiles is important as it impacts the order of magnitude of the transfer entropy.
 A different approach is provided by Rényi transfer entropy which allows to reweight the probabilities associated with the individual bins.
-Due to the proposed symbolic encoding of the data, tail events are associated with a lower likelihood as events in the centre of the distribution.
+Due to the proposed symbolic encoding of the data, tail events are associated with a lower likelihood compared to events in the centre of the distribution.
 Rényi transfer entropy, thus, puts more weight on the tails in calculating transfer entropy.
-This is particularly convenient when the distribution is assumed to be more informative in the tails.  Note again that Rényi transfer entropy estimates can potentially turn out negative.
-
+This is particularly convenient when the distribution is assumed to be more informative in the tails.
+Note again that Rényi transfer entropy estimates can potentially turn out negative.
 
 To illustrate the use of Rényi transfer entropy, we simulate data for which the dependence of $Y$ on $X$ changes with the level of the innovation.
 
@@ -402,7 +412,9 @@ Estimation of Rényi transfer entropy is, thus, invoqued as follows:
 
 ```{r te_renyi_3}
 set.seed(12345)
-(renyi_te <- transfer_entropy(x, y, entropy = "Renyi", q = 0.3))
+renyi_te <- transfer_entropy(x, y, entropy = "Renyi", q = 0.3)
+
+renyi_te
 ```
 
 The results indicate first and foremost that there is (statistically significant) information flow from $X$ to $Y$.
@@ -418,14 +430,16 @@ qs <- c(seq(0.1, 0.9, 0.1), 0.99)
 
 te <- sapply(qs, function(q) calc_te(x, y, entropy = "renyi", q = q))
 names(te) <- sprintf("q = %.2f", qs)
-(shannon_te3 <- transfer_entropy(x, y))
+shannon_te3 <- transfer_entropy(x, y)
+
+shannon_te3
 ```
 
 The Shannon transfer entropy from $X$ to $Y$ is estimated as `r format(round(shannon_te3$coef[1,1],4), nsmall=4)`.
 Using different values of $q$ we obtain the following results for the Rényi transfer entropy.
 
 ```{r plot_q_test, echo=F, message=FALSE, warning=FALSE}
-print(te)
+print(round(te, 4))
 
 ggplot(data.frame(x = qs, y = te), aes(x = x, y = y)) +
   geom_hline(yintercept = shannon_te3$coef[1,1], 
@@ -458,8 +472,8 @@ On the other hand, it is unclear upfront how the market environment as a whole (
 To measure the extent to which information flows between the index and the stocks, we use transfer entropy.
 As the calculation of transfer entropy requires stationary data, we calculate log-returns from the price series.
 
-```{r load_data}
-library(data.table)   # as a data.container
+```{r load_data, message=FALSE, warning=FALSE}
+library(data.table)   # for data-manipulation
 library(future.apply) # to use future_lapply
 plan(multiprocess)    # enable multiple processes
 
@@ -482,7 +496,7 @@ res_list <- future_lapply(split(stocks, stocks$ticker), function(d) {
   
   # calculate the 5/95 quantile
   tefit1 <- transfer_entropy(d$ret, d$sp500, shuffles = 50, quantiles = c(5, 95))
-  ## gather the results into a data.table
+  # gather the results into a data.table
   res1 <- data.table(
     stock     = ticker,
     quantiles = "(5, 95)",
@@ -494,20 +508,20 @@ res_list <- future_lapply(split(stocks, stocks$ticker), function(d) {
   tefit2 <- transfer_entropy(d$ret, d$sp500, shuffles = 50, 
                              quantiles = c(10, 90))
   
+  # gather the results into a data.table
   res2 <- data.table(
     stock     = ticker,
     quantiles = "(10, 90)",
     direction = c("X->Y", "Y->X"),
     coef(tefit2)[1:2, 2:4]
   )
+  
   rbind(res1, res2)
 })
 
+# combine the lists for each ticker into one data.table
 out_dt <- rbindlist(res_list)
-```
 
-
-```{r ete_plot_1}
 out_dt[, direction := factor(direction, 
                              labels = paste("Flow towards",
                                             c("Stock", "Market")))]
