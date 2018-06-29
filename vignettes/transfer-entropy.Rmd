@@ -146,7 +146,7 @@ However, we recommend that the number of bins is limited in order to avoid too m
   
 ## The `RTransferEntropy` package
   
-Testing for and quantifying the information flow between two time series with Shannon and Rényi transfer entropy, as outlined above, can be implemented with the package `RTransferEntropy`.
+Testing for and quantifying the information flow between two time series with Shannon and Rényi transfer entropy, as outlined above, can be implemented with the package [`RTransferEntropy`](https://github.com/BZPaper/RTransferEntropy).
 The package is installed and loaded in the usual way.
   
 ```{r load_packages, echo=F}

@@ -7,9 +7,10 @@ Authors@R: c(
     person("David", "Zimmermann", role = c("aut")),
     person("Thomas", "Dimpfl", role = c("aut")),
     person("Franziska", "Peter", role = c("aut")))
-Description: The `RTransferEntropy` library enables the user to calculate 
-    Shannon's and Renyi's entropy measures for time series on multiple cores.
+Description: A package that allows the computation of Shannon's and Renyi's transfer entropy measure for time series.
 License: GPL-3
+URL: https://github.com/BZPaper/RTransferEntropy
+BugReports: https://github.com/BZPaper/RTransferEntropy/issues
 Encoding: UTF-8
 Imports:
     future,
@@ -24,3 +25,4 @@ Suggests: ggplot2,
     testthat,
     vars
 VignetteBuilder: knitr
+
