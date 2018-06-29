@@ -317,7 +317,7 @@ Also in this example, we focus on Shannon transfer entropy.
 (shannon_te2 <- transfer_entropy(x, y))
 ```
 
-Again, the Shannon Transfer Entropy estimate indicates that there is a significant information flow from $X$ to $Y$, but not in the other direction. 
+Again, the Shannon transfer entropy estimate indicates that there is a significant information flow from $X$ to $Y$, but not in the other direction. 
 
 In the same situation, using a VAR would not reveal any relationship between $X$ and $Y$.
 Using the package [`vars`](https://cran.r-project.org/web/packages/vars/index.html) and one lag (the true lag structure) delivers the following estimates of the VAR(1) for the dependent variable $Y$:
@@ -612,7 +612,7 @@ ggplot(qdt, aes(x = q, y = ete)) +
 For low values of $q$, the information in the tails is given a high weight which leads in the current situation to a significant effective transfer entropy result. This indicates that indeed tail dependence is given between the S\&P 500 and the stock.
 As the weight is reduced, the effective transfer entropy decreases and even becomes negative (between $q=0.3$ and $q=0.8 in the direction from the stock to the index and between $q=0.5$ and $q=0.9$ in the other direction). This would mean that the knowledge of the either the stock or the index would even indicate a higher risk expose of the respective other entity. Note that this does not mean that there is no information flow. The information flow merely suggests a higher risk of the dependent variable as opposed to a situation with positive Rényi transfer entropy where the risk about the dependent variable is reduced by knowledge of the other variable.
 
-The red dashed line in the graph represents the Shannon entropy. The last value of $q$ is 0.99 for which the Rényi Transfer Entropy is already fairly close to the value of the Shannon Transfer Entropy. This illustrates that Rényi Transfer Entropy converges to Shannon Transfer Entropy as $q$ approaches 1.
+The red dashed line in the graph represents the Shannon entropy. The last value of $q$ is 0.99 for which the Rényi transfer entropy is already fairly close to the value of the Shannon transfer entropy. This illustrates that Rényi transfer entropy converges to Shannon transfer entropy as $q$ approaches 1.
 
 
 ## Parallel Execution
