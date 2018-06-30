@@ -230,7 +230,7 @@ y <- y[-1]
 ```
 
 The following scatterplot provides a first illustration of some of the dependencies among both time series.
-The left-hand-side shows the relations for lagged $X$, tThe plot in the centre displays the level-level relationship between the two variables (no lags are used) and the right-hand-side shows the relations for lagged $Y$.
+The left-hand-side shows the relations for lagged $X$, the plot in the centre displays the level-level relationship between the two variables (no lags are used) and the right-hand-side shows the relations for lagged $Y$.
 ```{r plot_data_1, echo=F, message=FALSE, warning=FALSE}
 plot_4_way(x, y)
 ```
