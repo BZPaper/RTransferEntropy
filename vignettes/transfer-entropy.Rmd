@@ -229,10 +229,8 @@ x <- x[-1]
 y <- y[-1]
 ```
 
-We visualize the relationship between the different lag-structures of $X$ and $Y$ in the following scatterplot.
-The left-hand-side shows the relations for lagged $X$, thus looking at $X \rightarrow Y$.
-The plot in the centre displays the level-level relationship between the two variables (no lags are used).
-The right-hand-side shows the relations for lagged $Y$, thus the effect of $Y \rightarrow X$.
+The following scatterplot provides a first illustration of some of the dependencies among both time series.
+The left-hand-side shows the relations for lagged $X$, tThe plot in the centre displays the level-level relationship between the two variables (no lags are used) and the right-hand-side shows the relations for lagged $Y$.
 ```{r plot_data_1, echo=F, message=FALSE, warning=FALSE}
 plot_4_way(x, y)
 ```
@@ -309,6 +307,8 @@ for (i in 2:(n + 200)) {
 x <- x[-(1:200)]
 y <- y[-(1:200)]
 ```
+
+As in the above example, a scatterplot provides a first illustration of some of the dependencies among both time series.
 
 ```{r plot_data_2, echo=F, message=FALSE, warning=FALSE}
 plot_4_way(x, y)
@@ -402,6 +402,8 @@ for (i in 2:(n + 200)) {
 x <- x[-(1:200)]
 y <- y[-(1:200)]
 ```
+
+Again, a scatterplot provides a first illustration of some of the dependencies among both time series.
 
 ```{r plot_data_3, echo=F, message=FALSE, warning=FALSE}
 plot_4_way(x, y)
