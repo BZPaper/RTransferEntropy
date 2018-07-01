@@ -229,8 +229,8 @@ x <- x[-1]
 y <- y[-1]
 ```
 
-The following scatterplot provides a first illustration of some of the dependencies among both time series.
-The left-hand-side shows the relations for lagged $X$, the plot in the centre displays the level-level relationship between the two variables (no lags are used) and the right-hand-side shows the relations for lagged $Y$.
+The following scatterplots provide a first illustration of the dependencies among both time series.
+The left graph shows the relation for $X_{t-1}$ and $Y_t$, the graph in the centre displays the contemporaneous relationship between the two variables, and the right graph shows the relation for $X_t$ and $Y_{t-1}$.
 ```{r plot_data_1, echo=F, message=FALSE, warning=FALSE}
 plot_4_way(x, y)
 ```
@@ -308,7 +308,7 @@ x <- x[-(1:200)]
 y <- y[-(1:200)]
 ```
 
-As in the above example, a scatterplot provides a first illustration of some of the dependencies among both time series.
+As in the above example, a scatterplot provides a first illustration of  the dependencies among both time series for different lead-lag combinations.
 
 ```{r plot_data_2, echo=F, message=FALSE, warning=FALSE}
 plot_4_way(x, y)
