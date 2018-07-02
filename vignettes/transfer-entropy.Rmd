@@ -18,34 +18,34 @@ knitr::opts_chunk$set(
 )
 library(ggplot2)
 theme_set(theme_light())
-plot_4_way <- function(x, y) {
+plot_series <- function(x, y) {
   
-  dt <- do.call(rbind, list(
-    data.frame(x = x, 
-               y = y, 
-               dir = "Level-Level", 
-               stringsAsFactors = FALSE),
-    data.frame(x = x, 
-               y = c(NA, y[1:(length(y) - 1)]), 
-               dir = "Lag Y\nY->X", 
-               stringsAsFactors = FALSE),
-    data.frame(x = c(NA, x[1:(length(x) - 1)]), 
-               y = y,
-               dir = "Lag X\nX->Y",
-               stringsAsFactors = FALSE)
-  ))
-  
-  dt$dir <- factor(dt$dir, 
-                   levels = c("Lag X\nX->Y", "Level-Level", "Lag Y\nY->X"))
-  
-  p <- ggplot(dt, aes(x = x, y = y)) + 
+  p1 <- ggplot(data.frame(x = c(NA, x[1:(length(x) - 1)]), y = y), aes(x, y)) +
     geom_smooth() +
     geom_point(alpha = 0.5, size = 0.5) +
-    facet_grid(~dir) +
-    labs(title = "X-Y Relations for Different Lags") +
-    coord_fixed(ratio = 1)
+    labs(x = expression(X[t - 1]), y = expression(Y[t])) +
+    coord_fixed(1) +
+    scale_x_continuous(limits = range(x)) +
+    scale_y_continuous(limits = range(y))
   
-  return(p)
+  p2 <- ggplot(data.frame(x = x, y = y), aes(x, y)) +
+    geom_smooth() +
+    geom_point(alpha = 0.5, size = 0.5) +
+    labs(x = expression(X[t]), y = expression(Y[t])) +
+    coord_fixed(1) +
+    scale_x_continuous(limits = range(x)) +
+    scale_y_continuous(limits = range(y))
+  
+  p3 <- ggplot(data.frame(x = x, y = c(NA, y[1:(length(y) - 1)])), aes(x, y)) +
+    geom_smooth() +
+    geom_point(alpha = 0.5, size = 0.5) +
+    labs(x = expression(X[t]), y = expression(Y[t - 1])) +
+    coord_fixed(1) +
+    scale_x_continuous(limits = range(x)) +
+    scale_y_continuous(limits = range(y))
+  
+  p <- gridExtra::grid.arrange(p1, p2, p3, ncol = 3)
+  return(invisible(p))
 }
 ```
   
@@ -232,7 +232,7 @@ y <- y[-1]
 The following scatterplots provide a first illustration of the dependencies among both time series.
 The left graph shows the relation for $X_{t-1}$ and $Y_t$, the graph in the centre displays the contemporaneous relationship between the two variables, and the right graph shows the relation for $X_t$ and $Y_{t-1}$.
 ```{r plot_data_1, echo=F, message=FALSE, warning=FALSE}
-plot_4_way(x, y)
+plot_series(x, y)
 ```
 
 
@@ -311,7 +311,7 @@ y <- y[-(1:200)]
 As in the above example, a scatterplot provides a first illustration of  the dependencies among both time series for different lead-lag combinations.
 
 ```{r plot_data_2, echo=F, message=FALSE, warning=FALSE}
-plot_4_way(x, y)
+plot_series(x, y)
 ```
 
 Also in this example, we focus on Shannon transfer entropy.
@@ -406,7 +406,7 @@ y <- y[-(1:200)]
 Again, a scatterplot provides a first illustration of some of the dependencies among both time series.
 
 ```{r plot_data_3, echo=F, message=FALSE, warning=FALSE}
-plot_4_way(x, y)
+plot_series(x, y)
 ```
 
 In a first step, we estimate Rényi transfer entropy with the default settings of the `transfer_entropy()` function, i.e. with a weighting parameter $q=0.1$ which gives a heavy weight to the (infrequent) tail observations.

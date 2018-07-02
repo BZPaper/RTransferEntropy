@@ -20,6 +20,7 @@ LazyData: true
 RoxygenNote: 6.0.1
 LinkingTo: Rcpp
 Suggests: ggplot2,
+    gridExtra,
     knitr,
     rmarkdown,
     testthat,
