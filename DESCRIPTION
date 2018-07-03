@@ -21,7 +21,8 @@ Imports:
 LazyData: true
 RoxygenNote: 6.0.1
 LinkingTo: Rcpp
-Suggests: ggplot2,
+Suggests: data.table,
+    ggplot2,
     gridExtra,
     knitr,
     rmarkdown,
