@@ -12,6 +12,8 @@ License: GPL-3
 URL: https://github.com/BZPaper/RTransferEntropy
 BugReports: https://github.com/BZPaper/RTransferEntropy/issues
 Encoding: UTF-8
+Depends: 
+    R (>= 3.1.2)
 Imports:
     future,
     future.apply,

@@ -53,23 +53,37 @@ y <- y[-1]
 
 ``` r
 library(ggplot2)
+library(gridExtra)
 theme_set(theme_light())
 
-dt <- do.call(rbind, list(
-  data.frame(x = x, y = y, dir = "Level-Level", stringsAsFactors = FALSE),
-  data.frame(x = x, y = c(NA, y[1:(length(y) - 1)]), dir = "Lag Y\nY->X", stringsAsFactors = FALSE),
-  data.frame(x = c(NA, x[1:(length(x) - 1)]), y = y, dir = "Lag X\nX->Y", stringsAsFactors = FALSE)
-))
-dt$dir <- factor(dt$dir, levels = c("Lag X\nX->Y", "Level-Level", "Lag Y\nY->X"))
-
-
-ggplot(dt, aes(x = x, y = y)) + 
+# Lagged X-Plot
+p1 <- ggplot(data.frame(x = c(NA, x[1:(length(x) - 1)]), y = y), aes(x, y)) +
   geom_smooth() +
   geom_point(alpha = 0.5, size = 0.5) +
-  facet_grid(~dir) +
-  theme_light() +
-  labs(title = "X-Y Relations for Different Lags") +
-  coord_fixed(ratio = 1)
+  labs(x = expression(X[t - 1]), y = expression(Y[t])) +
+  coord_fixed(1) +
+  scale_x_continuous(limits = range(x)) +
+  scale_y_continuous(limits = range(y))
+
+# X-Y Plot
+p2 <- ggplot(data.frame(x = x, y = y), aes(x, y)) +
+  geom_smooth() +
+  geom_point(alpha = 0.5, size = 0.5) +
+  labs(x = expression(X[t]), y = expression(Y[t])) +
+  coord_fixed(1) +
+  scale_x_continuous(limits = range(x)) +
+  scale_y_continuous(limits = range(y))
+
+# Lagged Y Plot
+p3 <- ggplot(data.frame(x = x, y = c(NA, y[1:(length(y) - 1)])), aes(x, y)) +
+  geom_smooth() +
+  geom_point(alpha = 0.5, size = 0.5) +
+  labs(x = expression(X[t]), y = expression(Y[t - 1])) +
+  coord_fixed(1) +
+  scale_x_continuous(limits = range(x)) +
+  scale_y_continuous(limits = range(y))
+
+a <- grid.arrange(p1, p2, p3, ncol = 3)
 ```
 
 ![](README-contemp_plot-1.png)
