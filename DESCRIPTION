@@ -2,12 +2,13 @@ Package: RTransferEntropy
 Type: Package
 Title: Calculating Shannon's and Renyi's Transfer Entropy for Time Series
 Version: 0.2.0
+Description: A package that allows the computation of Shannon's and Renyi's transfer entropy measure for time series.
 Authors@R: c(
     person("Simon", "Behrendt", , "simon.behrendt@zu.de", role = c("aut", "cre")),
     person("David", "Zimmermann", role = c("aut")),
     person("Thomas", "Dimpfl", role = c("aut")),
-    person("Franziska", "Peter", role = c("aut")))
-Description: A package that allows the computation of Shannon's and Renyi's transfer entropy measure for time series.
+    person("Franziska", "Peter", role = c("aut"))
+    )
 License: GPL-3
 URL: https://github.com/BZPaper/RTransferEntropy
 BugReports: https://github.com/BZPaper/RTransferEntropy/issues

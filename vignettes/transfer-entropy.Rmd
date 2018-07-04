@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
   fig.height = 4
 )
 
-options(future.globals.maxSize = 850 * (1024 ^ 2))
+options(future.globals.maxSize = 2048 * (1024 ^ 2))
 library(ggplot2)
 theme_set(theme_light())
 plot_series <- function(x, y) {
