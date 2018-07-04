@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
   fig.height = 4
 )
 
-options(future.globals.maxSize = 2048 * (1024 ^ 2))
+options(future.globals.maxSize = Inf)
 library(ggplot2)
 theme_set(theme_light())
 plot_series <- function(x, y) {
@@ -238,7 +238,7 @@ plot_series(x, y)
 ```
 
 
-We estimate Shannon transfer entropy with the defaults for all function arguments and  using the parallel processing option provided by the [`future`](https://cran.r-project.org/web/packages/future/index.html) package.
+We estimate Shannon transfer entropy with the defaults for all function arguments and  using the parallel processing option provided by the [`future`](https://cran.r-project.org/package=future) package.
 We provide more information about the parallel backend later in this vignette.
 
 ```{r te_1}
@@ -327,7 +327,7 @@ shannon_te2
 Again, the Shannon transfer entropy estimate indicates that there is a significant information flow from $X$ to $Y$, but not in the other direction. 
 
 In the same situation, using a VAR would not reveal any relationship between $X$ and $Y$.
-Using the package [`vars`](https://cran.r-project.org/web/packages/vars/index.html) and one lag (the true lag structure) delivers the following estimates of the VAR(1) for the dependent variable $Y$:
+Using the package [`vars`](https://cran.r-project.org/package=vars) and one lag (the true lag structure) delivers the following estimates of the VAR(1) for the dependent variable $Y$:
 
 ```{r var_comparison, message=FALSE, warning=FALSE}
 library(vars)
@@ -635,8 +635,8 @@ The red dashed line in the graph represents the Shannon entropy. The last value 
 
 ## Parallel Execution
 
-`RTransferEntropy` uses the [`future`](https://cran.r-project.org/web/packages/future/index.html) package internally that allows for parallel execution.
-To enable parallel execution, you have to select a plan (see also [`?future::plan`](https://www.rdocumentation.org/packages/future/versions/1.8.1/topics/plan)).
+`RTransferEntropy` uses the [`future`](https://cran.r-project.org/package=future) package internally that allows for parallel execution.
+To enable parallel execution, you have to select a plan (see also `?future::plan`).
 The following code uses multiple cores as set by `plan(multiprocess)` then it reverts to sequential execution.
 ```{r future_details, eval = T}
 library(future)
