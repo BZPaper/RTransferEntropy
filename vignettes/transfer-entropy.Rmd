@@ -633,7 +633,7 @@ As the weight is reduced, the effective transfer entropy decreases and even beco
 The red dashed line in the graph represents the Shannon entropy. The last value of $q$ is 0.99 for which the Rényi transfer entropy is already fairly close to the value of the Shannon transfer entropy. This illustrates that Rényi transfer entropy converges to Shannon transfer entropy as $q$ approaches 1.
 
 
-## Parallel Execution
+## Parallel execution
 
 `RTransferEntropy` uses the [`future`](https://cran.r-project.org/package=future) package internally that allows for parallel execution.
 To enable parallel execution, you have to select a plan (see also `?future::plan`).
