@@ -1,7 +1,7 @@
 Package: RTransferEntropy
 Type: Package
 Title: Calculating Shannon's and Renyi's Transfer Entropy for Time Series
-Version: 0.2.0
+Version: 0.2.1
 Description: Calculation of Shannon's and Renyi's transfer entropy measure for time series.
 Authors@R: c(
     person("Simon", "Behrendt", , "simon.behrendt@zu.de", role = c("aut", "cre")),
