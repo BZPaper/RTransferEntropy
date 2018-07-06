@@ -9,7 +9,7 @@
   \item{date}{date of the observation}
   \item{ticker}{ticker of the stock}
   \item{ret}{Return of the stock}
-  \item{sp500}{Return of the S\&P 500 stock market index}
+  \item{sp500}{Return of the S&P 500 stock market index}
 }}
 \source{
 yahoo finance using \code{\link[quantmod]{getSymbols}}
@@ -18,7 +18,7 @@ yahoo finance using \code{\link[quantmod]{getSymbols}}
 stocks
 }
 \description{
-A dataset containing the daily stock returns for 10 stocks and the S\&P 500
+A dataset containing the daily stock returns for 10 stocks and the S&P 500
 market returns for the time-period 2000-01-04 until 2017-12-29
 }
 \keyword{datasets}
