@@ -51,7 +51,7 @@
 #' @examples
 #' # construct two time-series
 #' set.seed(1234567890)
-#' n <- 1000
+#' n <- 500
 #' x <- rep(0, n + 1)
 #' y <- rep(0, n + 1)
 #'
@@ -63,27 +63,23 @@
 #' x <- x[-1]
 #' y <- y[-1]
 #'
-#' # Calculate the Transfer Entropy
-#' te_result <- transfer_entropy(x, y)
+#' # Calculate Shannon's Transfer Entropy
+#' te_result <- transfer_entropy(x, y, nboot = 100)
 #' te_result
-#'
-#' te_result <- transfer_entropy(x, y, nboot = 0)
-#' te_result
-#'
 #'
 #' # Parallel Processing using the future-package
 #' library(future)
 #' plan(multiprocess)
 #'
-#' te_result2 <- transfer_entropy(x, y)
+#' te_result2 <- transfer_entropy(x, y, nboot = 100)
 #' te_result2
 #'
 #' # revert back to sequential execution
 #' plan(sequential)
-#'
-#' te_result2 <- transfer_entropy(x, y)
-#' te_result2
-#'
+#' \dontrun{
+#'   te_result2 <- transfer_entropy(x, y, nboot = 100)
+#'   te_result2
+#' }
 #'
 #' # General set of quiet
 #' set_quiet(TRUE)

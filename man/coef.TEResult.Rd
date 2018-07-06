@@ -19,7 +19,7 @@ Extract the Coefficient Matrix from a TEResult
 }
 \examples{
 set.seed(1234567890)
-n <- 1000
+n <- 500
 x <- rep(0, n + 1)
 y <- rep(0, n + 1)
 

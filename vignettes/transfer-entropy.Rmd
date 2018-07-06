@@ -490,16 +490,17 @@ order_by_other <- function(vals, nums, take = NULL) {
   factor(vals, levels = lvls[order(nums)])
 }
 
+# silence the transfer-entropy functions
+set_quiet(TRUE)
+  
 # for each stock compute the TE between the stock and the sp500 at two quantiles
 res_list <- future_lapply(split(stocks, stocks$ticker), function(d) {
-  
-  # silence the transfer-entropy functions
-  set_quiet(TRUE)
   
   ticker <- d$ticker[[1]]
   
   # calculate the 5/95 quantile
-  tefit1 <- transfer_entropy(d$ret, d$sp500, shuffles = 50, quantiles = c(5, 95))
+  tefit1 <- transfer_entropy(d$ret, d$sp500, nboot = 100, shuffles = 50, quantiles = c(5, 95))
+  
   # gather the results into a data.table
   res1 <- data.table(
     stock     = ticker,
@@ -509,7 +510,7 @@ res_list <- future_lapply(split(stocks, stocks$ticker), function(d) {
   )
   
   # calculate the 10/90 quantile
-  tefit2 <- transfer_entropy(d$ret, d$sp500, shuffles = 50, 
+  tefit2 <- transfer_entropy(d$ret, d$sp500, nboot = 100, shuffles = 50,
                              quantiles = c(10, 90))
   
   # gather the results into a data.table
