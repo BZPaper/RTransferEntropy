@@ -2,13 +2,15 @@
 output: github_document
 ---
 
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
 [![Travis build status](https://travis-ci.org/BZPaper/RTransferEntropy.svg?branch=master)](https://travis-ci.org/BZPaper/RTransferEntropy)
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "README-"
+  fig.path = "man/figures/README-"
 )
 ```
 
@@ -132,23 +134,21 @@ calc_ete(y, x, entropy = "renyi", q = 0.5)
 
 To disable the verbosity of a function you can use the argument `quiet`. Note that we have set `nboot = 0` as we don't need bootstrapped quantiles for this example.
 ```{r}
-te_s <- transfer_entropy(x, y, nboot = 0, quiet = T)
+te <- transfer_entropy(x, y, nboot = 0, quiet = T)
 
-te_s
+te
 ```
 
 If you want to disable feedback from `transfer_entropy` functions, you can do so by using `set_quiet(TRUE)`
 ```{r}
 set_quiet(TRUE)
-te_s <- transfer_entropy(x, y, nboot = 0)
-te_r <- transfer_entropy(x, y, entropy = "renyi", nboot = 0)
+te <- transfer_entropy(x, y, nboot = 0)
 
-te_s
-te_r
+te
 
 # revert back with
 set_quiet(FALSE)
-te_s <- transfer_entropy(x, y, nboot = 0)
+te <- transfer_entropy(x, y, nboot = 0)
 ```
 
 # Parallel Programming
@@ -157,10 +157,9 @@ Using the `future` package and its `plan`s we can execute all computations in pa
 ```{r, warning=F}
 library(future)
 plan(multiprocess)
-te_s <- transfer_entropy(x, y, nboot = 100)
-te_r <- transfer_entropy(x, y, entropy = "renyi", nboot = 100)
+te <- transfer_entropy(x, y, nboot = 100)
 
 # revert to sequential mode
 plan(sequential)
-te_s <- transfer_entropy(x, y, nboot = 100)
+te <- transfer_entropy(x, y, nboot = 100)
 ```
