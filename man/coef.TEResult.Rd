@@ -31,6 +31,6 @@ for (i in seq(n)) {
 x <- x[-1]
 y <- y[-1]
 
-te_result <- transfer_entropy(x, y)
+te_result <- transfer_entropy(x, y, nboot = 100)
 coef(te_result)
 }

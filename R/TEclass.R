@@ -151,7 +151,7 @@ is.TEResult <- function(x) {
 #' x <- x[-1]
 #' y <- y[-1]
 #'
-#' te_result <- transfer_entropy(x, y)
+#' te_result <- transfer_entropy(x, y, nboot = 100)
 #' coef(te_result)
 coef.TEResult <- function(object, ...) {
   if (!is.TEResult(object)) stop("object must be a TEResult")
