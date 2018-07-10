@@ -5,11 +5,11 @@ calculate_transition_probabilities <- function(x, lx = 1L) {
     .Call('_RTransferEntropy_calculate_transition_probabilities', PACKAGE = 'RTransferEntropy', x, lx)
 }
 
-freq_table <- function(x) {
-    .Call('_RTransferEntropy_freq_table', PACKAGE = 'RTransferEntropy', x)
-}
-
 cluster_gen <- function(x, lx = 1L, y = NULL, ly = NULL, prog = TRUE) {
     .Call('_RTransferEntropy_cluster_gen', PACKAGE = 'RTransferEntropy', x, lx, y, ly, prog)
+}
+
+freq_table <- function(x) {
+    .Call('_RTransferEntropy_freq_table', PACKAGE = 'RTransferEntropy', x)
 }
 

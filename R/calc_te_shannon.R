@@ -9,17 +9,17 @@ calc_te_shannon <- function(x, lx, y, ly) {
   # Frequencies
   #------------------------------
   # x(k+1) and y(j)
-  k1_j <- cluster_gen(x, lx = lx, y, ly = ly)$frequency
+  k1_j <- cluster_gen(x, lx = lx, y, ly = ly)
   nck1_j <- length(k1_j)
 
   # x(k+1)
-  k1 <- cluster_gen(x, lx = lx)$frequency
+  k1 <- cluster_gen(x, lx = lx)
 
   # x(k) and y(j)
-  k_j <- cluster_gen(x, lx = lx, y, ly = ly, prog = FALSE)$frequency
+  k_j <- cluster_gen(x, lx = lx, y, ly = ly, prog = FALSE)
 
   # x(k)
-  k <- cluster_gen(x, lx = lx, prog = FALSE)$frequency
+  k <- cluster_gen(x, lx = lx, prog = FALSE)
 
   # Transfer entropy
   #------------------------------
