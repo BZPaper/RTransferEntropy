@@ -202,6 +202,12 @@ The function takes the following arguments:
 Additionally, we provide two functions `calc_te()` and `calc_ete()` that calculate only the transfer entropy and the effective transfer entropy for the $X\rightarrow Y$ direction and leave out additional bootstraps etc.
 Each function takes the same arguments as the `transfer_entropy()` function but returns only a single value.
 
+### Simulated series I
+
+Before we turn to different applications below, we provide a simple example here to demonstrate how the outputs of the different functions look like. 
+Let us consider a linear relationship between two random variables $X$ and $Y$, where $Y$ depends on $X$ with one lag and $X$ is independent of $Y$:
+
+
 $$
 \begin{split}
 x_t & = & 0.2x_{t-1} + \varepsilon_{x,t} \\
@@ -209,9 +215,6 @@ y_t & = & x_{t-1} + \varepsilon_{y,t},
 \end{split}
 $$
 
-Before we turn to different applications below, we provide a simple example here to demonstrate how the outputs of the different functions look like. 
-Let us consider a linear relationship between two random variables $X$ and $Y$, where $Y$ depends on $X$ with one lag and $X$ is independent of $Y$:
-  
 with $\varepsilon_{x,t}$ and $\varepsilon_{y,t}$ being normally distributed with a mean of 1 and a variance of 2.
 In this case, $X$ serves as a predictor for $Y$, but not vice versa.
 
@@ -276,7 +279,7 @@ calc_ete(y, x)
 Note that the effective transfer entropy relies on a random component (induced by shuffling and repeated reestimation).
 Therefore, the results might be slightly different.
 
-## Some examples using simulated time series
+### Simulated series II
 
 Consider the above example again, where the results show a significant information flow from $X$ to $Y$, but not vice versa.
 Similar conclusions could be drawn from using a vector autoregressive model and testing for Granger causality.
@@ -342,14 +345,11 @@ The autoregressive nature of $X$ (not shown above, but can be obtained with `svf
 The precise value of the transfer entropy is influenced by the choice of the quantiles.
 To illustrate the effect, we reestimate Shannon transfer entropy for a selection of quantiles.
 The following graph reports the results for increasing values of quantiles.
-```{r te_2a, eval=T, echo=FALSE}
-df <- data.frame(
-  q1 = 5:25,
-  q2 = 95:75
-)
+```{r te_2a, eval=T}
+df <- data.frame(q1 = 5:25, q2 = 95:75)
+
 df$ete <- apply(
-  df, 
-  1, 
+  df, 1,
   function(el) calc_ete(x, y, quantiles = c(el[["q1"]], el[["q2"]]))
 )
 
@@ -369,6 +369,8 @@ Due to the proposed symbolic encoding of the data, tail events are associated wi
 Rényi transfer entropy, thus, puts more weight on the tails in calculating transfer entropy.
 This is particularly convenient when the distribution is assumed to be more informative in the tails.
 Note again that Rényi transfer entropy estimates can potentially turn out negative.
+
+### Simulated series III
 
 To illustrate the use of Rényi transfer entropy, we simulate data for which the dependence of $Y$ on $X$ changes with the level of the innovation.
 
@@ -429,38 +431,39 @@ Furthermore, as $q \rightarrow 1$, Rényi transfer entropy approaches Shannon tr
 We illustrate both effects using different values of $q$.
 Note that this result is illustrated using the raw transfer entropy estimates and not the effective transfer entropy estimates because the latter depend on the shuffling procedure. 
 
-```{r q_test, include=F}
+```{r q_test}
 qs <- c(seq(0.1, 0.9, 0.1), 0.99)
 
 te <- sapply(qs, function(q) calc_te(x, y, entropy = "renyi", q = q))
 names(te) <- sprintf("q = %.2f", qs)
-shannon_te3 <- transfer_entropy(x, y)
 
-shannon_te3
+te_shannon <- calc_te(x, y)
+te_shannon
 ```
 
-The Shannon transfer entropy from $X$ to $Y$ is estimated as `r format(round(shannon_te3$coef[1,1],4), nsmall=4)`.
+The Shannon transfer entropy from $X$ to $Y$ is estimated as `r sprintf("%.4f", te_shannon)`.
 Using different values of $q$ we obtain the following results for the Rényi transfer entropy.
 
-```{r plot_q_test, echo=F, message=FALSE, warning=FALSE}
-print(round(te, 4))
+```{r plot_q_test, message=FALSE, warning=FALSE}
+round(te, 4)
+
+text_df <- data.frame(x = 0.25, 
+                      y = te_shannon, 
+                      lab = sprintf("Shannon's TE = %.4f", te_shannon))
 
 ggplot(data.frame(x = qs, y = te), aes(x = x, y = y)) +
-  geom_hline(yintercept = shannon_te3$coef[1,1], 
-             color = "red", linetype = "dashed") +
+  geom_hline(yintercept = te_shannon, color = "red", linetype = "dashed") +
   geom_smooth(se = F, color = "black", size = 0.5) +
   theme_light() +
   labs(x = "Values for q", y = "Renyi's Transfer Entropy",
        title = "Renyi's Transfer Entropy for different Values of q") +
-  geom_text(data = data.frame(x = 0.25, y = shannon_te3$coef[1,1], 
-                              lab = sprintf("Shannon's TE = %.4f", 
-                                            shannon_te3$coef[1,1])),
+  geom_text(data = text_df,
             aes(label = lab), color = "red", nudge_y = 0.01)
 
 ```
 
 As can be seen, the value of Rényi transfer entropy is highest for small values of $q$ and decreases as $q$ increases.
-Furthermore, it is indeed approaching `r format(round(shannon_te3$coef[1,1],4), nsmall=4)` as $q\rightarrow 1$.
+Furthermore, it is indeed approaching `r sprintf("%.4f", te_shannon)` as $q\rightarrow 1$.
 
 ## Application to financial time series
 
@@ -477,114 +480,76 @@ To measure the extent to which information flows between the index and the stock
 As the calculation of transfer entropy requires stationary data, we calculate log-returns from the price series.
 
 ```{r load_data, message=FALSE, warning=FALSE}
-library(data.table)   # for data-manipulation
-library(future.apply) # to use future_lapply
-plan(multiprocess)    # enable multiple processes
+library(data.table) # for data manipulation
 
-# small wrapper function that helps to order the stocks for the plot
-order_by_other <- function(vals, nums, take = NULL) {
-  if (!is.null(take)) {
-    lvls <- vals[take]
-    nums <- nums[take]
-  } else lvls <- unique(vals)
-  factor(vals, levels = lvls[order(nums)])
-}
+df <- stocks[, .(ete_xy = calc_ete(ret, sp500),
+                 ete_yx = calc_ete(sp500, ret)), by = ticker]
 
-# silence the transfer-entropy functions
-set_quiet(TRUE)
-  
-# for each stock compute the TE between the stock and the sp500 at two quantiles
-res_list <- future_lapply(split(stocks, stocks$ticker), function(d) {
-  
-  ticker <- d$ticker[[1]]
-  
-  # calculate the 5/95 quantile
-  tefit1 <- transfer_entropy(d$ret, d$sp500, nboot = 100, shuffles = 50, quantiles = c(5, 95))
-  
-  # gather the results into a data.table
-  res1 <- data.table(
-    stock     = ticker,
-    quantiles = "(5, 95)",
-    direction = c("X->Y", "Y->X"),
-    coef(tefit1)[1:2, 2:4]
-  )
-  
-  # calculate the 10/90 quantile
-  tefit2 <- transfer_entropy(d$ret, d$sp500, nboot = 100, shuffles = 50,
-                             quantiles = c(10, 90))
-  
-  # gather the results into a data.table
-  res2 <- data.table(
-    stock     = ticker,
-    quantiles = "(10, 90)",
-    direction = c("X->Y", "Y->X"),
-    coef(tefit2)[1:2, 2:4]
-  )
-  
-  rbind(res1, res2)
-})
+df_long <- melt(df, id.vars = "ticker")
 
-# combine the lists for each ticker into one data.table
-out_dt <- rbindlist(res_list)
+# order the ticker by the ete_xy
+df_long[, ticker := factor(ticker, levels = unique(ticker[order(df$ete_xy)]))]
 
-out_dt[, direction := factor(direction, 
-                             labels = paste("Flow towards",
-                                            c("Stock", "Market")))]
+# rename the variable (xy/yx)
+df_long[, variable := factor(variable, levels = c("ete_xy", "ete_yx"),
+                             labels = c("Flow towards Market",
+                                        "Flow towards Stock"))]
 
-dt_plot1 <- out_dt[quantiles == "(5, 95)"]
-dt_plot1[, stock := order_by_other(stock, ete, 
-                                   direction == "Flow towards Stock")]
-
-ggplot(dt_plot1, aes(x = stock, y = ete)) + 
-  geom_hline(yintercept = 0, color = "darkgray") +
-  geom_errorbar(aes(ymin = ete - qnorm(0.95) * se - 0.001, 
-                    ymax = ete + qnorm(0.95) * se + 0.001), 
-                width = 0.25, col = "blue") +
+ggplot(df_long, aes(x = ticker, y = value)) + 
   geom_point() +
-  facet_grid(~direction) +
+  facet_wrap(~variable) +
   theme(axis.text.x = element_text(angle = 90)) +
   labs(x = NULL, y = "Effective Transfer Entropy")
+
 ```
 
-The graphic reports effective transfer entropy estimates together with 95% confidence bounds for 10 stocks.
-The results illustrate that there is indeed bi-directional information flow.
-However, the information flow from the market to the stocks is higher for most stocks than the other direction.
-Also, as can easily be seen from the confidence bounds, the information flow towards the market is not statistically significant in 3 cases (on a 5\% significance level). 
+The graphic reports effective transfer entropy estimates for 10 stocks.
+The results illustrate that there is indeed a bi-directional information flow.
+However, the information flow from the stocks to the market is higher for most stocks than the other direction.
 
 Again, the estimated transfer entropy depends on the choice of the quantile.
-This is illustrated in the following Figure which reports density plots of effective transfer entropies for two different choices of quantiles, namely `quantiles = c(5, 95)` in the upper graph and `quantiles = c(10, 90)` in the lower graph.
-The solid (dotted) line depicts the information flow from the market to the individual stocks (from the stocks to the market).
-The estimated information flow from the stocks to the market is rather robust with respect to the choice of the quantiles, the dotted lines in both graphs have a similar shape.
-For the other direction, the choice of the quantiles has a larger impact, but the overall information that the flow towards the individual stocks is more equilibrated than the other direction, holds for both choices.  
+This is illustrated in the following Figure which reports the changes of effective transfer entropy values for two different quantiles `(05, 95)` and `c(10, 90)` for the two flow directions: stock towards market on the left facet, and market towards stock on the right facet. The different colors represent different stocks.
+The estimated information flow from the market to the stocks is rather robust with respect to the choice of the quantiles, most values in both flow directions show little change (as indicated by small absolute slopes of the lines).
 
 ```{r density_plot_1}
-dt_plot2 <- copy(out_dt)
-dt_plot2[, quantiles := factor(quantiles, levels = c("(5, 95)", "(10, 90)"))]
+# calculate the same ete with different quantiles
+df2 <- stocks[, .(ete_xy = calc_ete(ret, sp500, quantiles = c(10, 90)),
+                  ete_yx = calc_ete(sp500, ret, quantiles = c(10, 90))), 
+              by = ticker]
 
-ggplot(dt_plot2[ete <= 0.020], aes(x = ete, linetype = direction)) +
-  geom_density() +
-  facet_grid(quantiles~.) +
-  scale_x_continuous(lim = c(-0.003, 0.018)) +
+# combine the quantiles into a single dt
+dt <- rbindlist(list(
+  df[, quantiles := "(05, 95)"],
+  df2[, quantiles := "(10, 90)"]
+))
+
+df_long2 <- melt(dt, id.vars = c("ticker", "quantiles"))
+
+df_long2[, quantiles := factor(quantiles, levels = c("(05, 95)", "(10, 90)"))]
+df_long2[, variable := factor(variable, levels = c("ete_xy", "ete_yx"),
+                              labels = c("Flow towards Market",
+                                         "Flow towards Stock"))]
+
+ggplot(df_long2, aes(x = quantiles, y = value, color = ticker, group = ticker)) + 
+  geom_line() + 
+  facet_wrap(~variable) +
   labs(
-    x = "Effective Transfer Entropy", y = "Density", 
-    linetype = "TE Flow Direction",
-    title = "Distribution of ETE-values for different Directions and Quantiles"
+    x = "Quantiles", 
+    y = "Effective Transfer Entropy",
+    title = "Change of ETE-Values for different Quantiles",
+    color = "Ticker"
   )
 ```
-
 
 In finance, pricing relevant information is readily associated with tail events, i.e. relatively large positive or negative returns.
 If these are indeed more relevant, Rényi transfer entropy provides a tool to give more weight to their contribution to the overall information flow.
-To illustrate this feature we use one stock and calculate Rényi transfer entropy from the index to the stock for a selection of weighting parameters $q$.
+To illustrate this feature we use one stock and calculate Rényi transfer entropy from the index to the stock for a selection of the weighting parameters $q$.
 
 ```{r renyi_te}
 qs <- c(seq(0.1, 0.9, 0.1), 0.99)
 d <- stocks[ticker == "AXP"]
 
 q_list <- future_lapply(qs, function(q) {
-  
-  # silence the transfer-entropy calls
-  set_quiet(TRUE)
   
   # transfer_entropy will give a warning as nboot < 100
   suppressWarnings({
@@ -601,14 +566,9 @@ q_list <- future_lapply(qs, function(q) {
 })
 qdt <- rbindlist(q_list)
 
-sh_tefit <- transfer_entropy(d$ret, d$sp500, lx = 1, ly = 1, 
-                             entropy = "Shannon", 
-                             shuffles = 50, quantiles = c(10, 90), 
-                             nboot = 0, quiet = T)
-
 sh_dt <- data.table(
   dir = c("X->Y", "Y->X"),
-  coef(sh_tefit)[, 2:3]
+  ete = c(calc_ete(d$ret, d$sp500), calc_ete(d$sp500, d$ret))
 )
 ```
 
