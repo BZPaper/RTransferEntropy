@@ -32,7 +32,6 @@ Rcpp::NumericVector cluster_gen(Rcpp::IntegerVector x, int lx = 1,
 
   std::map<std::vector<int>, int> counts;
   int nclust = x.size() - std::max(lx, ly_);
-  int lxi, lyi;
 
   if (no_y) ly = 0;
 

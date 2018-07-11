@@ -7,8 +7,8 @@ markov_boot_step <- function(x, lx, burn = 50) {
   bootvec <- numeric(n)
 
   # First draw
-  pr <- freq_table(as.character(x))
-  bootvec[1] <- as.numeric(sample(names(pr), 1, prob = pr))
+  pr <- freq_table(x)
+  bootvec[1] <- sample(names(pr), 1, prob = pr)
 
   # Draws
   for (i in 2:(lx + 1)) {
@@ -19,7 +19,7 @@ markov_boot_step <- function(x, lx, burn = 50) {
                    names(val),
                    sample(names(val), 1, prob = val))
 
-    bootvec[i] <- as.numeric(substr(draw, i, i))
+    bootvec[i] <- strsplit(draw, " ")[[1]][i]
   }
 
   tprob <- calculate_transition_probabilities(x, lx)
@@ -31,10 +31,10 @@ markov_boot_step <- function(x, lx, burn = 50) {
                    names(val),
                    sample(names(val), 1, prob = val))
 
-    bootvec[i] <- as.numeric(substr(draw, lx + 1, lx + 1))
+    bootvec[i] <- strsplit(draw, " ")[[1]][lx + 1]
   }
 
   bootvec <- bootvec[(burn + 1):n]
 
-  return(bootvec)
+  return(as.numeric(bootvec))
 }

@@ -6,12 +6,12 @@
 using namespace Rcpp;
 
 // calculate_transition_probabilities
-List calculate_transition_probabilities(CharacterVector x, int lx);
+List calculate_transition_probabilities(IntegerVector x, int lx);
 RcppExport SEXP _RTransferEntropy_calculate_transition_probabilities(SEXP xSEXP, SEXP lxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< int >::type lx(lxSEXP);
     rcpp_result_gen = Rcpp::wrap(calculate_transition_probabilities(x, lx));
     return rcpp_result_gen;
@@ -33,12 +33,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // freq_table
-Rcpp::NumericVector freq_table(std::vector<std::string> x);
+Rcpp::NumericVector freq_table(std::vector<int> x);
 RcppExport SEXP _RTransferEntropy_freq_table(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::vector<std::string> >::type x(xSEXP);
+    Rcpp::traits::input_parameter< std::vector<int> >::type x(xSEXP);
     rcpp_result_gen = Rcpp::wrap(freq_table(x));
     return rcpp_result_gen;
 END_RCPP

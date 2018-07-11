@@ -2,8 +2,8 @@
 
 // Calculates the frequency for a given input of strings
 // [[Rcpp::export]]
-Rcpp::NumericVector freq_table(std::vector<std::string> x) {
-  std::map<std::string, int> counts;
+Rcpp::NumericVector freq_table(std::vector<int> x) {
+  std::map<int, int> counts;
 
   // load the values into the count-map
   for (int i = 0; i < x.size(); ++i) {
@@ -12,7 +12,7 @@ Rcpp::NumericVector freq_table(std::vector<std::string> x) {
 
   // flatten the map to a vector
   // contains the cluster names, i.e., "1 2 2", "2 2 2" etc
-  std::vector<std::string> cluster_names;
+  std::vector<int> cluster_names;
   cluster_names.reserve(counts.size());
 
   // contains the cluster counts

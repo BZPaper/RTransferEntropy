@@ -1,22 +1,24 @@
 #include <Rcpp.h>
+#include <sstream>
 using namespace Rcpp;
 
 // Wrapper function that calculates the transition probabilities for a given
 // vector
 // [[Rcpp::export]]
-List calculate_transition_probabilities(CharacterVector x, int lx = 1) {
+List calculate_transition_probabilities(IntegerVector x, int lx = 1) {
 
-  std::string cluster_id; // i.e., 1, 2, 3 (the first letter of the cluster_val)
-  std::string cluster_val; // i.e., 21, 12, 11, 22, 231 (lx = 2) etc.
-  std::map<std::string, std::map<std::string, int>> counts;
+  int cluster_id; // i.e., 1, 2, 3 (the first letter of the cluster_val)
+
+  std::map<int, std::map<std::vector<int>, int>> counts;
 
   // Fill the count map map
   for (int i = 0; i < x.size() - lx; ++i) {
     cluster_id = x[i];
     // construct the clusterValue
-    cluster_val = "";
+    std::vector<int> cluster_val; // i.e., 21, 12, 11, 22, 231 (lx = 2) etc.
+    cluster_val.reserve(lx + 1);
     for (int l = 0; l < lx + 1; ++l) {
-      cluster_val += x[i + l];
+      cluster_val.push_back(x[i + l]);
     }
     counts[cluster_id][cluster_val] += 1;
   }
@@ -24,18 +26,16 @@ List calculate_transition_probabilities(CharacterVector x, int lx = 1) {
 
   // add missing elements, i.e., if there is no 2 in the series,
   // replace the element with an empty map
-  for (int i = std::stoi(counts.begin()->first);
-       i <= std::stoi(counts.rbegin()->first);
-       ++i) {
-    auto it = counts.find(std::to_string(i));
+  for (int i = counts.begin()->first; i <= counts.rbegin()->first; ++i) {
+    auto it = counts.find(i);
     if (it == counts.end()) {
-      counts[std::to_string(i)] = std::map<std::string, int>();
+      counts[i] = std::map<std::vector<int>, int>();
     }
   }
 
 
   // flatten map map to a vector of vectors
-  std::vector<std::string> names; // contains the names of the clusters
+  std::vector<int> names; // contains the names of the clusters
   names.reserve(counts.size());
   std::vector< NumericVector > res; // contains the count of clusters
   res.reserve(counts.size()) ;
@@ -59,7 +59,14 @@ List calculate_transition_probabilities(CharacterVector x, int lx = 1) {
          val_ptr != id_ptr->second.end();
          ++val_ptr) {
       tmp_vec.push_back((double) val_ptr->second / n);
-      name_vec.push_back(val_ptr->first);
+
+      std::stringstream name_val;
+      for (auto it = val_ptr->first.begin();
+           it != val_ptr->first.end();
+           ++it) {
+        name_val << *it << ' ';
+      }
+      name_vec.push_back(name_val.str().substr(0, name_val.str().size() - 1));
     }
 
     names.push_back(id_ptr->first);
