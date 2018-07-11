@@ -67,26 +67,27 @@
 #' te_result <- transfer_entropy(x, y, nboot = 100)
 #' te_result
 #'
-#' # Parallel Processing using the future-package
-#' library(future)
-#' plan(multiprocess)
-#'
-#' te_result2 <- transfer_entropy(x, y, nboot = 100)
-#' te_result2
-#'
-#' # revert back to sequential execution
-#' plan(sequential)
 #' \dontrun{
+#'   # Parallel Processing using the future-package
+#'   library(future)
+#'   plan(multiprocess)
+#'
 #'   te_result2 <- transfer_entropy(x, y, nboot = 100)
 #'   te_result2
+#'
+#'   # revert back to sequential execution
+#'   plan(sequential)
+#'
+#'   te_result2 <- transfer_entropy(x, y, nboot = 100)
+#'   te_result2
+#'
+#'   # General set of quiet
+#'   set_quiet(TRUE)
+#'   a <- transfer_entropy(x, y, nboot = 0)
+#'
+#'   set_quiet(FALSE)
+#'   a <- transfer_entropy(x, y, nboot = 0)
 #' }
-#'
-#' # General set of quiet
-#' set_quiet(TRUE)
-#' a <- transfer_entropy(x, y, nboot = 0)
-#'
-#' set_quiet(FALSE)
-#' a <- transfer_entropy(x, y, nboot = 0)
 transfer_entropy <- function(x,
                              y,
                              lx = 1,

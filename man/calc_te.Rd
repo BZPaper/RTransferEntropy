@@ -79,10 +79,12 @@ calc_te(x, y)
 # calculate the Y->X transfer entropy value
 calc_te(y, x)
 
-# Compare the results
-calc_te(x, y, seed = 123)
-calc_te(y, x, seed = 123)
-transfer_entropy(x, y, nboot = 0, seed = 123)
+\dontrun{
+  # Compare the results
+  calc_te(x, y, seed = 123)
+  calc_te(y, x, seed = 123)
+  transfer_entropy(x, y, nboot = 0, seed = 123)
+}
 }
 \seealso{
 \code{\link{calc_ete}} and\code{\link{transfer_entropy}}

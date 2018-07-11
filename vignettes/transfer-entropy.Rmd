@@ -639,7 +639,7 @@ The red dashed line in the graph represents the Shannon entropy. The last value 
 `RTransferEntropy` uses the [`future`](https://cran.r-project.org/package=future) package internally that allows for parallel execution.
 To enable parallel execution, you have to select a plan (see also `?future::plan`).
 The following code uses multiple cores as set by `plan(multiprocess)` then it reverts to sequential execution.
-```{r future_details, eval = T}
+```{r future_details, eval = F}
 library(future)
 
 # enable parallelism

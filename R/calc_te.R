@@ -27,10 +27,12 @@
 #' # calculate the Y->X transfer entropy value
 #' calc_te(y, x)
 #'
-#' # Compare the results
-#' calc_te(x, y, seed = 123)
-#' calc_te(y, x, seed = 123)
-#' transfer_entropy(x, y, nboot = 0, seed = 123)
+#' \dontrun{
+#'   # Compare the results
+#'   calc_te(x, y, seed = 123)
+#'   calc_te(y, x, seed = 123)
+#'   transfer_entropy(x, y, nboot = 0, seed = 123)
+#' }
 calc_te <- function(x, y, lx = 1, ly = 1, q = 0.1,
                     entropy = "Shannon",
                     shuffles = 100,

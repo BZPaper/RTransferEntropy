@@ -27,12 +27,14 @@
 #' # calculate the Y->X transfer entropy value
 #' calc_ete(y, x)
 #'
-#' # Compare the results
-#' # even with the same seed, transfer_entropy might return slightly different
-#' # results from calc_ete
-#' calc_ete(x, y, seed = 123)
-#' calc_ete(y, x, seed = 123)
-#' transfer_entropy(x, y, nboot = 0, seed = 123)
+#' \dontrun{
+#'   # Compare the results
+#'   # even with the same seed, transfer_entropy might return slightly different
+#'   # results from calc_ete
+#'   calc_ete(x, y, seed = 123)
+#'   calc_ete(y, x, seed = 123)
+#'   transfer_entropy(x, y, nboot = 0, seed = 123)
+#' }
 calc_ete <- function(x, y, lx = 1, ly = 1, q = 0.1,
                      entropy = "Shannon",
                      shuffles = 100,
