@@ -96,7 +96,7 @@ $$
   H^q_J = \frac{1}{1-q} log \left(\sum_j p^q(j)\right).
 $$
 For $q\rightarrow 1$, Rényi entropy converges to Shannon entropy.
-For $0<q<1$  events which have a low probability to occur receive more weight, while for $q>1$ the weights induce a preference for outcomes $j$ with a higher initial probability.
+For $0<q<1$  events that have a low probability to occur receive more weight, while for $q>1$ the weights induce a preference for outcomes $j$ with a higher initial probability.
 Consequently, Rényi entropy provides a more flexible tool for estimating uncertainty, since different areas of a distribution can be emphasized, depending on the parameter $q$. 
 
 Using the escort distribution [for more information, see @BeckS93] $\phi_q(j)=\frac{p^q(j)}{\sum_j p^q(j))}$ with $q >0$ to normalize the weighted distributions, @JKS12 derive the Rényi transfer entropy measure as
@@ -166,7 +166,7 @@ library(RTransferEntropy)
 ```
 
 The main function is `transfer_entropy()`, which creates an object of class `TEResult` that contains the respective transfer entropy estimates (both in $J \rightarrow I$ and $I \rightarrow J$ direction), the related effective transfer entropy estimates, standard errors, and p-values for the estimated values, an indication of statistical significance, and quantiles of the bootstrap samples (if the number of bootstrap replications is specified to be greater than zero).
-Some auxilliary functions are written in `C++` using [`Rcpp`](https://github.com/RcppCore/Rcpp) to speed up computations, furthermore we use the [`future`](https://github.com/HenrikBengtsson/future) package to allow parallel computing, allowing for more efficient programming when the `transfer_entropy()` function is called repeatedly or when large amounts of bootstraps are used.
+Some auxilliary functions are written in `C++` using [`Rcpp`](https://github.com/RcppCore/Rcpp) to speed up computations. Furthermore, we use the [`future`](https://github.com/HenrikBengtsson/future) package to enable parallel computing, which allows for more efficient programming when the `transfer_entropy()` function is called repeatedly or when large amounts of shuffles and bootstraps are used.
 
 ### Functionality
 
@@ -199,7 +199,7 @@ The function takes the following arguments:
   * `quiet`: if FALSE (default), the function gives feedback.
   * `seed` a seed that seeds the PRNG (will internally just call set.seed), default is `seed = NULL`.
 
-Additionally, we provide two functions `calc_te()` and `calc_ete()` that calculate only the transfer entropy and the effective transfer entropy for the $X\rightarrow Y$ direction and leave out additional bootstraps etc.
+Additionally, we provide two functions `calc_te()` and `calc_ete()` that calculate only the transfer entropy and the effective transfer entropy and leave out additional bootstraps etc.
 Each function takes the same arguments as the `transfer_entropy()` function but returns only a single value.
 
 ### Simulated series I
@@ -234,7 +234,7 @@ x <- x[-1]
 y <- y[-1]
 ```
 
-The following scatterplots provide a first illustration of the dependencies among both time series.
+The following scatterplots provide a first approximation of the dependencies among both time series.
 The left graph shows the relation for $X_{t-1}$ and $Y_t$, the graph in the centre displays the contemporaneous relationship between the two variables, and the right graph shows the relation for $X_t$ and $Y_{t-1}$.
 ```{r plot_data_1, echo=F, message=FALSE, warning=FALSE}
 plot_series(x, y)
@@ -259,7 +259,7 @@ For each direction of the (possible) information flow, the Shannon transfer entr
 Effective transfer entropy estimates for both direction can be found in the `Eff.TE` column.
 Standard errors and p-values in the fourth and fifth columns are based on the bootstrap samples, whose quantiles are depicted in the lower part of the ouput table.
 The `TE` estimates are compared to the quantiles of the bootstrap samples to calculate p-values and to provide an easy-to-read indication of statistical significance in the last column, according to the definition below the output table.
-From the output below, we can see that there is a significant information flow from $X$ to $Y$ but not vice versa, as expected due to the parameters of the simulation.
+From the output below, we can see that there is a significant information flow from $X$ to $Y$ but not vice versa, as expected due to the simulated processes.
 
 ```{r show_result_1, eval=T}
 shannon_te
@@ -281,7 +281,7 @@ Therefore, the results might be slightly different.
 
 ### Simulated series II
 
-Consider the above example again, where the results show a significant information flow from $X$ to $Y$, but not vice versa.
+Regarding the above example, where the results show a significant information flow from $X$ to $Y$, but not vice versa.
 Similar conclusions could be drawn from using a vector autoregressive model and testing for Granger causality.
 However, the main advantage of using transfer entropy is that it is not limited to linear relationships.
 Consider the following nonlinear relation between $X$ and $Y$, where, again, only $Y$ depends on $X$:
@@ -313,7 +313,7 @@ x <- x[-(1:200)]
 y <- y[-(1:200)]
 ```
 
-As in the above example, a scatterplot provides a first illustration of  the dependencies among both time series for different lead-lag combinations.
+As in the above example, a scatterplot provides a first approximation of the dependencies among both time series for different lead-lag combinations.
 
 ```{r plot_data_2, echo=F, message=FALSE, warning=FALSE}
 plot_series(x, y)
@@ -340,7 +340,7 @@ svf <- summary(varfit)
 svf$varresult$y
 ```
 
-The VAR cannot detect the nonlinear dependence of $Y$ on $X$ which leads to a parameter estimate `x.l1` which is not statistically significant.
+The VAR cannot detect the nonlinear dependence of $Y$ on $X$, which leads to a parameter estimate `x.l1` that is not statistically significant.
 The autoregressive nature of $X$ (not shown above, but can be obtained with `svf$varresult$x`) is, as expected, readily identified. 
 The precise value of the transfer entropy is influenced by the choice of the quantiles.
 To illustrate the effect, we reestimate Shannon transfer entropy for a selection of quantiles.
@@ -364,9 +364,9 @@ As can be seen, the relative value of the effective transfer entropy from $X$ to
 Statistical significance (not shown in the plot), is, however, not affected. 
 
 As shown above, the question how to determine the quantiles is important as it impacts the order of magnitude of the transfer entropy.
-A different approach is provided by Rényi transfer entropy which allows to reweight the probabilities associated with the individual bins.
+A different approach is provided by Rényi transfer entropy, which allows to reweight the probabilities associated with the individual bins.
 Due to the proposed symbolic encoding of the data, tail events are associated with a lower likelihood compared to events in the centre of the distribution.
-Rényi transfer entropy, thus, puts more weight on the tails in calculating transfer entropy.
+Rényi transfer entropy, thus, puts more weight on the tails when calculating transfer entropy.
 This is particularly convenient when the distribution is assumed to be more informative in the tails.
 Note again that Rényi transfer entropy estimates can potentially turn out negative.
 
@@ -407,13 +407,13 @@ x <- x[-(1:200)]
 y <- y[-(1:200)]
 ```
 
-Again, a scatterplot provides a first illustration of some of the dependencies among both time series.
+Again, a scatterplot provides a first approximation of the dependencies among both time series.
 
 ```{r plot_data_3, echo=F, message=FALSE, warning=FALSE}
 plot_series(x, y)
 ```
 
-In a first step, we estimate Rényi transfer entropy with the default settings of the `transfer_entropy()` function, i.e. with a weighting parameter $q=0.1$ which gives a heavy weight to the (infrequent) tail observations.
+In a first step, we estimate Rényi transfer entropy with a weighting parameter $q=0.3$, which gives a reasonable weight to the (infrequent) tail observations.
 Estimation of Rényi transfer entropy is, thus, invoqued as follows:
 
 ```{r te_renyi_3}
