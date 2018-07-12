@@ -482,30 +482,42 @@ As the calculation of transfer entropy requires stationary data, we calculate lo
 ```{r load_data, message=FALSE, warning=FALSE}
 library(data.table) # for data manipulation
 
-df <- stocks[, .(ete_xy = calc_ete(ret, sp500),
-                 ete_yx = calc_ete(sp500, ret)), by = ticker]
+res <- lapply(split(stocks, stocks$ticker), function(d) {
+  te <- transfer_entropy(d$ret, d$sp500, shuffles = 50, nboot = 100, quiet = T)
+  
+  data.table(
+    ticker = d$ticker[1],
+    dir = c("X->Y", "Y->X"),
+    coef(te)[1:2, 2:3]
+  )
+})
 
-df_long <- melt(df, id.vars = "ticker")
+df <- rbindlist(res)
 
-# order the ticker by the ete_xy
-df_long[, ticker := factor(ticker, levels = unique(ticker[order(df$ete_xy)]))]
+# order the ticker by the ete of X->Y
+df[, ticker := factor(ticker, 
+                      levels = unique(df$ticker)[order(df[dir == "X->Y"]$ete)])]
 
 # rename the variable (xy/yx)
-df_long[, variable := factor(variable, levels = c("ete_xy", "ete_yx"),
-                             labels = c("Flow towards Market",
-                                        "Flow towards Stock"))]
+df[, dir := factor(dir, levels = c("X->Y", "Y->X"),
+                   labels = c("Flow towards Market",
+                              "Flow towards Stock"))]
 
-ggplot(df_long, aes(x = ticker, y = value)) + 
-  geom_point() +
-  facet_wrap(~variable) +
+ggplot(df, aes(x = ticker, y = ete)) + 
+  facet_wrap(~dir) +
+  geom_hline(yintercept = 0, color = "gray") +
   theme(axis.text.x = element_text(angle = 90)) +
-  labs(x = NULL, y = "Effective Transfer Entropy")
-
+  labs(x = NULL, y = "Effective Transfer Entropy") +
+  geom_errorbar(aes(ymin = ete - qnorm(0.95) * se,  
+                    ymax = ete + qnorm(0.95) * se),  
+                width = 0.25, col = "blue") +
+  geom_point()
 ```
 
-The graphic reports effective transfer entropy estimates for 10 stocks.
-The results illustrate that there is indeed a bi-directional information flow.
-However, the information flow from the stocks to the market is higher for most stocks than the other direction.
+The graphic reports effective transfer entropy estimates together with 95% confidence bounds for 10 stocks. 
+The results illustrate that there is indeed bi-directional information flow. 
+However, the information flow from the market to the stocks is higher for most stocks than the other direction. 
+Also, as can easily be seen from the confidence bounds, the information flow towards the market is not statistically significant in two cases (on a 5\% significance level).  
 
 Again, the estimated transfer entropy depends on the choice of the quantile.
 This is illustrated in the following Figure which reports the changes of effective transfer entropy values for two different quantiles `(05, 95)` and `c(10, 90)` for the two flow directions: stock towards market on the left facet, and market towards stock on the right facet. The different colors represent different stocks.
@@ -518,8 +530,11 @@ df2 <- stocks[, .(ete_xy = calc_ete(ret, sp500, quantiles = c(10, 90)),
               by = ticker]
 
 # combine the quantiles into a single dt
+
+df1 <- dcast(df[, .(dir, ticker, ete)], ticker ~ dir, value.var = "ete")
+setnames(df1, c("ticker", "ete_xy", "ete_yx"))
 dt <- rbindlist(list(
-  df[, quantiles := "(05, 95)"],
+  df1[, quantiles := "(05, 95)"],
   df2[, quantiles := "(10, 90)"]
 ))
 
@@ -549,7 +564,7 @@ To illustrate this feature we use one stock and calculate Rényi transfer entrop
 qs <- c(seq(0.1, 0.9, 0.1), 0.99)
 d <- stocks[ticker == "AXP"]
 
-q_list <- future_lapply(qs, function(q) {
+q_list <- lapply(qs, function(q) {
   
   # transfer_entropy will give a warning as nboot < 100
   suppressWarnings({
@@ -570,9 +585,6 @@ sh_dt <- data.table(
   dir = c("X->Y", "Y->X"),
   ete = c(calc_ete(d$ret, d$sp500), calc_ete(d$sp500, d$ret))
 )
-```
-
-```{r plot_renyi_te, echo=F}
 qdt[, pe := qnorm(0.95) * se]
 
 ggplot(qdt, aes(x = q, y = ete)) +
