@@ -288,7 +288,7 @@ Consider the following nonlinear relation between $X$ and $Y$, where, again, onl
 $$
 \begin{split}
 x_t & = & 0.2x_{t-1} + \varepsilon_{x,t}\\
-y_t & = & sqrt{\mid x_{t-1}\mid} + \varepsilon_{y,t},
+y_t & = & \sqrt{\mid x_{t-1}\mid} + \varepsilon_{y,t},
 \end{split}
 $$
 
@@ -361,7 +361,7 @@ ggplot(df, aes(x = quantiles, y = ete)) +
   labs(x = "Quantiles", y = "ETE (X->Y)")
 ```
 As can be seen, the relative value of the effective transfer entropy from $X$ to $Y$ increases as the central bin gets smaller.
-Statistical significance, is, however, not affected. 
+Statistical significance (not shown in the plot), is, however, not affected. 
 
 As shown above, the question how to determine the quantiles is important as it impacts the order of magnitude of the transfer entropy.
 A different approach is provided by Rényi transfer entropy which allows to reweight the probabilities associated with the individual bins.
