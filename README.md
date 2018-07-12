@@ -223,6 +223,7 @@ te
 
 # revert back with
 set_quiet(FALSE)
+
 te <- transfer_entropy(x, y, nboot = 0)
 #> Shannon's entropy on 8 cores with 100 shuffles. The timeseries have length 2000 (0 NAs removed)
 #>   [calculate] X->Y transfer entropy

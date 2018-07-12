@@ -148,6 +148,7 @@ te
 
 # revert back with
 set_quiet(FALSE)
+
 te <- transfer_entropy(x, y, nboot = 0)
 ```
 

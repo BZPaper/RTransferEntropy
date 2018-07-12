@@ -516,8 +516,8 @@ ggplot(df, aes(x = ticker, y = ete)) +
 
 The graphic reports effective transfer entropy estimates together with 95% confidence bounds for 10 stocks. 
 The results illustrate that there is indeed bi-directional information flow. 
-However, the information flow from the market to the stocks is higher for most stocks than the other direction. 
-Also, as can easily be seen from the confidence bounds, the information flow towards the market is not statistically significant in two cases (on a 5\% significance level).  
+However, the information flow from the stocks to the market is higher for most stocks than the other direction. 
+Also, as can easily be seen from the confidence bounds, the information flow towards the stock is not statistically significant in two cases (on a 5\% significance level).  
 
 Again, the estimated transfer entropy depends on the choice of the quantile.
 This is illustrated in the following Figure which reports the changes of effective transfer entropy values for two different quantiles `(05, 95)` and `c(10, 90)` for the two flow directions: stock towards market on the left facet, and market towards stock on the right facet. The different colors represent different stocks.
