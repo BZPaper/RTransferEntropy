@@ -281,7 +281,7 @@ Therefore, the results might be slightly different.
 
 ### Simulated series II
 
-Regarding the above example, where the results show a significant information flow from $X$ to $Y$, but not vice versa.
+Consider again the above example, where the results show a significant information flow from $X$ to $Y$, but not vice versa.
 Similar conclusions could be drawn from using a vector autoregressive model and testing for Granger causality.
 However, the main advantage of using transfer entropy is that it is not limited to linear relationships.
 Consider the following nonlinear relation between $X$ and $Y$, where, again, only $Y$ depends on $X$:
@@ -291,7 +291,6 @@ x_t & = & 0.2x_{t-1} + \varepsilon_{x,t}\\
 y_t & = & \sqrt{\mid x_{t-1}\mid} + \varepsilon_{y,t},
 \end{split}
 $$
-
 with $\varepsilon_{x,t}$ and $\varepsilon_{y,t}$ being standard normally distributed.
 We simulate these processes, discarding the first 200 observations as a burn-in period.
 
@@ -313,13 +312,13 @@ x <- x[-(1:200)]
 y <- y[-(1:200)]
 ```
 
-As in the above example, a scatterplot provides a first approximation of the dependencies among both time series for different lead-lag combinations.
+As in the previous example, a scatterplot provides a first impression of the dependencies among both time series for different lead-lag combinations. 
 
 ```{r plot_data_2, echo=F, message=FALSE, warning=FALSE}
 plot_series(x, y)
 ```
 
-Also in this example, we focus on Shannon transfer entropy.
+The focus of this example is on Shannon transfer entropy. We use the standard settings of the `transfer_entropy()` function which uses one lag to calculate the transfer entropy.
 
 ```{r te_2, eval=T}
 shannon_te2 <- transfer_entropy(x, y)
@@ -327,7 +326,7 @@ shannon_te2 <- transfer_entropy(x, y)
 shannon_te2
 ```
 
-Again, the Shannon transfer entropy estimate indicates that there is a significant information flow from $X$ to $Y$, but not in the other direction. 
+The resulting Shannon transfer entropy estimate indicates that there is a significant information flow from $X$ to $Y$, but not in the other direction. 
 
 In the same situation, using a VAR would not reveal any relationship between $X$ and $Y$.
 Using the package [`vars`](https://cran.r-project.org/package=vars) and one lag (the true lag structure) delivers the following estimates of the VAR(1) for the dependent variable $Y$:
@@ -342,9 +341,10 @@ svf$varresult$y
 
 The VAR cannot detect the nonlinear dependence of $Y$ on $X$, which leads to a parameter estimate `x.l1` that is not statistically significant.
 The autoregressive nature of $X$ (not shown above, but can be obtained with `svf$varresult$x`) is, as expected, readily identified. 
+
 The precise value of the transfer entropy is influenced by the choice of the quantiles.
 To illustrate the effect, we reestimate Shannon transfer entropy for a selection of quantiles.
-The following graph reports the results for increasing values of quantiles.
+The following graph reports the results for increasing tail bins (and, thus, a shrinking central bin).
 ```{r te_2a, eval=T}
 df <- data.frame(q1 = 5:25, q2 = 95:75)
 
@@ -363,14 +363,14 @@ ggplot(df, aes(x = quantiles, y = ete)) +
 As can be seen, the relative value of the effective transfer entropy from $X$ to $Y$ increases as the central bin gets smaller.
 Statistical significance (not shown in the plot), is, however, not affected. 
 
-As shown above, the question how to determine the quantiles is important as it impacts the order of magnitude of the transfer entropy.
-A different approach is provided by Rényi transfer entropy, which allows to reweight the probabilities associated with the individual bins.
-Due to the proposed symbolic encoding of the data, tail events are associated with a lower likelihood compared to events in the centre of the distribution.
+### Simulated series III
+
+As shown above, the question how to determine the quantiles is important as it impacts the order of magnitude of the transfer entropy. A different approach is provided by Rényi transfer entropy, which allows to reweight the probabilities associated with the individual bins. Due to the proposed symbolic encoding of the data, tail events are associated with a lower likelihood compared to events in the centre of the distribution.
 Rényi transfer entropy, thus, puts more weight on the tails when calculating transfer entropy.
 This is particularly convenient when the distribution is assumed to be more informative in the tails.
 Note again that Rényi transfer entropy estimates can potentially turn out negative.
 
-### Simulated series III
+
 
 To illustrate the use of Rényi transfer entropy, we simulate data for which the dependence of $Y$ on $X$ changes with the level of the innovation.
 
@@ -428,8 +428,8 @@ The effect in the other direction is not statistically significant.
 
 The appealing property of the Rényi transfer entropy is the possibility to reweight the probabilities.
 Furthermore, as $q \rightarrow 1$, Rényi transfer entropy approaches Shannon transfer entropy.
-We illustrate both effects using different values of $q$.
-Note that this result is illustrated using the raw transfer entropy estimates and not the effective transfer entropy estimates because the latter depend on the shuffling procedure. 
+We illustrate these two effects using different values of $q$ in the estimation of Rényi transfer entropy and compare the result with the Shannon transfer entropy. Note that the values are only comparable when the same bins are used in the symbolic encoding. 
+Furthermore, the results are illustrated using the raw transfer entropy estimates and not the effective transfer entropy estimates because the latter depend on the shuffling procedure. 
 
 ```{r q_test}
 qs <- c(seq(0.1, 0.9, 0.1), 0.99)
