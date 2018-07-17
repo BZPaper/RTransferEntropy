@@ -56,7 +56,7 @@ plot_series <- function(x, y) {
 The measurement of information transfer between different time series is the basis of research questions in various research areas, including biometrics, economics, ecological modelling, neuroscience, sociology, and thermodynamics.
 The quantification of information transfer commonly relies on measures that have been derived from subject-specific assumptions and restrictions concerning the underlying stochastic processes or theoretical models.
 With the development of transfer entropy, information theory based measures have become a popular alternative to quantify information flows within various disciplines.
-Transfer entropy is a non-parametric measure of directed, time-asymmetric information transfer between two processes.
+Transfer entropy is a non-parametric measure of directed, asymmetric information transfer between two processes.
   
 We show how to quantify the information flow between two stationary time series and how to test for its statistical significance  using  Shannon transfer entropy and Rényi transfer entropy  within the package `RTransferEntropy`.
 A core aspect of the provided package is to allow statistical inference and hypothesis testing in the context of transfer entropy.
