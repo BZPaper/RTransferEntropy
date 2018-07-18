@@ -1,7 +1,7 @@
 #' @useDynLib RTransferEntropy
 #' @importFrom Rcpp sourceCpp
 #' @importFrom stats quantile sd
-#' @import future
+#' @importFrom future plan multisession multicore sequential
 NULL
 
 .onAttach <- function(...) {
