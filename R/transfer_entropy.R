@@ -203,12 +203,12 @@ transfer_entropy <- function(x,
 
   if (!quiet) {
     cat(sprintf(
-      "%s's entropy on %s core%s with %s shuffle%s. ",
+      "%s's entropy on %s core%s with %s shuffle%s.\n",
       fupper(entropy),
       future::nbrOfWorkers(), mult_s(future::nbrOfWorkers()),
       shuffles, mult_s(shuffles)
     ))
-    cat(sprintf("The timeseries have length %s (%s NAs removed)\n",
+    cat(sprintf("  x and y have length %s (%s NAs removed)\n",
                 length(x), sum(mis_values)))
   }
 
