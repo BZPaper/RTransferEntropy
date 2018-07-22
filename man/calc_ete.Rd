@@ -79,7 +79,7 @@ calc_ete(x, y)
 # calculate the Y->X transfer entropy value
 calc_ete(y, x)
 
-\dontrun{
+\donttest{
   # Compare the results
   # even with the same seed, transfer_entropy might return slightly different
   # results from calc_ete

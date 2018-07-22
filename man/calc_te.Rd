@@ -79,7 +79,7 @@ calc_te(x, y)
 # calculate the Y->X transfer entropy value
 calc_te(y, x)
 
-\dontrun{
+\donttest{
   # Compare the results
   calc_te(x, y, seed = 123)
   calc_te(y, x, seed = 123)

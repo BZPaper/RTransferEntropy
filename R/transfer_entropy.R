@@ -67,7 +67,7 @@
 #' te_result <- transfer_entropy(x, y, nboot = 100)
 #' te_result
 #'
-#' \dontrun{
+#' \donttest{
 #'   # Parallel Processing using the future-package
 #'   library(future)
 #'   plan(multiprocess)
