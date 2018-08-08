@@ -69,7 +69,7 @@ Let $log$ denote the logarithm to the base 2, then informational gain is measure
 Shannon entropy [@S48] states that for a discrete random variable $J$ with probability distribution $p(j)$, where $j$ stands for the different outcomes the random variable $J$ can take, the average number of bits required to optimally encode independent draws from the distribution of $J$ can be calculated as 
   
 $$
-  H_J = - \sum_j p(j) \times log \left(p(j)\right).
+  H_J = - \sum_j p(j) \cdot log \left(p(j)\right).
 $$
     
 Strictly speaking, Shannon's formula  is a measure for uncertainty, which increases with the number of bits needed to optimally encode a sequence of realizations of $J$.
@@ -79,14 +79,14 @@ The Markov property implies that the probability to observe $I$ at time $t+1$ in
 The average number of bits needed to encode the observation in $t+1$ if the previous $k$ values are known is given by
   
 $$
-  h_I(k)=- \sum_i p\left(i_{t+1}, i_t^{(k)}\right) \times log \left(p\left(i_{t+1}|i_t^{(k)}\right)\right),
+  h_I(k)=- \sum_i p\left(i_{t+1}, i_t^{(k)}\right) \cdot log \left(p\left(i_{t+1}|i_t^{(k)}\right)\right),
 $$
 where $i^{(k)}_t=(i_t,...,i_{t-k+1})$. $h_J(l)$ can be derived analogously for process $J$.
 In the bivariate case, information flow from process $J$ to process $I$ is measured by quantifying the deviation from the generalized Markov property $p(i_{t+1}| i_t^{(k)})=p(i_{t+1}| i_t^{(k)},j_t^{(l)})$ relying on the Kullback-Leibler distance [@schreiber2000].
 Thus, (Shannon) transfer entropy is given by 
   
 $$
-  T_{J \rightarrow I}(k,l) = \sum_{i,j} p\left(i_{t+1}, i_t^{(k)}, j_t^{(l)}\right) \times log \left(\frac{p\left(i_{t+1}| i_t^{(k)}, j_t^{(l)}\right)}{p\left(i_{t+1}|i_t^{(k)}\right)}\right),
+  T_{J \rightarrow I}(k,l) = \sum_{i,j} p\left(i_{t+1}, i_t^{(k)}, j_t^{(l)}\right) \cdot log \left(\frac{p\left(i_{t+1}| i_t^{(k)}, j_t^{(l)}\right)}{p\left(i_{t+1}|i_t^{(k)}\right)}\right),
 $$
 where $T_{J\rightarrow I}$ consequently measures the information flow from $J$ to $I$ ( $T_{I \rightarrow J}$ as a measure for the information flow from $I$ to $J$ can be derived analogously). 
 
@@ -99,9 +99,9 @@ For $q\rightarrow 1$, Rényi entropy converges to Shannon entropy.
 For $0<q<1$  events that have a low probability to occur receive more weight, while for $q>1$ the weights induce a preference for outcomes $j$ with a higher initial probability.
 Consequently, Rényi entropy provides a more flexible tool for estimating uncertainty, since different areas of a distribution can be emphasized, depending on the parameter $q$. 
 
-Using the escort distribution [for more information, see @BeckS93] $\phi_q(j)=\frac{p^q(j)}{\sum_j p^q(j))}$ with $q >0$ to normalize the weighted distributions, @JKS12 derive the Rényi transfer entropy measure as
+Using the escort distribution [for more information, see @BeckS93] $\phi_q(j)=\frac{p^q(j)}{\sum_j p^q(j)}$ with $q >0$ to normalize the weighted distributions, @JKS12 derive the Rényi transfer entropy measure as
 $$
-  RT_{J \rightarrow I}(k,l) = \frac{1}{1-q} log \left(\frac{\sum_i \phi_q\left(i_t^{(k)}\right)p^q\left(i_{t+1}|i^{(k)}_t\right)}{\sum_{i,j} \phi_q\left(i^{(k)}_t,j^{(l)}_t\right)p^q\left(i_{t+1}|i^{(k)},j^{(l)}_t \right)}\right).
+  RT_{J \rightarrow I}(k,l) = \frac{1}{1-q} log \left(\frac{\sum_i \phi_q\left(i_t^{(k)}\right)p^q\left(i_{t+1}|i^{(k)}_t\right)}{\sum_{i,j} \phi_q\left(i^{(k)}_t,j^{(l)}_t\right)p^q\left(i_{t+1}|i^{(k)}_t,j^{(l)}_t \right)}\right).
 $$
 Analogously to (Shannon) transfer entropy, Rényi transfer entropy measures the information flow from $J$ to $I$.
 Note that, contrary to Shannon transfer entropy, the calculation of Rényi transfer entropy can result in negative values.
@@ -111,7 +111,7 @@ The above transfer entropy estimates are commonly biased due to small sample eff
 A remedy is provided by the effective transfer entropy [@MK02], which is computed in the following way: 
   
 $$
-  ET_{J \rightarrow I}(k,l):=  T_{J \rightarrow I}(k,l)- T_{J_{\text{shuffled}} \rightarrow I}(k,l),
+  ET_{J \rightarrow I}(k,l)=  T_{J \rightarrow I}(k,l)- T_{J_{\text{shuffled}} \rightarrow I}(k,l),
 $$
 where $T_{J_{\text{shuffled}} \rightarrow I}(k,l)$ indicates the transfer entropy using a shuffled  version of the time series of $J$.
 Shuffling implies randomly drawing values from the time series of $J$ and realigning them to generate a new time series.
