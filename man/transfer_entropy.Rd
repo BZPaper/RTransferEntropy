@@ -8,7 +8,7 @@ series x and y.}
 transfer_entropy(x, y, lx = 1, ly = 1, q = 0.1,
   entropy = "Shannon", shuffles = 100, type = "quantiles",
   quantiles = c(5, 95), bins = NULL, limits = NULL, nboot = 300,
-  burn = 50, quiet = NULL, seed = NULL, cl = NULL)
+  burn = 50, quiet = NULL, seed = NULL)
 }
 \arguments{
 \item{x}{a vector of numeric values, ordered by time.}
@@ -58,9 +58,6 @@ the bootstrapped Markov chain. Default is \code{burn = 50}.}
 
 \item{seed}{a seed that seeds the PRNG (will internally just call set.seed),
 default is \code{seed = NULL}.}
-
-\item{cl}{deprecated, for parallel processing use
-\code{future::\link[future]{plan}}}
 }
 \value{
 an object of class transfer_entropy, containing the transfer entropy

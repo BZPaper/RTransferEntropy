@@ -34,8 +34,6 @@
 #' @param quiet if FALSE (default), the function gives feedback.
 #' @param seed a seed that seeds the PRNG (will internally just call set.seed),
 #'             default is \code{seed = NULL}.
-#' @param cl deprecated, for parallel processing use
-#'            \code{future::\link[future]{plan}}
 #'
 #' @return an object of class transfer_entropy, containing the transfer entropy
 #'         estimates in both directions, the effective transfer entropy
@@ -104,8 +102,7 @@ transfer_entropy <- function(x,
                              nboot = 300,
                              burn = 50,
                              quiet = NULL,
-                             seed = NULL,
-                             cl = NULL) {
+                             seed = NULL) {
 
   if (!is.null(seed)) set.seed(seed)
 
@@ -173,9 +170,6 @@ transfer_entropy <- function(x,
       entropy <- "shannon"
     }
   }
-
-  if (!is.null(cl))
-    warning("cl is deprecated, use future::plan(multiprocess) instead")
 
   # Check quantiles
   if (type == "quantiles" && (min(quantiles) < 0 || max(quantiles) > 100))
