@@ -185,3 +185,12 @@ coef.transfer_entropy <- function(object, ...) {
   if (!is.transfer_entropy(object)) stop("object must be a transfer_entropy")
   return(object$coef)
 }
+
+# for some p-values (x) return the stars
+star <- function(x) {
+  ifelse(is.null(x) || is.na(x), "",
+         ifelse(x < 0.001, "***",
+                ifelse(x < 0.01, "**",
+                       ifelse(x < 0.05, "*",
+                              ifelse(x < 0.1, ".", "")))))
+}
