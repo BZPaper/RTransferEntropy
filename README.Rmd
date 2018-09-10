@@ -103,6 +103,8 @@ set.seed(20180108 + 1)
 shannon_te <- transfer_entropy(x = x, y = y)
 
 shannon_te
+
+summary(shannon_te)
 ```
 
 Alternatively, you can calculate only the transfer entropy or the effective transfer entropy with
