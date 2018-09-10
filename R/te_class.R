@@ -3,65 +3,102 @@
 #' @param x a transfer_entropy
 #' @param digits the number of digits to display, defaults to 4
 #' @param boot if the bootstrapped results should be printed, defaults to TRUE
+#' @param probs numeric vector of quantiles for the bootstraps
 #' @param ... additional arguments, currently not in use
 #'
 #' @return invisible the text
 #' @export
 #'
 #' @examples
-#' # see ?transfer_entropy()
-print.transfer_entropy <- function(x, digits = 4, boot = TRUE, ...) {
+#' # construct two time-series
+#' set.seed(1234567890)
+#' n <- 500
+#' x <- rep(0, n + 1)
+#' y <- rep(0, n + 1)
+#'
+#' for (i in seq(n)) {
+#'   x[i + 1] <- 0.2 * x[i] + rnorm(1, 0, 2)
+#'   y[i + 1] <- x[i] + rnorm(1, 0, 2)
+#' }
+#'
+#' x <- x[-1]
+#' y <- y[-1]
+#'
+#' # Calculate Shannon's Transfer Entropy
+#' te_result <- transfer_entropy(x, y, nboot = 100)
+#'
+#' print(te_result)
+#'
+#' # change the number of digits
+#' print(te_result, digits = 10)
+#'
+#' # disable boot-print
+#' print(te_result, boot = F)
+#'
+#' # specify the quantiles of the bootstraps
+#' print(te_result, probs = c(0, 0.1, 0.4, 0.5, 0.6, 0.9, 1))
+print.transfer_entropy <- function(x, digits = 4, boot = TRUE,
+                                   probs = c(0, 0.25, 0.5, 0.75, 1),
+                                   ...) {
 
   # the number of chars per reported value
-  n_digits <- max(10, digits + 2)
-
-  # the width (in chars) of the overall output
-  # ncol(x) - 1 of n_digits + 2 spaces (stars excluded)
-  # plus the names (n_digits + 2 spaces)
-  # plus 5 for the stars
-  n <- (n_digits + 2) * (ncol(x$coef) + 1) + 5
-
-  line <- paste(rep("-", n), collapse = "")
 
   # crate the header
-  header_lengths <- c(rep(10, ncol(x$coef) + 1), 5)
-  header_names <- c("Direction", "TE", "Eff. TE", "Std.Err.", "p-value", "sig")
+  val_names <- c("TE", "Eff. TE", "Std.Err.", "p-value", "sig")
+  header_names <- c("Direction", val_names)
+
+  n_digits <- max(max(nchar(val_names)), digits + 2)
+  header_lengths <- c(9, rep(n_digits, ncol(x$coef)), 5)
+
   header <- paste(mapply(function(l, t) sprintf(sprintf("%%%ss", l), t),
                          l = header_lengths, t = header_names),
                   collapse = "  ")
 
+  line <- paste0(rep("-", max(nchar(header)), 59), collapse = "")
+  # 59 chars in the p-value footnote
+
   # create the bootstrapped output:
-  if (!is.matrix(x$boot) || !boot) {
+  if (!is.matrix(x$boot)) {
     boot_res <- c(
       line,
       "For calculation of standard errors and p-values set nboot > 0"
     )
+  } else if (!boot) {
+    boot_res <- NULL
   } else {
-    quants <- t(apply(x$boot, 1, function(b) quantile(b)))
+    quants <- t(apply(x$boot, 1, function(b) quantile(b, probs = probs)))
     rownames(quants) <- c("X->Y", "Y->X")
 
-    quant_hdr_l <- c(rep(8, ncol(quants) + 1))
-    quant_hdr_n <- c("Direction", "0%", "25%", "50%", "75%", "100%")
-    quant_hdr <- paste(mapply(function(l, t) sprintf(sprintf("%%%ss", l), t),
-                              l = quant_hdr_l, t = quant_hdr_n),
-                       collapse = "  ")
+    probs_nam <- paste0(probs * 100, "%")
+    boot_hd_nam <- c("Direction", probs_nam)
+    boot_hd_len <- c(9,
+                     rep(max(nchar(probs_nam), digits + 2),
+                         length(probs)))
+
+    boot_hd <- paste(mapply(function(l, t) sprintf(sprintf("%%%ss", l), t),
+                            l = boot_hd_len, t = boot_hd_nam),
+                     collapse = "  ")
+
+    line_width <- max(nchar(header), nchar(boot_hd), 59)
+    # 59 chars in the p-value footnote
+
+    line <- paste(rep("-", line_width), collapse = "")
 
     boot_res <- c(
       line,
       sprintf("Bootstrapped TE Quantiles (%s replications):", ncol(x$boot)),
       line,
-      quant_hdr,
+      boot_hd,
       line,
-      textify_mat(quants, digits = digits, width = 8, stars = FALSE)
+      textify_mat(quants, digits = digits, width = boot_hd_len, stars = FALSE)
     )
   }
-
   text <- c(
     paste(fupper(x$entropy), "Transfer Entropy Results:"),
     line,
     header,
     line,
-    textify_mat(x$coef, digits, 10),
+    textify_mat(coef(x), digits, header_lengths),
     boot_res,
     line,
     paste0(sprintf("Number of Observations: %s", x$nobs),
@@ -70,7 +107,7 @@ print.transfer_entropy <- function(x, digits = 4, boot = TRUE, ...) {
     "p-values: < 0.001 '***', < 0.01 '**', < 0.05 '*', < 0.1 '.'"
   )
   text <- paste(text, collapse = "\n")
-  cat(text)
+  cat(text, "\n")
   return(invisible(text))
 }
 
@@ -80,31 +117,39 @@ print.transfer_entropy <- function(x, digits = 4, boot = TRUE, ...) {
 # stars if the last row represents the p-values and we want to calc the ***
 textify_mat <- function(mat, digits, width = 10, stars = TRUE) {
 
-  width <- max(width, digits + 2)
-  nr_fmt <- sprintf("%%%s.%sf", width, digits)
-  txt_fmt <- sprintf("%%%ss", width)
+  # the first element is the direction (text)
+  nr_fmt <- sprintf("%%%s.%sf", width[-1], digits)
+  txt_fmt <- sprintf("%%%ss", width[1])
+
+  if (stars) {
+    if (ncol(mat) + 1 != length(nr_fmt))
+      stop("width has to have the same lenghts as the num of columns of mat + 1")
+    star_fmt <- sprintf("%%%ss", width[length(width)])
+    nr_fmt <- nr_fmt[-length(nr_fmt)]
+  }
+
 
   # for each row, for each col, paste the number in the right format and
   # add the stars at the end
   txt <- apply(mat, 1, function(row_el) {
-    res <- sapply(row_el, function(x) sprintf(nr_fmt, x))
+    res <- mapply(function(x, fmt) sprintf(fmt, x), x = row_el, fmt = nr_fmt)
 
     if (stars) {
-      paste(c(res, sprintf("%5s", star(row_el[length(row_el)]))),
+      paste(c(res, sprintf(star_fmt, star(row_el[length(row_el)]))),
             collapse = "  ")
     } else {
       paste(res, collapse = "  ")
     }
 
   })
-
-  paste0(" ", paste(sprintf(txt_fmt, names(txt)), txt, sep = "  "))
+  paste(sprintf(txt_fmt, names(txt)), txt, sep = "  ")
 }
 
 #' Prints a summary of a transfer-entropy result
 #'
 #' @param object a transfer_entropy
 #' @param digits the number of digits to display, defaults to 4
+#' @param probs numeric vector of quantiles for the bootstraps
 #' @param ... additional arguments, passed to \code{\link[stats]{printCoefmat}}
 #'
 #' @return invisible the object
@@ -112,7 +157,8 @@ textify_mat <- function(mat, digits, width = 10, stars = TRUE) {
 #'
 #' @examples
 #' # see ?transfer_entropy
-summary.transfer_entropy <- function(object, digits = 4, ...) {
+summary.transfer_entropy <- function(object, digits = 4,
+                                     probs = c(0, 0.25, 0.5, 0.75, 1), ...) {
   cat(sprintf("%s's Transfer Entropy\n\n", fupper(object$entropy)))
   cat("Coefficients:\n")
   printCoefmat(coef(object), ...)
@@ -120,20 +166,24 @@ summary.transfer_entropy <- function(object, digits = 4, ...) {
   if (!is.matrix(object$boot)) {
     boot_res <- c(NULL)
   } else {
-    quants <- t(apply(object$boot, 1, function(b) quantile(b)))
+    quants <- t(apply(object$boot, 1, function(b) quantile(b, probs = probs)))
     rownames(quants) <- c("X->Y", "Y->X")
 
-    quant_hdr_l <- c(rep(8, ncol(quants) + 1))
-    quant_hdr_n <- c("Direction", "0%", "25%", "50%", "75%", "100%")
-    quant_hdr <- paste(mapply(function(l, t) sprintf(sprintf("%%%ss", l), t),
-                              l = quant_hdr_l, t = quant_hdr_n),
-                       collapse = "  ")
+    probs_nam <- paste0(probs * 100, "%")
+    boot_hd_nam <- c("Direction", probs_nam)
+    boot_hd_len <- c(9,
+                     rep(max(nchar(probs_nam), digits + 2),
+                         length(probs)))
+
+    boot_hd <- paste(mapply(function(l, t) sprintf(sprintf("%%%ss", l), t),
+                            l = boot_hd_len, t = boot_hd_nam),
+                     collapse = "  ")
 
     boot_res <- c(
       sprintf("\nBootstrapped TE Quantiles (%s replications):",
               ncol(object$boot)),
-      quant_hdr,
-      textify_mat(quants, digits = digits, width = 8, stars = FALSE)
+      boot_hd,
+      textify_mat(quants, digits = digits, width = boot_hd_len, stars = FALSE)
     )
     boot_res <- paste(boot_res, collapse = "\n")
     cat(boot_res,"\n")
