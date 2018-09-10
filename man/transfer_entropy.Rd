@@ -5,10 +5,10 @@
 \title{Function to estimate Shannon and Renyi transfer entropy between two time
 series x and y.}
 \usage{
-transfer_entropy(x, y, lx = 1, ly = 1, q = 0.1, entropy = "Shannon",
-  shuffles = 100, type = "quantiles", quantiles = c(5, 95), bins = NULL,
-  limits = NULL, nboot = 300, burn = 50, quiet = NULL, seed = NULL,
-  cl = NULL)
+transfer_entropy(x, y, lx = 1, ly = 1, q = 0.1,
+  entropy = "Shannon", shuffles = 100, type = "quantiles",
+  quantiles = c(5, 95), bins = NULL, limits = NULL, nboot = 300,
+  burn = 50, quiet = NULL, seed = NULL, cl = NULL)
 }
 \arguments{
 \item{x}{a vector of numeric values, ordered by time.}
@@ -63,7 +63,7 @@ default is \code{seed = NULL}.}
 \code{future::\link[future]{plan}}}
 }
 \value{
-an object of class TEResult, containing the transfer entropy
+an object of class transfer_entropy, containing the transfer entropy
         estimates in both directions, the effective transfer entropy
         estimates in both directions, standard errors and p-values based on
         bootstrap replications of the Markov chains under the null hypothesis
@@ -117,5 +117,5 @@ te_result
 }
 }
 \seealso{
-\code{\link{coef}}, \code{\link{print.TEResult}}
+\code{\link{coef}}, \code{\link{print.transfer_entropy}}
 }

@@ -165,7 +165,7 @@ install.packages('RTransferEntropy')
 library(RTransferEntropy)
 ```
 
-The main function is `transfer_entropy()`, which creates an object of class `TEResult` that contains the respective transfer entropy estimates (both in $J \rightarrow I$ and $I \rightarrow J$ direction), the related effective transfer entropy estimates, standard errors, and p-values for the estimated values, an indication of statistical significance, and quantiles of the bootstrap samples (if the number of bootstrap replications is specified to be greater than zero).
+The main function is `transfer_entropy()`, which creates an object of class `transfer_entropy` that contains the respective transfer entropy estimates (both in $J \rightarrow I$ and $I \rightarrow J$ direction), the related effective transfer entropy estimates, standard errors, and p-values for the estimated values, an indication of statistical significance, and quantiles of the bootstrap samples (if the number of bootstrap replications is specified to be greater than zero).
 Some auxilliary functions are written in `C++` using [`Rcpp`](https://github.com/RcppCore/Rcpp) to speed up computations. Furthermore, we use the [`future`](https://github.com/HenrikBengtsson/future) package to enable parallel computing, which allows for more efficient programming when the `transfer_entropy()` function is called repeatedly or when large amounts of shuffles and bootstraps are used.
 
 ### Functionality

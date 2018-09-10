@@ -47,7 +47,7 @@ test_that("transfer_entropy shannon is correctly specified", {
   })
 
   context("check types")
-  expect_true(is.TEResult(res))
+  expect_true(is.transfer_entropy(res))
 
   # we have the all observations saved properly
   expect_equal(res$entropy, "shannon")
@@ -111,7 +111,7 @@ test_that("transfer_entropy renyi is correctly specified", {
   })
 
   context("check types")
-  expect_true(is.TEResult(res))
+  expect_true(is.transfer_entropy(res))
 
   # we have the all observations saved properly
   expect_equal(res$entropy, "renyi")

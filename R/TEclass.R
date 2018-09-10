@@ -1,6 +1,6 @@
 #' Prints a transfer-entropy result
 #'
-#' @param x a TEResult
+#' @param x a transfer_entropy
 #' @param digits the number of digits to display, defaults to 4
 #' @param boot if the bootstrapped results should be printed, defaults to TRUE
 #' @param ... additional arguments, currently not in use
@@ -10,7 +10,7 @@
 #'
 #' @examples
 #' # see ?transfer_entropy()
-print.TEResult <- function(x, digits = 4, boot = TRUE, ...) {
+print.transfer_entropy <- function(x, digits = 4, boot = TRUE, ...) {
 
   # the number of chars per reported value
   n_digits <- max(10, digits + 2)
@@ -103,7 +103,7 @@ textify_mat <- function(mat, digits, width = 10, stars = TRUE) {
 
 #' Prints a summary of a transfer-entropy result
 #'
-#' @param object a TEResult
+#' @param object a transfer_entropy
 #' @param ... additional arguments, currently not in use
 #'
 #' @return invisible the text
@@ -111,27 +111,27 @@ textify_mat <- function(mat, digits, width = 10, stars = TRUE) {
 #'
 #' @examples
 #' # see ?transfer_entropy
-summary.TEResult <- function(object, ...) {
+summary.transfer_entropy <- function(object, ...) {
   text <- print(object, ...)
   return(invisible(text))
 }
 
-#' Checks if an object is a TEResult
+#' Checks if an object is a transfer_entropy
 #'
 #' @param x an object
 #'
-#' @return a boolean value if x is a TEResult
+#' @return a boolean value if x is a transfer_entropy
 #' @export
 #'
 #' @examples
 #' # see ?transfer_entropy
-is.TEResult <- function(x) {
-  inherits(x, "TEResult")
+is.transfer_entropy <- function(x) {
+  inherits(x, "transfer_entropy")
 }
 
-#' Extract the Coefficient Matrix from a TEResult
+#' Extract the Coefficient Matrix from a transfer_entropy
 #'
-#' @param object a TEResult
+#' @param object a transfer_entropy
 #' @param ... additional arguments, currently not in use
 #'
 #' @return a Matrix containing the coefficients
@@ -153,7 +153,7 @@ is.TEResult <- function(x) {
 #'
 #' te_result <- transfer_entropy(x, y, nboot = 100)
 #' coef(te_result)
-coef.TEResult <- function(object, ...) {
-  if (!is.TEResult(object)) stop("object must be a TEResult")
+coef.transfer_entropy <- function(object, ...) {
+  if (!is.transfer_entropy(object)) stop("object must be a transfer_entropy")
   return(object$coef)
 }

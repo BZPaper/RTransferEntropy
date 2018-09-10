@@ -20,7 +20,7 @@ Imports:
     future.apply,
     Rcpp
 LazyData: true
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 LinkingTo: Rcpp
 Suggests: data.table,
     ggplot2,
@@ -31,4 +31,3 @@ Suggests: data.table,
     testthat,
     vars
 VignetteBuilder: knitr
-

@@ -37,7 +37,7 @@
 #' @param cl deprecated, for parallel processing use
 #'            \code{future::\link[future]{plan}}
 #'
-#' @return an object of class TEResult, containing the transfer entropy
+#' @return an object of class transfer_entropy, containing the transfer entropy
 #'         estimates in both directions, the effective transfer entropy
 #'         estimates in both directions, standard errors and p-values based on
 #'         bootstrap replications of the Markov chains under the null hypothesis
@@ -46,7 +46,7 @@
 #'         (if \code{nboot > 0}).
 #' @export
 #'
-#' @seealso \code{\link{coef}}, \code{\link{print.TEResult}}
+#' @seealso \code{\link{coef}}, \code{\link{print.transfer_entropy}}
 #'
 #' @examples
 #' # construct two time-series
@@ -287,6 +287,6 @@ transfer_entropy <- function(x,
     cat("Done - Total time", round(t, 2), "seconds\n")
   }
 
-  class(res) <- "TEResult"
+  class(res) <- "transfer_entropy"
   return(res)
 }
