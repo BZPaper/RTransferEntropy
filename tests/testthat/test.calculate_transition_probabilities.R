@@ -1,4 +1,4 @@
-library(testthat)
+context("Check calculate_transisition_probabilities")
 
 test_that("Check calculate_transition_probabilities for complete cases", {
   x <- c(1, 2, 3, 2, 1)
@@ -12,7 +12,6 @@ test_that("Check calculate_transition_probabilities for complete cases", {
   expect_equal(res[[2]], c("2 1" = 0.5, "2 3" = 0.5))
   expect_equal(res[[3]], c("3 2" = 1))
 })
-
 
 test_that("Check calculate_transition_probabilities incomplete cases", {
   x <- c(1, 1, 3, 3, 3)

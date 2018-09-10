@@ -17,37 +17,37 @@ y <- y[-1]
 context("Shannon's Entropy")
 
 test_that("transfer_entropy shannon is correctly specified", {
-  context("calc_te X->Y")
+  # calc_te X->Y
   res <- calc_te(x, y)
   expect_type(res, "double")
   expect_length(res, 1)
   expect_equal(res, 0.1120278, tolerance = 1e-6)
 
-  context("calc_te Y->X")
+  # calc_te Y->X
   res <- calc_te(y, x)
   expect_type(res, "double")
   expect_length(res, 1)
   expect_equal(res, 0.007642886, tolerance = 1e-6)
 
-  context("calc_ete X->Y")
+  # calc_ete X->Y
   res <- calc_ete(x, y, seed = 1234567890)
   expect_type(res, "double")
   expect_length(res, 1)
   expect_equal(res, 0.1052868, tolerance = 1e-6)
 
-  context("calc_ete Y->X")
+  # calc_ete Y->X
   res <- calc_ete(y, x, seed = 1234567890)
   expect_type(res, "double")
   expect_length(res, 1)
   expect_equal(res, 0.00187351, tolerance = 1e-6)
 
-  context("transfer_entropy")
+  # transfer_entropy
   suppressWarnings({
     res <- transfer_entropy(x, y, lx = 1, ly = 1, nboot = 10, quiet = T,
                             seed = 12345667)
   })
 
-  context("check types")
+  # check types
   expect_true(is.transfer_entropy(res))
 
   # we have the all observations saved properly
@@ -66,7 +66,7 @@ test_that("transfer_entropy shannon is correctly specified", {
   expect_true(is.matrix(boot))
   expect_equal(dim(boot), c(2, 10))
 
-  context("check values")
+  # check values
   exp_coefs <- matrix(
     c(0.112028, 0.007643, 0.105148, 0.002364, 0.004295, 0.002488, 0, 0.3),
     nrow = 2, ncol = 4,
@@ -83,37 +83,37 @@ test_that("transfer_entropy shannon is correctly specified", {
 context("Renyi's Entropy")
 
 test_that("transfer_entropy renyi is correctly specified", {
-  context("calc_te X->Y")
+  # calc_te X->Y
   res <- calc_te(x, y, entropy = "renyi")
   expect_type(res, "double")
   expect_length(res, 1)
   expect_equal(res, 0.2530839, tolerance = 1e-6)
 
-  context("calc_te Y->X")
+  # calc_te Y->X
   res <- calc_te(y, x, entropy = "renyi")
   expect_type(res, "double")
   expect_length(res, 1)
   expect_equal(res, 0.02494136, tolerance = 1e-6)
 
-  context("calc_ete X->Y")
+  # calc_ete X->Y
   res <- calc_ete(x, y, seed = 1234567890, entropy = "renyi")
   expect_type(res, "double")
   expect_length(res, 1)
   expect_equal(res, -0.074507, tolerance = 1e-6)
 
-  context("calc_ete Y->X")
+  # calc_ete Y->X
   res <- calc_ete(y, x, entropy = "renyi")
   expect_type(res, "double")
   expect_length(res, 1)
   expect_equal(res, -0.174042, tolerance = 1e-6)
 
-  context("transfer_entropy")
+  # transfer_entropy
   suppressWarnings({
     res <- transfer_entropy(x, y, lx = 1, ly = 1, entropy = "renyi", q = 0.5,
                             nboot = 10, quiet = T, seed = 12345667)
   })
 
-  context("check types")
+  # check types
   expect_true(is.transfer_entropy(res))
 
   # we have the all observations saved properly
@@ -132,7 +132,7 @@ test_that("transfer_entropy renyi is correctly specified", {
   expect_true(is.matrix(boot))
   expect_equal(dim(boot), c(2, 10))
 
-  context("check values")
+  # check values
   exp_coefs <- matrix(
     c(0.121448, 0.01247, 0.043398, -0.034465, 0.041596, 0.039388, 0.4, 0.6),
     nrow = 2, ncol = 4,
@@ -148,25 +148,38 @@ test_that("transfer_entropy renyi is correctly specified", {
 context("zoo & xts compatability")
 
 test_that("Check that transfer_entropy takes zoos and xts", {
+  x <- x[1:200]
+  y <- y[1:200]
+  x.date <- seq(from = as.Date("2010-01-01"),
+                by = "day",
+                length.out = length(x))
+
   suppressWarnings({
     te_raw <- transfer_entropy(x, y, seed = 123, nboot = 10, quiet = T)
   })
 
-  x.date <- seq(from = as.Date("2010-01-01"), by = "day", length.out = n)
+  # ts
+  x_ts <- ts(x, start = min(x.date), end = max(x.date))
+  y_ts <- ts(y, start = min(x.date), end = max(x.date))
+  suppressWarnings({
+    te_ts <- transfer_entropy(x_ts, y_ts, seed = 123, nboot = 10, quiet = T)
+  })
+  expect_equal(te_raw, te_ts)
 
-  xzoo <- zoo::zoo(x, x.date)
-  yzoo <- zoo::zoo(y, x.date)
+  # zoo
+  x_zoo <- zoo::zoo(x, x.date)
+  y_zoo <- zoo::zoo(y, x.date)
 
   suppressWarnings({
-    te_zoo <- transfer_entropy(xzoo, yzoo, seed = 123, nboot = 10, quiet = T)
+    te_zoo <- transfer_entropy(x_zoo, y_zoo, seed = 123, nboot = 10, quiet = T)
   })
-
-  xxts <- xts::xts(x, x.date)
-  yxts <- xts::xts(y, x.date)
-  suppressWarnings({
-    te_xts <- transfer_entropy(xxts, yxts, seed = 123, nboot = 10, quiet = T)
-  })
-
   expect_equal(te_raw, te_zoo)
+
+  # xts
+  x_xts <- xts::xts(x, x.date)
+  y_xts <- xts::xts(y, x.date)
+  suppressWarnings({
+    te_xts <- transfer_entropy(x_xts, y_xts, seed = 123, nboot = 10, quiet = T)
+  })
   expect_equal(te_raw, te_xts)
 })
