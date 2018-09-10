@@ -113,6 +113,10 @@ transfer_entropy <- function(x,
   }
   if (is.null(quiet)) quiet <- as.logical(options("RTransferEntropy::quiet"))
 
+  # check and convert x and y if of class zoo (also includes xts)
+  if ("zoo" %in% class(x)) x <- as.numeric(sort(x))
+  if ("zoo" %in% class(y)) y <- as.numeric(sort(y))
+
   # Check that type is specified correctly
   type <- tolower(type)
   if (!type %in% c("quantiles", "bins", "limits", "q", "b", "l"))

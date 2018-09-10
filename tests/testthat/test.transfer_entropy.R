@@ -14,6 +14,7 @@ y <- y[-1]
 # Shannon Entropy
 #################################
 
+context("Shannon's Entropy")
 
 test_that("transfer_entropy shannon is correctly specified", {
   context("calc_te X->Y")
@@ -79,6 +80,8 @@ test_that("transfer_entropy shannon is correctly specified", {
 # Renyi Entropy
 #################################
 
+context("Renyi's Entropy")
+
 test_that("transfer_entropy renyi is correctly specified", {
   context("calc_te X->Y")
   res <- calc_te(x, y, entropy = "renyi")
@@ -138,3 +141,32 @@ test_that("transfer_entropy renyi is correctly specified", {
   expect_equal(coefs, exp_coefs, tolerance = 1e-6)
 })
 
+#################################
+# zoo and xts compatability
+#################################
+
+context("zoo & xts compatability")
+
+test_that("Check that transfer_entropy takes zoos and xts", {
+  suppressWarnings({
+    te_raw <- transfer_entropy(x, y, seed = 123, nboot = 10, quiet = T)
+  })
+
+  x.date <- seq(from = as.Date("2010-01-01"), by = "day", length.out = n)
+
+  xzoo <- zoo::zoo(x, x.date)
+  yzoo <- zoo::zoo(y, x.date)
+
+  suppressWarnings({
+    te_zoo <- transfer_entropy(xzoo, yzoo, seed = 123, nboot = 10, quiet = T)
+  })
+
+  xxts <- xts::xts(x, x.date)
+  yxts <- xts::xts(y, x.date)
+  suppressWarnings({
+    te_xts <- transfer_entropy(xxts, yxts, seed = 123, nboot = 10, quiet = T)
+  })
+
+  expect_equal(te_raw, te_zoo)
+  expect_equal(te_raw, te_xts)
+})
