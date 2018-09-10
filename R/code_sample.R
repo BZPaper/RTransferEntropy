@@ -9,7 +9,6 @@ code_sample <- function(x,
                         bins = NULL,
                         limits = NULL,
                         scale = 1e10) {
-
   if (type %in% c("bins", "limits")) {
     UB <- max(x)
     LB <- min(x)

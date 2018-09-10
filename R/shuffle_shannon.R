@@ -4,7 +4,6 @@
 # same arguments.
 #
 shuffle_shannon <- function(x, lx, y, ly, shuffles) {
-
   n <- length(x)
 
   if (shuffles > 200) {

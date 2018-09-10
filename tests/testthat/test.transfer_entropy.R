@@ -43,8 +43,10 @@ test_that("transfer_entropy shannon is correctly specified", {
 
   # transfer_entropy
   suppressWarnings({
-    res <- transfer_entropy(x, y, lx = 1, ly = 1, nboot = 10, quiet = T,
-                            seed = 12345667)
+    res <- transfer_entropy(x, y,
+      lx = 1, ly = 1, nboot = 10, quiet = T,
+      seed = 12345667
+    )
   })
 
   # check types
@@ -70,8 +72,7 @@ test_that("transfer_entropy shannon is correctly specified", {
   exp_coefs <- matrix(
     c(0.112028, 0.007643, 0.105148, 0.002364, 0.004295, 0.002488, 0, 0.3),
     nrow = 2, ncol = 4,
-    dimnames = list(c("X->Y", "Y->X"), c("te", "ete", "se", "p-value")
-    )
+    dimnames = list(c("X->Y", "Y->X"), c("te", "ete", "se", "p-value"))
   )
   expect_equal(coefs, exp_coefs, tolerance = 1e-6)
 })
@@ -109,8 +110,10 @@ test_that("transfer_entropy renyi is correctly specified", {
 
   # transfer_entropy
   suppressWarnings({
-    res <- transfer_entropy(x, y, lx = 1, ly = 1, entropy = "renyi", q = 0.5,
-                            nboot = 10, quiet = T, seed = 12345667)
+    res <- transfer_entropy(x, y,
+      lx = 1, ly = 1, entropy = "renyi", q = 0.5,
+      nboot = 10, quiet = T, seed = 12345667
+    )
   })
 
   # check types
@@ -150,9 +153,11 @@ context("zoo & xts compatability")
 test_that("Check that transfer_entropy takes zoos and xts", {
   x <- x[1:200]
   y <- y[1:200]
-  x.date <- seq(from = as.Date("2010-01-01"),
-                by = "day",
-                length.out = length(x))
+  x.date <- seq(
+    from = as.Date("2010-01-01"),
+    by = "day",
+    length.out = length(x)
+  )
 
   suppressWarnings({
     te_raw <- transfer_entropy(x, y, seed = 123, nboot = 10, quiet = T)

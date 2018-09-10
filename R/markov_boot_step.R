@@ -2,7 +2,6 @@
 # used for the H0 bootstrap. Used internally by transfer_entropy; same arguments.
 #
 markov_boot_step <- function(x, lx, burn = 50) {
-
   n <- length(x) + burn
   bootvec <- numeric(n)
 
@@ -16,8 +15,9 @@ markov_boot_step <- function(x, lx, burn = 50) {
     val <- tprob[[bootvec[i - 1]]]
 
     draw <- ifelse(length(names(val)) == 1,
-                   names(val),
-                   sample(names(val), 1, prob = val))
+      names(val),
+      sample(names(val), 1, prob = val)
+    )
 
     bootvec[i] <- strsplit(draw, " ")[[1]][i]
   }
@@ -28,8 +28,9 @@ markov_boot_step <- function(x, lx, burn = 50) {
     val <- tprob[[bootvec[i - 1]]]
 
     draw <- ifelse(length(names(val)) == 1,
-                   names(val),
-                   sample(names(val), 1, prob = val))
+      names(val),
+      sample(names(val), 1, prob = val)
+    )
 
     bootvec[i] <- strsplit(draw, " ")[[1]][lx + 1]
   }

@@ -51,8 +51,10 @@ print.transfer_entropy <- function(x, digits = 4, boot = TRUE,
   header_lengths <- c(9, rep(n_digits, ncol(x$coef)), 5)
 
   header <- paste(mapply(function(l, t) sprintf(sprintf("%%%ss", l), t),
-                         l = header_lengths, t = header_names),
-                  collapse = "  ")
+    l = header_lengths, t = header_names
+  ),
+  collapse = "  "
+  )
 
   line <- paste0(rep("-", max(nchar(header)), 59), collapse = "")
   # 59 chars in the p-value footnote
@@ -71,13 +73,19 @@ print.transfer_entropy <- function(x, digits = 4, boot = TRUE,
 
     probs_nam <- paste0(probs * 100, "%")
     boot_hd_nam <- c("Direction", probs_nam)
-    boot_hd_len <- c(9,
-                     rep(max(nchar(probs_nam), digits + 2),
-                         length(probs)))
+    boot_hd_len <- c(
+      9,
+      rep(
+        max(nchar(probs_nam), digits + 2),
+        length(probs)
+      )
+    )
 
     boot_hd <- paste(mapply(function(l, t) sprintf(sprintf("%%%ss", l), t),
-                            l = boot_hd_len, t = boot_hd_nam),
-                     collapse = "  ")
+      l = boot_hd_len, t = boot_hd_nam
+    ),
+    collapse = "  "
+    )
 
     line_width <- max(nchar(header), nchar(boot_hd), 59)
     # 59 chars in the p-value footnote
@@ -101,8 +109,10 @@ print.transfer_entropy <- function(x, digits = 4, boot = TRUE,
     textify_mat(x$coef, digits, header_lengths),
     boot_res,
     line,
-    paste0(sprintf("Number of Observations: %s", x$nobs),
-           ifelse(x$entropy == "renyi", sprintf("\nQ: %s", x$q), "")),
+    paste0(
+      sprintf("Number of Observations: %s", x$nobs),
+      ifelse(x$entropy == "renyi", sprintf("\nQ: %s", x$q), "")
+    ),
     line,
     "p-values: < 0.001 '***', < 0.01 '**', < 0.05 '*', < 0.1 '.'"
   )
@@ -122,8 +132,9 @@ textify_mat <- function(mat, digits, width = 10, stars = TRUE) {
   txt_fmt <- sprintf("%%%ss", width[1])
 
   if (stars) {
-    if (ncol(mat) + 1 != length(nr_fmt))
+    if (ncol(mat) + 1 != length(nr_fmt)) {
       stop("width has to have the same lenghts as the num of columns of mat + 1")
+    }
     star_fmt <- sprintf("%%%ss", width[length(width)])
     nr_fmt <- nr_fmt[-length(nr_fmt)]
   }
@@ -136,11 +147,11 @@ textify_mat <- function(mat, digits, width = 10, stars = TRUE) {
 
     if (stars) {
       paste(c(res, sprintf(star_fmt, star(row_el[length(row_el)]))),
-            collapse = "  ")
+        collapse = "  "
+      )
     } else {
       paste(res, collapse = "  ")
     }
-
   })
   paste(sprintf(txt_fmt, names(txt)), txt, sep = "  ")
 }
@@ -171,22 +182,30 @@ summary.transfer_entropy <- function(object, digits = 4,
 
     probs_nam <- paste0(probs * 100, "%")
     boot_hd_nam <- c("Direction", probs_nam)
-    boot_hd_len <- c(9,
-                     rep(max(nchar(probs_nam), digits + 2),
-                         length(probs)))
+    boot_hd_len <- c(
+      9,
+      rep(
+        max(nchar(probs_nam), digits + 2),
+        length(probs)
+      )
+    )
 
     boot_hd <- paste(mapply(function(l, t) sprintf(sprintf("%%%ss", l), t),
-                            l = boot_hd_len, t = boot_hd_nam),
-                     collapse = "  ")
+      l = boot_hd_len, t = boot_hd_nam
+    ),
+    collapse = "  "
+    )
 
     boot_res <- c(
-      sprintf("\nBootstrapped TE Quantiles (%s replications):",
-              ncol(object$boot)),
+      sprintf(
+        "\nBootstrapped TE Quantiles (%s replications):",
+        ncol(object$boot)
+      ),
       boot_hd,
       textify_mat(quants, digits = digits, width = boot_hd_len, stars = FALSE)
     )
     boot_res <- paste(boot_res, collapse = "\n")
-    cat(boot_res,"\n")
+    cat(boot_res, "\n")
   }
 
   cat(sprintf("\nNumber of Observations: %i", object$nobs))
@@ -239,8 +258,12 @@ coef.transfer_entropy <- function(object, ...) {
 # for some p-values (x) return the stars
 star <- function(x) {
   ifelse(is.null(x) || is.na(x), "",
-         ifelse(x < 0.001, "***",
-                ifelse(x < 0.01, "**",
-                       ifelse(x < 0.05, "*",
-                              ifelse(x < 0.1, ".", "")))))
+    ifelse(x < 0.001, "***",
+      ifelse(x < 0.01, "**",
+        ifelse(x < 0.05, "*",
+          ifelse(x < 0.1, ".", "")
+        )
+      )
+    )
+  )
 }

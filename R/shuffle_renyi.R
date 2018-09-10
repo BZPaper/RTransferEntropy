@@ -4,20 +4,23 @@
 # same arguments.
 #
 shuffle_renyi <- function(x, lx, y, ly, q, shuffles) {
-
   n <- length(x)
 
   if (shuffles > 200) {
     shuffle <- future.apply::future_replicate(
       shuffles,
-      calc_te_renyi(x = x, y = sample(y, n, replace = TRUE), lx = lx, ly = ly,
-                    q = q)
+      calc_te_renyi(
+        x = x, y = sample(y, n, replace = TRUE), lx = lx, ly = ly,
+        q = q
+      )
     )
   } else {
     shuffle <- replicate(
       shuffles,
-      calc_te_renyi(x = x, y = sample(y, n, replace = TRUE), lx = lx, ly = ly,
-                    q = q)
+      calc_te_renyi(
+        x = x, y = sample(y, n, replace = TRUE), lx = lx, ly = ly,
+        q = q
+      )
     )
   }
 

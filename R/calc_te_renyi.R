@@ -10,19 +10,19 @@ calc_te_renyi <- function(x, lx, y, ly, q) {
   #------------------------------
   # x(k+1) and y(j)
   k1_j <- cluster_gen(x, lx = lx, y, ly = ly)
-  k1_j <- k1_j ^ q
+  k1_j <- k1_j^q
 
   # x(k+1)
   k1 <- cluster_gen(x, lx = lx)
-  k1 <- k1 ^ q
+  k1 <- k1^q
 
   # x(k) and y(j)
   k_j <- cluster_gen(x, lx = lx, y, ly = ly, prog = FALSE)
-  k_j <- k_j ^ q
+  k_j <- k_j^q
 
   # x(k)
   k <- cluster_gen(x, lx = lx, prog = FALSE)
-  k <- k ^ q
+  k <- k^q
 
   # Renyi transfer entropy
   #------------------------------

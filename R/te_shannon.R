@@ -21,45 +21,56 @@ te_shannon <- function(x,
   # Lead = y
   if (!quiet) cat("  [calculate] X->Y transfer entropy\n")
   texy <- calc_te_shannon(y, lx = ly, x, ly = lx)
-  consty <- shuffle_shannon(x = y,
-                            lx = ly,
-                            y = x,
-                            ly = lx,
-                            shuffles = shuffles)
+  consty <- shuffle_shannon(
+    x = y,
+    lx = ly,
+    y = x,
+    ly = lx,
+    shuffles = shuffles
+  )
   stexy <- texy - consty
 
   # Lead = x
   if (!quiet) cat("  [calculate] Y->X transfer entropy\n")
   teyx <- calc_te_shannon(x, lx = lx, y, ly = ly)
-  constx <- shuffle_shannon(x = x,
-                            lx = lx,
-                            y = y,
-                            ly = ly,
-                            shuffles = shuffles)
+  constx <- shuffle_shannon(
+    x = x,
+    lx = lx,
+    y = y,
+    ly = ly,
+    shuffles = shuffles
+  )
   steyx <- teyx - constx
 
   # Bootstrap
   if (nboot > 0) {
-    if (!quiet) cat(sprintf("  [bootstrap] %s time%s\n",
-                            nboot, mult_s(nboot)))
+    if (!quiet) {
+      cat(sprintf(
+        "  [bootstrap] %s time%s\n",
+        nboot, mult_s(nboot)
+      ))
+    }
     seeds <- sample(.Machine$integer.max, nboot)
 
     boot <- future.apply::future_sapply(seeds, function(seed) {
       set.seed(seed)
-      bootstrap_shannon(x = x,
-                        lx = lx,
-                        y = y,
-                        ly = ly,
-                        burn = burn)
+      bootstrap_shannon(
+        x = x,
+        lx = lx,
+        y = y,
+        ly = ly,
+        burn = burn
+      )
     })
-
   } else {
     boot <- NA
   }
 
-  return(list(teyx  = teyx,
-              texy  = texy,
-              steyx = steyx,
-              stexy = stexy,
-              boot = boot))
+  return(list(
+    teyx = teyx,
+    texy = texy,
+    steyx = steyx,
+    stexy = stexy,
+    boot = boot
+  ))
 }

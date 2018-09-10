@@ -25,12 +25,12 @@ calc_te_ete <- function(restype = "te",
                         limits = NULL,
                         burn = 50,
                         seed = NULL) {
-
   if (!is.null(seed)) set.seed(seed)
 
   restype <- tolower(restype)
-  if (!restype %in% c("te", "ete"))
+  if (!restype %in% c("te", "ete")) {
     stop("Internal Error, restype has to be te or ete")
+  }
 
   # Check for unequal length of time series
   if (length(x) != length(y)) {
@@ -38,8 +38,9 @@ calc_te_ete <- function(restype = "te",
   }
 
   # Check that type is specified correctly
-  if (!type %in% c("quantiles", "bins", "limits", "q", "b", "l"))
+  if (!type %in% c("quantiles", "bins", "limits", "q", "b", "l")) {
     stop("type must be either 'quantiles', 'bins' or 'limits'.")
+  }
 
   if (nchar(type) == 1) {
     if (type == "q") {
@@ -52,23 +53,26 @@ calc_te_ete <- function(restype = "te",
   }
 
   # Check/Restrict number of classes and Markov order/lags
-  if (length(quantiles) > 20 || length(bins) > 20 || length(limits) > 20)
+  if (length(quantiles) > 20 || length(bins) > 20 || length(limits) > 20) {
     stop(paste(
       "Number of classes should not exceed 20. Do not expect sensical results",
       "when using too many classes and/or lags."
     ))
+  }
 
-  if (lx > 20 || ly > 20)
+  if (lx > 20 || ly > 20) {
     stop(paste(
       "Markov order/number of lags should not exceed 20.",
       "Do not expect sensical results when using too many classes and/or lags."
     ))
+  }
 
-  if (lx != ly)
+  if (lx != ly) {
     warning(paste(
       "Markov order/number of lags should be identical for both time series to",
       "facilitate interpretation of results. Consider setting lx = ly."
     ))
+  }
 
   # Check that transfer entropy measure is specified correctly
   entropy <- tolower(entropy)
@@ -77,8 +81,9 @@ calc_te_ete <- function(restype = "te",
     entropy <- if (entropy == "s") "shannon" else "renyi"
   }
 
-  if (!entropy %in% c("shannon", "renyi"))
+  if (!entropy %in% c("shannon", "renyi")) {
     stop("entropy must be either 'Shannon' or 'Renyi'.")
+  }
 
   # Check that q is between 0 and 1
   if (entropy == "renyi") {
@@ -94,8 +99,9 @@ calc_te_ete <- function(restype = "te",
   }
 
   # Check quantiles
-  if (type == "quantiles" && (min(quantiles) < 0 || max(quantiles) > 100))
+  if (type == "quantiles" && (min(quantiles) < 0 || max(quantiles) > 100)) {
     stop("Quantiles must be between 0 and 100")
+  }
 
   if (type == "quantiles" && max(quantiles) <= 1) {
     warning(paste(
@@ -119,11 +125,13 @@ calc_te_ete <- function(restype = "te",
   if (entropy == "shannon") {
     te <- calc_te_shannon(y, lx = ly, x, ly = lx)
     if (restype == "ete") {
-      consty <- shuffle_shannon(x = y,
-                                lx = ly,
-                                y = x,
-                                ly = lx,
-                                shuffles = shuffles)
+      consty <- shuffle_shannon(
+        x = y,
+        lx = ly,
+        y = x,
+        ly = lx,
+        shuffles = shuffles
+      )
       ete <- te - consty
       ete <- max(0, ete)
     }
@@ -132,12 +140,14 @@ calc_te_ete <- function(restype = "te",
     # RENYI
     te <- calc_te_renyi(y, lx = ly, x, ly = lx, q = q)
     if (restype == "ete") {
-      consty <- shuffle_renyi(x = y,
-                              lx = ly,
-                              y = x,
-                              ly = lx,
-                              shuffles = shuffles,
-                              q = q)
+      consty <- shuffle_renyi(
+        x = y,
+        lx = ly,
+        y = x,
+        ly = lx,
+        shuffles = shuffles,
+        q = q
+      )
       ete <- te - consty
     }
   }

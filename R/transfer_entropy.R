@@ -107,7 +107,6 @@ transfer_entropy <- function(x,
                              burn = 50,
                              quiet = NULL,
                              seed = NULL) {
-
   if (!is.null(seed)) set.seed(seed)
 
   t0 <- Sys.time()
@@ -123,8 +122,9 @@ transfer_entropy <- function(x,
 
   # Check that type is specified correctly
   type <- tolower(type)
-  if (!type %in% c("quantiles", "bins", "limits", "q", "b", "l"))
+  if (!type %in% c("quantiles", "bins", "limits", "q", "b", "l")) {
     stop("type must be either 'quantiles', 'bins' or 'limits'.")
+  }
 
   if (nchar(type) == 1) {
     if (type == "q") {
@@ -137,24 +137,27 @@ transfer_entropy <- function(x,
   }
 
   # Check/Restrict number of classes and Markov order/lags
-  if (length(quantiles) > 20 || length(bins) > 20 || length(limits) > 20)
+  if (length(quantiles) > 20 || length(bins) > 20 || length(limits) > 20) {
     stop(paste(
       "Number of classes should not exceed 20.",
       "Do not expect sensical results when using too many classes and/or lags."
     ))
+  }
 
-  if (lx > 20 || ly > 20)
+  if (lx > 20 || ly > 20) {
     stop(paste(
       "Markov order/number of lags should not exceed 20.",
       "Do not expect sensical results when using too many classes and/or lags."
     ))
+  }
 
-  if (lx != ly)
+  if (lx != ly) {
     warning(paste(
       "Markov order/number of lags should be identical for both",
       "time series to facilitate interpretation of results.",
       "Consider setting lx = ly."
     ))
+  }
 
   # Check that transfer entropy measure is specified correctly
   entropy <- tolower(entropy)
@@ -163,8 +166,9 @@ transfer_entropy <- function(x,
     entropy <- if (entropy == "s") "shannon" else "renyi"
   }
 
-  if (!entropy %in% c("shannon", "renyi"))
+  if (!entropy %in% c("shannon", "renyi")) {
     stop("entropy must be either 'Shannon' or 'Renyi'.")
+  }
 
   # Check that q is between 0 and 1
   if (entropy == "renyi") {
@@ -180,8 +184,9 @@ transfer_entropy <- function(x,
   }
 
   # Check quantiles
-  if (type == "quantiles" && (min(quantiles) < 0 || max(quantiles) > 100))
+  if (type == "quantiles" && (min(quantiles) < 0 || max(quantiles) > 100)) {
     stop("Quantiles must be between 0 and 100")
+  }
 
   if (type == "quantiles" && max(quantiles) <= 1) {
     warning(paste(
@@ -192,11 +197,12 @@ transfer_entropy <- function(x,
   }
 
   # Check number of bootstrap replications
-  if (nboot > 0 && nboot < 100)
+  if (nboot > 0 && nboot < 100) {
     warning(paste(
       "Number of bootstrap replications is below 100. Use a higher number of",
       "bootstrap replications, you are relying on asymptotic arguments here."
-      ))
+    ))
+  }
 
   # Remove missing values
   mis_values <- is.na(x) | is.na(y)
@@ -212,38 +218,44 @@ transfer_entropy <- function(x,
       future::nbrOfWorkers(), mult_s(future::nbrOfWorkers()),
       shuffles, mult_s(shuffles)
     ))
-    cat(sprintf("  x and y have length %s (%s NAs removed)\n",
-                length(x), sum(mis_values)))
+    cat(sprintf(
+      "  x and y have length %s (%s NAs removed)\n",
+      length(x), sum(mis_values)
+    ))
   }
 
   # Call either te_shannon or te_renyi
   if (entropy == "shannon") {
-    te <- te_shannon(x = x,
-                     lx = lx,
-                     y = y,
-                     ly = ly,
-                     shuffles = shuffles,
-                     type = type,
-                     quantiles = quantiles,
-                     bins = bins,
-                     limits = limits,
-                     nboot = nboot,
-                     burn = burn,
-                     quiet = quiet)
+    te <- te_shannon(
+      x = x,
+      lx = lx,
+      y = y,
+      ly = ly,
+      shuffles = shuffles,
+      type = type,
+      quantiles = quantiles,
+      bins = bins,
+      limits = limits,
+      nboot = nboot,
+      burn = burn,
+      quiet = quiet
+    )
   } else {
-    te <- te_renyi(x = x,
-                   lx = lx,
-                   y = y,
-                   ly = ly,
-                   q = q,
-                   shuffles = shuffles,
-                   type = type,
-                   quantiles = quantiles,
-                   bins = bins,
-                   limits = limits,
-                   nboot = nboot,
-                   burn = burn,
-                   quiet = quiet)
+    te <- te_renyi(
+      x = x,
+      lx = lx,
+      y = y,
+      ly = ly,
+      q = q,
+      shuffles = shuffles,
+      type = type,
+      quantiles = quantiles,
+      bins = bins,
+      limits = limits,
+      nboot = nboot,
+      burn = burn,
+      quiet = quiet
+    )
   }
 
 
@@ -264,14 +276,18 @@ transfer_entropy <- function(x,
   }
 
   coef <- matrix(
-    c(te$texy, te$stexy, setexy, pstexy,
-      te$teyx, te$steyx, seteyx, psteyx),
+    c(
+      te$texy, te$stexy, setexy, pstexy,
+      te$teyx, te$steyx, seteyx, psteyx
+    ),
     nrow = 2, byrow = T,
-    dimnames = list(c("X->Y", "Y->X"),
-                    c("te", "ete", "se", "p-value"))
+    dimnames = list(
+      c("X->Y", "Y->X"),
+      c("te", "ete", "se", "p-value")
+    )
   )
   if (entropy == "shannon") {
-    coef[, "te"]  <- pmax(0, coef[, "te"])
+    coef[, "te"] <- pmax(0, coef[, "te"])
     coef[, "ete"] <- pmax(0, coef[, "ete"])
   }
   q <- ifelse(entropy == "renyi", q, NA)

@@ -22,47 +22,59 @@ te_renyi <- function(x,
   # Lead = y
   if (!quiet) cat("  [calculate] X->Y transfer entropy\n")
   texy <- calc_te_renyi(x = y, lx = ly, y = x, ly = lx, q = q)
-  consty <- shuffle_renyi(x = y,
-                          lx = ly,
-                          y = x,
-                          ly = lx,
-                          q = q,
-                          shuffles = shuffles)
+  consty <- shuffle_renyi(
+    x = y,
+    lx = ly,
+    y = x,
+    ly = lx,
+    q = q,
+    shuffles = shuffles
+  )
   stexy <- texy - consty
 
   # Lead = x
   if (!quiet) cat("  [calculate] Y->X transfer entropy\n")
   teyx <- calc_te_renyi(x = x, lx = lx, y = y, ly = ly, q = q)
-  constx <- shuffle_renyi(x = x,
-                          lx = lx,
-                          y = y,
-                          ly = ly,
-                          q = q,
-                          shuffles = shuffles)
+  constx <- shuffle_renyi(
+    x = x,
+    lx = lx,
+    y = y,
+    ly = ly,
+    q = q,
+    shuffles = shuffles
+  )
   steyx <- teyx - constx
 
 
   # Bootstrap
   if (nboot > 1) {
-    if (!quiet) cat(sprintf("  [bootstrap] %s time%s\n",
-                            nboot, mult_s(nboot)))
+    if (!quiet) {
+      cat(sprintf(
+        "  [bootstrap] %s time%s\n",
+        nboot, mult_s(nboot)
+      ))
+    }
     seeds <- sample(.Machine$integer.max, nboot)
     boot <- future.apply::future_sapply(seeds, function(seed) {
       set.seed(seed)
-      bootstrap_renyi(x = x,
-                      lx = lx,
-                      y = y,
-                      ly = ly,
-                      q = q,
-                      burn = burn)
+      bootstrap_renyi(
+        x = x,
+        lx = lx,
+        y = y,
+        ly = ly,
+        q = q,
+        burn = burn
+      )
     })
   } else {
     boot <- NA
   }
 
-  return(list(teyx   = teyx,
-              texy   = texy,
-              steyx = steyx,
-              stexy = stexy,
-              boot = boot))
+  return(list(
+    teyx = teyx,
+    texy = texy,
+    steyx = steyx,
+    stexy = stexy,
+    boot = boot
+  ))
 }

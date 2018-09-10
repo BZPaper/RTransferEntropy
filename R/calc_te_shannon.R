@@ -27,9 +27,9 @@ calc_te_shannon <- function(x, lx, y, ly) {
   for (i in 1:nck1_j) {
     names_ <- strsplit(names(k1_j[i]), " ")[[1]]
 
-    p1 <-  k1[paste0(names_[1:(lx + 1)], collapse = " ")]
+    p1 <- k1[paste0(names_[1:(lx + 1)], collapse = " ")]
     p2 <- k_j[paste0(names_[-(lx + 1)], collapse = " ")]
-    p3 <-   k[paste0(names_[1:lx], collapse = " ")]
+    p3 <- k[paste0(names_[1:lx], collapse = " ")]
     entropy[i] <- k1_j[i] * log2((k1_j[i] * p3) / (p2 * p1))
   }
 
