@@ -9,9 +9,13 @@ calc_ete(x, y, lx = 1, ly = 1, q = 0.1, entropy = "Shannon",
   bins = NULL, limits = NULL, burn = 50, seed = NULL)
 }
 \arguments{
-\item{x}{a vector of numeric values, ordered by time.}
+\item{x}{a vector of numeric values, ordered by time.
+Also allowed are \code{\link[xts]{xts}}, \code{\link[zoo]{zoo}},
+or \code{\link[stats]{ts}} objects.}
 
-\item{y}{a vector of numeric values, ordered by time.}
+\item{y}{a vector of numeric values, ordered by time.
+Also allowed are \code{\link[xts]{xts}}, \code{\link[zoo]{zoo}},
+or \code{\link[stats]{ts}} objects.}
 
 \item{lx}{Markov order of x, i.e. the number of lagged values affecting the
 current value of x. Default is \code{lx = 1}.}

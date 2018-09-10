@@ -2,7 +2,11 @@
 #' series x and y.
 #'
 #' @param x a vector of numeric values, ordered by time.
+#'         Also allowed are \code{\link[xts]{xts}}, \code{\link[zoo]{zoo}},
+#'         or \code{\link[stats]{ts}} objects.
 #' @param y a vector of numeric values, ordered by time.
+#'         Also allowed are \code{\link[xts]{xts}}, \code{\link[zoo]{zoo}},
+#'         or \code{\link[stats]{ts}} objects.
 #' @param lx Markov order of x, i.e. the number of lagged values affecting the
 #'           current value of x. Default is \code{lx = 1}.
 #' @param ly Markov order of y, i.e. the number of lagged values affecting the
