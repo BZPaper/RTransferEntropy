@@ -94,6 +94,8 @@ y <- y[-1]
 te_result <- transfer_entropy(x, y, nboot = 100)
 te_result
 
+summary(te_result)
+
 \donttest{
   # Parallel Processing using the future-package
   library(future)

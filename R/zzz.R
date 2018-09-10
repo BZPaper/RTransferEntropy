@@ -1,6 +1,6 @@
 #' @useDynLib RTransferEntropy
 #' @importFrom Rcpp sourceCpp
-#' @importFrom stats quantile sd
+#' @importFrom stats quantile sd printCoefmat
 #' @importFrom future plan multisession multicore sequential
 NULL
 

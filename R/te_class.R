@@ -98,22 +98,50 @@ textify_mat <- function(mat, digits, width = 10, stars = TRUE) {
 
   })
 
-  paste(sprintf(txt_fmt, names(txt)), txt, sep = "  ")
+  paste0(" ", paste(sprintf(txt_fmt, names(txt)), txt, sep = "  "))
 }
 
 #' Prints a summary of a transfer-entropy result
 #'
 #' @param object a transfer_entropy
-#' @param ... additional arguments, currently not in use
+#' @param digits the number of digits to display, defaults to 4
+#' @param ... additional arguments, passed to \code{\link[stats]{printCoefmat}}
 #'
-#' @return invisible the text
+#' @return invisible the object
 #' @export
 #'
 #' @examples
 #' # see ?transfer_entropy
-summary.transfer_entropy <- function(object, ...) {
-  text <- print(object, ...)
-  return(invisible(text))
+summary.transfer_entropy <- function(object, digits = 4, ...) {
+  cat(sprintf("%s's Transfer Entropy\n\n", fupper(object$entropy)))
+  cat("Coefficients:\n")
+  printCoefmat(coef(object), ...)
+
+  if (!is.matrix(object$boot)) {
+    boot_res <- c(NULL)
+  } else {
+    quants <- t(apply(object$boot, 1, function(b) quantile(b)))
+    rownames(quants) <- c("X->Y", "Y->X")
+
+    quant_hdr_l <- c(rep(8, ncol(quants) + 1))
+    quant_hdr_n <- c("Direction", "0%", "25%", "50%", "75%", "100%")
+    quant_hdr <- paste(mapply(function(l, t) sprintf(sprintf("%%%ss", l), t),
+                              l = quant_hdr_l, t = quant_hdr_n),
+                       collapse = "  ")
+
+    boot_res <- c(
+      sprintf("\nBootstrapped TE Quantiles (%s replications):",
+              ncol(object$boot)),
+      quant_hdr,
+      textify_mat(quants, digits = digits, width = 8, stars = FALSE)
+    )
+    boot_res <- paste(boot_res, collapse = "\n")
+    cat(boot_res,"\n")
+  }
+
+  cat(sprintf("\nNumber of Observations: %i", object$nobs))
+
+  return(invisible(object))
 }
 
 #' Checks if an object is a transfer_entropy
