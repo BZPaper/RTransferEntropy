@@ -287,6 +287,6 @@ transfer_entropy <- function(x,
     cat("Done - Total time", round(t, 2), "seconds\n")
   }
 
-  class(res) <- append(class(res), "TEResult")
+  class(res) <- "TEResult"
   return(res)
 }
