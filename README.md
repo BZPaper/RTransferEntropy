@@ -3,6 +3,8 @@
 
 [![Travis build
 status](https://travis-ci.org/BZPaper/RTransferEntropy.svg?branch=master)](https://travis-ci.org/BZPaper/RTransferEntropy)
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/RTransferEntropy)](https://cran.r-project.org/package=RTransferEntropy)
+[![](https://cranlogs.r-pkg.org/badges/RTransferEntropy)](https://cran.r-project.org/package=RTransferEntropy)
 
 # RTransferEntropy
 
