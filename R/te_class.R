@@ -33,7 +33,7 @@
 #' print(te_result, digits = 10)
 #'
 #' # disable boot-print
-#' print(te_result, boot = F)
+#' print(te_result, boot = FALSE)
 #'
 #' # specify the quantiles of the bootstraps
 #' print(te_result, probs = c(0, 0.1, 0.4, 0.5, 0.6, 0.9, 1))
