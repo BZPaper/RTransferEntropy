@@ -167,7 +167,24 @@ textify_mat <- function(mat, digits, width = 10, stars = TRUE) {
 #' @export
 #'
 #' @examples
-#' # see ?transfer_entropy
+#' # construct two time-series
+#' set.seed(1234567890)
+#' n <- 500
+#' x <- rep(0, n + 1)
+#' y <- rep(0, n + 1)
+#'
+#' for (i in seq(n)) {
+#'   x[i + 1] <- 0.2 * x[i] + rnorm(1, 0, 2)
+#'   y[i + 1] <- x[i] + rnorm(1, 0, 2)
+#' }
+#'
+#' x <- x[-1]
+#' y <- y[-1]
+#'
+#' # Calculate Shannon's Transfer Entropy
+#' te_result <- transfer_entropy(x, y, nboot = 100)
+#'
+#' summary(te_result)
 summary.transfer_entropy <- function(object, digits = 4,
                                      probs = c(0, 0.25, 0.5, 0.75, 1), ...) {
   cat(sprintf("%s's Transfer Entropy\n\n", fupper(object$entropy)))
@@ -208,7 +225,11 @@ summary.transfer_entropy <- function(object, digits = 4,
     cat(boot_res, "\n")
   }
 
-  cat(sprintf("\nNumber of Observations: %i", object$nobs))
+  cat(sprintf("\nNumber of Observations: %i%s",
+              object$nobs,
+              ifelse(object$entropy == "renyi",
+                     sprintf("\nQ: %s", object$q),
+                     "")))
 
   return(invisible(object))
 }
