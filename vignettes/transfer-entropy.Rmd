@@ -244,10 +244,23 @@ plot_series(x, y)
 We estimate Shannon transfer entropy with the defaults for all function arguments and  using the parallel processing option provided by the [`future`](https://cran.r-project.org/package=future) package.
 We provide more information about the parallel backend later in this vignette.
 
-```{r te_1}
+```{r te_1_lib, eval=F}
 library(future)
 # enable parallel processing for all future transfer_entropy calls
 plan(multiprocess)
+```
+
+```{r te_1_lib_actual, echo=F}
+library(future)
+
+if (Sys.info()[["user"]] == "travis") {
+  plan(sequential)
+} else {
+  plan(multiprocess)
+}
+```
+
+```{r te_1}
 set.seed(12345)
 shannon_te <- transfer_entropy(x, y)
 ```
