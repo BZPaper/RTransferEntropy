@@ -189,7 +189,7 @@ summary.transfer_entropy <- function(object, digits = 4,
                                      probs = c(0, 0.25, 0.5, 0.75, 1), ...) {
   cat(sprintf("%s's Transfer Entropy\n\n", fupper(object$entropy)))
   cat("Coefficients:\n")
-  printCoefmat(coef(object), ...)
+  printCoefmat(object$coef, ...)
 
   if (!is.matrix(object$boot)) {
     boot_res <- c(NULL)
