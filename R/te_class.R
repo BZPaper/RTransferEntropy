@@ -5,6 +5,10 @@
 #' @param boot if the bootstrapped results should be printed, defaults to TRUE
 #' @param probs numeric vector of quantiles for the bootstraps
 #' @param ... additional arguments, currently not in use
+#' @param tex if the data should be outputted as a TeX-string
+#' @param ref the reference string of the LaTeX table (label) applies only if table = TRUE and tex = TRUE, defaults to FALSE
+#' @param file a file where the results are printed to
+#' @param table if the table environment should be printed as well (only applies if tex = TRUE), defaults to TRUE
 #'
 #' @return invisible the text
 #' @export
@@ -37,8 +41,24 @@
 #'
 #' # specify the quantiles of the bootstraps
 #' print(te_result, probs = c(0, 0.1, 0.4, 0.5, 0.6, 0.9, 1))
+#'
+#' # get LaTeX output:
+#' print(te_result, tex = TRUE)
+#'
+#' # set the reference label for LaTeX table
+#' print(te_result, tex = TRUE, ref = "tab:te_result")
+#'
+#' \dontrun{
+#' # file output
+#' print(te_result, file = "te_result_file.txt")
+#' print(te_result, tex = TRUE, file = "te_result_file.tex")
+#' }
 print.transfer_entropy <- function(x, digits = 4, boot = TRUE,
                                    probs = c(0, 0.25, 0.5, 0.75, 1),
+                                   tex = FALSE,
+                                   ref = NA,
+                                   file = NA,
+                                   table = TRUE,
                                    ...) {
 
   # the number of chars per reported value
@@ -53,7 +73,7 @@ print.transfer_entropy <- function(x, digits = 4, boot = TRUE,
   header <- paste(mapply(function(l, t) sprintf(sprintf("%%%ss", l), t),
     l = header_lengths, t = header_names
   ),
-  collapse = "  "
+  collapse = ifelse(tex, " & ", "  ")
   )
 
   line <- paste0(rep("-", max(nchar(header)), 59), collapse = "")
@@ -84,7 +104,7 @@ print.transfer_entropy <- function(x, digits = 4, boot = TRUE,
     boot_hd <- paste(mapply(function(l, t) sprintf(sprintf("%%%ss", l), t),
       l = boot_hd_len, t = boot_hd_nam
     ),
-    collapse = "  "
+    collapse = ifelse(tex, " & ", "  ")
     )
 
     line_width <- max(nchar(header), nchar(boot_hd), 59)
@@ -92,32 +112,100 @@ print.transfer_entropy <- function(x, digits = 4, boot = TRUE,
 
     line <- paste(rep("-", line_width), collapse = "")
 
-    boot_res <- c(
+    if (tex) {
+      boot_res <- c(
+        "  \\begin{subtable}[t]{\\linewidth}",
+        "    \\centering",
+        "    \\vspace{0pt}",
+        "    \\caption{Panel B: Bootstrapped TE Quantiles}",
+        "    \\begin{tabular}{rrrrrr}",
+        "      \\toprule",
+        paste("      ", gsub("%", "\\\\%", boot_hd), " \\\\"),
+        "      \\midrule",
+        paste("      ",
+              textify_mat(quants, digits = digits, width = boot_hd_len, stars = FALSE, tex = tex)),
+        "      \\bottomrule",
+        sprintf("      \\multicolumn{6}{l}{Number of Replications: %d}", ncol(x$boot)),
+        "    \\end{tabular}",
+        "  \\end{subtable}"
+      )
+
+    } else {
+      boot_res <- c(
+        line,
+        sprintf("Bootstrapped TE Quantiles (%s replications):", ncol(x$boot)),
+        line,
+        boot_hd,
+        line,
+        textify_mat(quants, digits = digits, width = boot_hd_len, stars = FALSE)
+      )
+    }
+  }
+
+
+  if (tex) {
+    if (!is.na(ref) && ref == FALSE) ref <- NA
+
+    text <- c(
+      "% Make sure to include the following packages:",
+      "% \\usepackage{booktabs}",
+      "% \\usepackage{subcaption}",
+      "",
+      "% Table created by the RTransferEntropy Package",
+      sprintf("%% Time of creation: %s", Sys.time()),
+      "",
+      ifelse(table, "\\begin{table}", ""),
+      ifelse(table, sprintf("  \\caption{%s Transfer Entropy Result}", fupper(x$entropy)), ""),
+      ifelse(!is.na(ref) && table, sprintf("  \\label{%s}", ref), ""),
+      "  \\begin{subtable}[t]{\\linewidth}",
+      "    \\centering",
+      "    \\vspace{0pt}",
+      "    \\caption{Panel A: Transfer Entropy Estimates}",
+      "    \\begin{tabular}{rrrrrl}",
+      "      \\toprule",
+      paste("      ", header, " \\\\"),
+      "      \\midrule",
+      paste("      ", textify_mat(x$coef, digits, header_lengths, tex = tex)),
+      "      \\bottomrule",
+      ifelse(x$entropy == "shannon",
+             "",
+             sprintf("      \\multicolumn{6}{l}{Q: %s} \\\\", x$q)),
+      sprintf("      \\multicolumn{6}{l}{Number of Observations: %d} \\\\", x$nobs),
+      "      \\multicolumn{6}{l}{p-values: \\textless 0.001 '***', \\textless 0.01 '**', \\textless 0.05 '*', \\textless 0.1 '.' } \\\\",
+      "    \\end{tabular}",
+      "  \\end{subtable}",
+      "",
+      boot_res,
+      ifelse(table, "\\end{table}", "")
+    )
+
+  } else {
+    text <- c(
+      paste(fupper(x$entropy), "Transfer Entropy Results:"),
       line,
-      sprintf("Bootstrapped TE Quantiles (%s replications):", ncol(x$boot)),
+      header,
       line,
-      boot_hd,
+      textify_mat(x$coef, digits, header_lengths),
+      boot_res,
       line,
-      textify_mat(quants, digits = digits, width = boot_hd_len, stars = FALSE)
+      paste0(
+        sprintf("Number of Observations: %s", x$nobs),
+        ifelse(x$entropy == "renyi", sprintf("\nQ: %s", x$q), "")
+      ),
+      line,
+      "p-values: < 0.001 '***', < 0.01 '**', < 0.05 '*', < 0.1 '.'"
     )
   }
-  text <- c(
-    paste(fupper(x$entropy), "Transfer Entropy Results:"),
-    line,
-    header,
-    line,
-    textify_mat(x$coef, digits, header_lengths),
-    boot_res,
-    line,
-    paste0(
-      sprintf("Number of Observations: %s", x$nobs),
-      ifelse(x$entropy == "renyi", sprintf("\nQ: %s", x$q), "")
-    ),
-    line,
-    "p-values: < 0.001 '***', < 0.01 '**', < 0.05 '*', < 0.1 '.'"
-  )
+
   text <- paste(text, collapse = "\n")
-  cat(text, "\n")
+
+  if (is.na(file)) {
+    cat(text, "\n")
+  } else {
+    writeLines(text, file)
+    message("TE Result has been written to file: ", file)
+  }
+
   return(invisible(text))
 }
 
@@ -125,7 +213,7 @@ print.transfer_entropy <- function(x, digits = 4, boot = TRUE,
 # n the number of digits for the coefficients
 # w the width of each number-field, defaults to 10
 # stars if the last row represents the p-values and we want to calc the ***
-textify_mat <- function(mat, digits, width = 10, stars = TRUE) {
+textify_mat <- function(mat, digits, width = 10, stars = TRUE, tex = FALSE) {
 
   # the first element is the direction (text)
   nr_fmt <- sprintf("%%%s.%sf", width[-1], digits)
@@ -139,21 +227,27 @@ textify_mat <- function(mat, digits, width = 10, stars = TRUE) {
     nr_fmt <- nr_fmt[-length(nr_fmt)]
   }
 
-
+  clp <- ifelse(tex, " & ", "  ")
   # for each row, for each col, paste the number in the right format and
   # add the stars at the end
   txt <- apply(mat, 1, function(row_el) {
     res <- mapply(function(x, fmt) sprintf(fmt, x), x = row_el, fmt = nr_fmt)
 
     if (stars) {
-      paste(c(res, sprintf(star_fmt, star(row_el[length(row_el)]))),
-        collapse = "  "
+      r <- paste(c(res, sprintf(star_fmt, star(row_el[length(row_el)]))),
+        collapse = clp
       )
     } else {
-      paste(res, collapse = "  ")
+      r <- paste(res, collapse = clp)
     }
+
+    if (tex) r <- paste(r, " \\\\")
+    return(r)
   })
-  paste(sprintf(txt_fmt, names(txt)), txt, sep = "  ")
+
+  if (tex) names(txt) <- gsub("->", " \\\\textgreater ", names(txt))
+
+  paste(sprintf(txt_fmt, names(txt)), txt, sep = clp)
 }
 
 #' Prints a summary of a transfer-entropy result
@@ -288,3 +382,4 @@ star <- function(x) {
     )
   )
 }
+

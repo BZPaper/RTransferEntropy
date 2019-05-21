@@ -5,7 +5,8 @@
 \title{Prints a transfer-entropy result}
 \usage{
 \method{print}{transfer_entropy}(x, digits = 4, boot = TRUE,
-  probs = c(0, 0.25, 0.5, 0.75, 1), ...)
+  probs = c(0, 0.25, 0.5, 0.75, 1), tex = FALSE, ref = NA,
+  file = NA, table = TRUE, ...)
 }
 \arguments{
 \item{x}{a transfer_entropy}
@@ -15,6 +16,14 @@
 \item{boot}{if the bootstrapped results should be printed, defaults to TRUE}
 
 \item{probs}{numeric vector of quantiles for the bootstraps}
+
+\item{tex}{if the data should be outputted as a TeX-string}
+
+\item{ref}{the reference string of the LaTeX table (label) applies only if table = TRUE and tex = TRUE, defaults to FALSE}
+
+\item{file}{a file where the results are printed to}
+
+\item{table}{if the table environment should be printed as well (only applies if tex = TRUE), defaults to TRUE}
 
 \item{...}{additional arguments, currently not in use}
 }
@@ -52,4 +61,16 @@ print(te_result, boot = FALSE)
 
 # specify the quantiles of the bootstraps
 print(te_result, probs = c(0, 0.1, 0.4, 0.5, 0.6, 0.9, 1))
+
+# get LaTeX output:
+print(te_result, tex = TRUE)
+
+# set the reference label for LaTeX table
+print(te_result, tex = TRUE, ref = "tab:te_result")
+
+\dontrun{
+# file output
+print(te_result, file = "te_result_file.txt")
+print(te_result, tex = TRUE, file = "te_result_file.tex")
+}
 }
