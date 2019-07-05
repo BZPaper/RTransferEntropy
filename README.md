@@ -5,6 +5,7 @@
 status](https://travis-ci.org/BZPaper/RTransferEntropy.svg?branch=master)](https://travis-ci.org/BZPaper/RTransferEntropy)
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/RTransferEntropy)](https://cran.r-project.org/package=RTransferEntropy)
 [![](https://cranlogs.r-pkg.org/badges/RTransferEntropy)](https://cran.r-project.org/package=RTransferEntropy)
+[![](https://img.shields.io/badge/doi-10.1016/j.softx.2019.100265-yellow.svg)](https://doi.org/10.1016/j.softx.2019.100265)
 
 # RTransferEntropy
 
