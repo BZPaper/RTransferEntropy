@@ -11,6 +11,15 @@ status](https://travis-ci.org/BZPaper/RTransferEntropy.svg?branch=master)](https
 The goal of `RTransferEntropy` is to implement the calculation of the
 transfer entropy metric using Shannon’s or the Renyi’s methodology.
 
+A short introduction can be found below, for a more thorough
+introduction to the transfer entropy methodology and the
+`RTransferEntropy` package, see the
+[vignette](https://cran.r-project.org/web/packages/RTransferEntropy/vignettes/transfer-entropy.html)
+and the [`RTransferEntropy`
+paper](https://www.sciencedirect.com/science/article/pii/S2352711019300779).
+If you use the package in academic work, please make sure to cite us,
+see also `citation("RTransferEntropy")`.
+
 ## Installation
 
 You can install `RTransferEntropy` with
@@ -112,15 +121,15 @@ shannon_te
 #> -----------------------------------------------------------
 #> Direction        TE   Eff. TE  Std.Err.   p-value    sig
 #> -----------------------------------------------------------
-#>      X->Y    0.1245    0.1213    0.0015    0.0000    ***
-#>      Y->X    0.0020    0.0000    0.0016    0.8433       
+#>      X->Y    0.1245    0.1210    0.0015    0.0000    ***
+#>      Y->X    0.0020    0.0000    0.0014    0.8167       
 #> -----------------------------------------------------------
 #> Bootstrapped TE Quantiles (300 replications):
 #> -----------------------------------------------------------
 #> Direction      0%     25%     50%     75%    100%
 #> -----------------------------------------------------------
-#>      X->Y  0.0008  0.0023  0.0031  0.0043  0.0107
-#>      Y->X  0.0005  0.0021  0.0029  0.0039  0.0095
+#>      X->Y  0.0009  0.0022  0.0031  0.0040  0.0080
+#>      Y->X  0.0005  0.0022  0.0030  0.0041  0.0088
 #> -----------------------------------------------------------
 #> Number of Observations: 2000
 #> -----------------------------------------------------------
@@ -131,15 +140,15 @@ summary(shannon_te)
 #> 
 #> Coefficients:
 #>             te       ete     se p-value    
-#> X->Y 0.1244709 0.1212710 0.0015  <2e-16 ***
-#> Y->X 0.0020383 0.0000000 0.0016  0.8433    
+#> X->Y 0.1244709 0.1210119 0.0015  <2e-16 ***
+#> Y->X 0.0020383 0.0000000 0.0014  0.8167    
 #> ---
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> 
 #> Bootstrapped TE Quantiles (300 replications):
 #> Direction      0%     25%     50%     75%    100%
-#>      X->Y  0.0008  0.0023  0.0031  0.0043  0.0107
-#>      Y->X  0.0005  0.0021  0.0029  0.0039  0.0095 
+#>      X->Y  0.0009  0.0022  0.0031  0.0040  0.0080
+#>      Y->X  0.0005  0.0022  0.0030  0.0041  0.0088 
 #> 
 #> Number of Observations: 2000
 ```
@@ -154,7 +163,7 @@ calc_te(y, x)
 #> [1] 0.002038284
 
 calc_ete(x, y)
-#> [1] 0.1211241
+#> [1] 0.1211754
 calc_ete(y, x)
 #> [1] 0
 ```
@@ -177,15 +186,15 @@ renyi_te
 #> -----------------------------------------------------------
 #> Direction        TE   Eff. TE  Std.Err.   p-value    sig
 #> -----------------------------------------------------------
-#>      X->Y    0.0852    0.0421    0.0213    0.0233      *
-#>      Y->X    0.0276   -0.0135    0.0225    0.7000       
+#>      X->Y    0.0852    0.0393    0.0198    0.0167      *
+#>      Y->X    0.0276   -0.0139    0.0225    0.7367       
 #> -----------------------------------------------------------
 #> Bootstrapped TE Quantiles (300 replications):
 #> -----------------------------------------------------------
 #> Direction      0%     25%     50%     75%    100%
 #> -----------------------------------------------------------
-#>      X->Y  -0.0188  0.0248  0.0408  0.0538  0.1164
-#>      Y->X  -0.0111  0.0288  0.0414  0.0558  0.1436
+#>      X->Y  -0.0116  0.0268  0.0397  0.0533  0.1068
+#>      Y->X  -0.0176  0.0277  0.0404  0.0540  0.1001
 #> -----------------------------------------------------------
 #> Number of Observations: 2000
 #> Q: 0.5
@@ -198,9 +207,9 @@ calc_te(y, x, entropy = "renyi", q = 0.5)
 #> [1] 0.02758021
 
 calc_ete(x, y, entropy = "renyi", q = 0.5)
-#> [1] 0.04324357
+#> [1] 0.04092147
 calc_ete(y, x, entropy = "renyi", q = 0.5)
-#> [1] -0.01225754
+#> [1] -0.01455836
 ```
 
 # Function Verbosity aka `quiet = TRUE`
@@ -239,7 +248,7 @@ te
 #> -----------------------------------------------------------
 #> Direction        TE   Eff. TE  Std.Err.   p-value    sig
 #> -----------------------------------------------------------
-#>      X->Y    0.1245    0.1213        NA        NA       
+#>      X->Y    0.1245    0.1212        NA        NA       
 #>      Y->X    0.0020    0.0000        NA        NA       
 #> -----------------------------------------------------------
 #> For calculation of standard errors and p-values set nboot > 0
