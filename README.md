@@ -22,7 +22,7 @@ If you use the package in academic work, please make sure to cite us,
 see also `citation("RTransferEntropy")`.
 
 The authors of the
-[`TransferEntropy`](https://cran.r-project.org/web/packages/TransferEntropy/index.html)
+[`TransferEntropy`](https://CRAN.R-project.org/package=TransferEntropy)
 package no longer develop their package, which is deprecated as of
 2018-08-10, and recommend the use of this package.
 
