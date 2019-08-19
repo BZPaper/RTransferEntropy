@@ -6,7 +6,8 @@
 \usage{
 calc_te(x, y, lx = 1, ly = 1, q = 0.1, entropy = "Shannon",
   shuffles = 100, type = "quantiles", quantiles = c(5, 95),
-  bins = NULL, limits = NULL, burn = 50, seed = NULL)
+  bins = NULL, limits = NULL, burn = 50, seed = NULL,
+  na.rm = TRUE)
 }
 \arguments{
 \item{x}{a vector of numeric values, ordered by time.
@@ -55,6 +56,9 @@ the bootstrapped Markov chain. Default is \code{burn = 50}.}
 
 \item{seed}{a seed that seeds the PRNG (will internally just call set.seed),
 default is \code{seed = NULL}.}
+
+\item{na.rm}{if missing values should be removed (will remove the values at
+the same point in the other series as well). Default is \code{TRUE}.}
 }
 \value{
 a single numerical value for the transfer entropy

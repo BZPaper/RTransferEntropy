@@ -41,10 +41,12 @@ calc_te <- function(x, y, lx = 1, ly = 1, q = 0.1,
                     bins = NULL,
                     limits = NULL,
                     burn = 50,
-                    seed = NULL) {
+                    seed = NULL,
+                    na.rm = TRUE) {
   calc_te_ete("te", x, y,
     lx = lx, ly = ly, entropy = entropy, q = q,
     shuffles = shuffles, type = type, quantiles = quantiles,
-    bins = bins, limits = limits, burn = burn, seed = seed
+    bins = bins, limits = limits, burn = burn, seed = seed,
+    na.rm = na.rm
   )
 }

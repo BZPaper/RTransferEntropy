@@ -24,7 +24,8 @@ calc_te_ete <- function(restype = "te",
                         bins = NULL,
                         limits = NULL,
                         burn = 50,
-                        seed = NULL) {
+                        seed = NULL,
+                        na.rm = TRUE) {
   if (!is.null(seed)) set.seed(seed)
 
   restype <- tolower(restype)
@@ -72,6 +73,15 @@ calc_te_ete <- function(restype = "te",
       "Markov order/number of lags should be identical for both time series to",
       "facilitate interpretation of results. Consider setting lx = ly."
     ))
+  }
+
+  # Remove missing values
+  mis_values <- is.na(x) | is.na(y)
+  if (na.rm == TRUE) {
+    x <- x[!mis_values]
+    y <- y[!mis_values]
+  } else {
+    if (any(mis_values)) return(NA)
   }
 
   # Check that transfer entropy measure is specified correctly

@@ -38,6 +38,8 @@
 #' @param quiet if FALSE (default), the function gives feedback.
 #' @param seed a seed that seeds the PRNG (will internally just call set.seed),
 #'             default is \code{seed = NULL}.
+#' @param na.rm if missing values should be removed (will remove the values at
+#'             the same point in the other series as well). Default is \code{TRUE}.
 #'
 #' @return an object of class transfer_entropy, containing the transfer entropy
 #'         estimates in both directions, the effective transfer entropy
@@ -106,7 +108,8 @@ transfer_entropy <- function(x,
                              nboot = 300,
                              burn = 50,
                              quiet = NULL,
-                             seed = NULL) {
+                             seed = NULL,
+                             na.rm = TRUE) {
   if (!is.null(seed)) set.seed(seed)
 
   t0 <- Sys.time()
@@ -238,7 +241,8 @@ transfer_entropy <- function(x,
       limits = limits,
       nboot = nboot,
       burn = burn,
-      quiet = quiet
+      quiet = quiet,
+      na.rm = na.rm
     )
   } else {
     te <- te_renyi(
@@ -254,7 +258,8 @@ transfer_entropy <- function(x,
       limits = limits,
       nboot = nboot,
       burn = burn,
-      quiet = quiet
+      quiet = quiet,
+      na.rm = na.rm
     )
   }
 

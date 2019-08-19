@@ -77,6 +77,16 @@ test_that("transfer_entropy shannon is correctly specified", {
   expect_equal(coefs, exp_coefs, tolerance = 1e-6)
 })
 
+
+test_that("transfer_entropy handles missing values", {
+  x[10] <- NA
+  te <- calc_te(x, y, na.rm = TRUE)
+  te2 <- calc_te(x, y, na.rm = FALSE)
+
+  expect_false(is.na(te))
+  expect_true(is.na(te2))
+})
+
 #################################
 # Renyi Entropy
 #################################
