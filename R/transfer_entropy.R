@@ -212,8 +212,12 @@ transfer_entropy <- function(x,
 
   # Remove missing values
   mis_values <- is.na(x) | is.na(y)
-  x <- x[!mis_values]
-  y <- y[!mis_values]
+  if (na.rm == TRUE) {
+    x <- x[!mis_values]
+    y <- y[!mis_values]
+  } else {
+    if (any(mis_values)) return(NA)
+  }
 
   if (length(x) == 0) stop("x and y must have non-missing values.")
 
@@ -244,8 +248,7 @@ transfer_entropy <- function(x,
       limits = limits,
       nboot = nboot,
       burn = burn,
-      quiet = quiet,
-      na.rm = na.rm
+      quiet = quiet
     )
   } else {
     te <- te_renyi(
@@ -261,8 +264,7 @@ transfer_entropy <- function(x,
       limits = limits,
       nboot = nboot,
       burn = burn,
-      quiet = quiet,
-      na.rm = na.rm
+      quiet = quiet
     )
   }
 
