@@ -33,13 +33,13 @@ test_that("transfer_entropy shannon is correctly specified", {
   res <- calc_ete(x, y, seed = 1234567890)
   expect_type(res, "double")
   expect_length(res, 1)
-  expect_equal(res, 0.1052868, tolerance = 1e-6)
+  expect_equal(res, 0.1052938, tolerance = 1e-6)
 
   # calc_ete Y->X
   res <- calc_ete(y, x, seed = 1234567890)
   expect_type(res, "double")
   expect_length(res, 1)
-  expect_equal(res, 0.00187351, tolerance = 1e-6)
+  expect_equal(res, 0.001819, tolerance = 1e-6)
 
   # transfer_entropy
   suppressWarnings({
@@ -70,7 +70,7 @@ test_that("transfer_entropy shannon is correctly specified", {
 
   # check values
   exp_coefs <- matrix(
-    c(0.112028, 0.007643, 0.105148, 0.002364, 0.004295, 0.002488, 0, 0.3),
+    c(0.112027, 0.007642, 0.104721, 0.002144, 0.003884, 0.002741, 0, 0.3),
     nrow = 2, ncol = 4,
     dimnames = list(c("X->Y", "Y->X"), c("te", "ete", "se", "p-value"))
   )
@@ -110,13 +110,13 @@ test_that("transfer_entropy renyi is correctly specified", {
   res <- calc_ete(x, y, seed = 1234567890, entropy = "renyi")
   expect_type(res, "double")
   expect_length(res, 1)
-  expect_equal(res, -0.074507, tolerance = 1e-6)
+  expect_equal(res, -0.072464, tolerance = 1e-6)
 
   # calc_ete Y->X
   res <- calc_ete(y, x, entropy = "renyi")
   expect_type(res, "double")
   expect_length(res, 1)
-  expect_equal(res, -0.174042, tolerance = 1e-6)
+  expect_equal(res, -0.169475, tolerance = 1e-6)
 
   # transfer_entropy
   suppressWarnings({
@@ -147,7 +147,7 @@ test_that("transfer_entropy renyi is correctly specified", {
 
   # check values
   exp_coefs <- matrix(
-    c(0.121448, 0.01247, 0.043398, -0.034465, 0.041596, 0.039388, 0.4, 0.6),
+    c(0.121448, 0.01247, 0.045051, -0.036961, 0.028008, 0.042837, 0, 0.8),
     nrow = 2, ncol = 4,
     dimnames = list(c("X->Y", "Y->X"), c("te", "ete", "se", "p-value"))
   )
