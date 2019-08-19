@@ -15,7 +15,7 @@ transfer entropy metric using Shannon’s or the Renyi’s methodology.
 A short introduction can be found below, for a more thorough
 introduction to the transfer entropy methodology and the
 `RTransferEntropy` package, see the
-[vignette](https://cran.r-project.org/web/packages/RTransferEntropy/vignettes/transfer-entropy.html)
+[vignette](https://cran.r-project.org/package=RTransferEntropy/vignettes/transfer-entropy.html)
 and the [`RTransferEntropy`
 paper](https://www.sciencedirect.com/science/article/pii/S2352711019300779).
 If you use the package in academic work, please make sure to cite us,
