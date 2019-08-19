@@ -207,6 +207,9 @@ transfer_entropy <- function(x,
     ))
   }
 
+  x <- check_dimension(x)
+  y <- check_dimension(y)
+
   # Remove missing values
   mis_values <- is.na(x) | is.na(y)
   x <- x[!mis_values]
