@@ -21,6 +21,11 @@ paper](https://www.sciencedirect.com/science/article/pii/S2352711019300779).
 If you use the package in academic work, please make sure to cite us,
 see also `citation("RTransferEntropy")`.
 
+The authors of the
+[`TransferEntropy`](https://cran.r-project.org/web/packages/TransferEntropy/index.html)
+package no longer develop their package, which is deprecated as of
+2018-08-10, and recommend the use of this package.
+
 ## Installation
 
 You can install `RTransferEntropy` with
