@@ -6,6 +6,11 @@ using namespace Rcpp;
 // vector
 // [[Rcpp::export]]
 List calculate_transition_probabilities(IntegerVector x, int lx = 1) {
+  if (lx > 20) {
+    Rprintf("in calculate_transition_probabilities lx > 20 - Aborting calculation\n");
+    List rr;
+    return rr;
+  }
 
   int cluster_id; // i.e., 1, 2, 3 (the first letter of the cluster_val)
 
