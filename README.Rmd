@@ -4,10 +4,12 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-[![Travis build status](https://travis-ci.org/BZPaper/RTransferEntropy.svg?branch=master)](https://travis-ci.org/BZPaper/RTransferEntropy)
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/BZPaper/RTransferEntropy/workflows/R-CMD-check/badge.svg)](https://github.com/BZPaper/RTransferEntropy/actions)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/RTransferEntropy)](https://cran.r-project.org/package=RTransferEntropy)
 [![](https://cranlogs.r-pkg.org/badges/RTransferEntropy)](https://cran.r-project.org/package=RTransferEntropy)
 [![](https://img.shields.io/badge/doi-10.1016/j.softx.2019.100265-yellow.svg)](https://doi.org/10.1016/j.softx.2019.100265)
+<!-- badges: end -->
 
 
 ```{r, echo = FALSE}
