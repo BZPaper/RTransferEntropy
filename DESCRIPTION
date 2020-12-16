@@ -4,8 +4,8 @@ Title: Measuring Information Flow Between Time Series with Shannon and Renyi Tra
 Version: 0.2.13
 Description: Measuring information flow between time series with Shannon and Rényi transfer entropy. See also Dimpfl and Peter (2013) <doi:10.1515/snde-2012-0044> and Dimpfl and Peter (2014) <doi:10.1016/j.intfin.2014.03.004> for theory and applications to financial time series. Additional references can be found in the theory part of the vignette.
 Authors@R: c(
-    person("Simon", "Behrendt", , "simon.behrendt@zu.de", role = c("aut", "cre")),
-    person("David", "Zimmermann", role = c("aut")),
+    person("David", "Zimmermann", email = "david_j_zimmermann@hotmail.com", role = c("aut", "cre")),
+    person("Simon", "Behrendt", role = c("aut")),
     person("Thomas", "Dimpfl", role = c("aut")),
     person("Franziska", "Peter", role = c("aut"))
     )
