@@ -20,7 +20,7 @@ Imports:
     future.apply,
     Rcpp
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 LinkingTo: Rcpp
 Suggests: data.table,
     ggplot2,

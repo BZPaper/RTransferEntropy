@@ -4,8 +4,7 @@
 \alias{summary.transfer_entropy}
 \title{Prints a summary of a transfer-entropy result}
 \usage{
-\method{summary}{transfer_entropy}(object, digits = 4, probs = c(0,
-  0.25, 0.5, 0.75, 1), ...)
+\method{summary}{transfer_entropy}(object, digits = 4, probs = c(0, 0.25, 0.5, 0.75, 1), ...)
 }
 \arguments{
 \item{object}{a transfer_entropy}

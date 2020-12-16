@@ -5,10 +5,24 @@
 \title{Function to estimate Shannon and Renyi transfer entropy between two time
 series x and y.}
 \usage{
-transfer_entropy(x, y, lx = 1, ly = 1, q = 0.1,
-  entropy = "Shannon", shuffles = 100, type = "quantiles",
-  quantiles = c(5, 95), bins = NULL, limits = NULL, nboot = 300,
-  burn = 50, quiet = NULL, seed = NULL, na.rm = TRUE)
+transfer_entropy(
+  x,
+  y,
+  lx = 1,
+  ly = 1,
+  q = 0.1,
+  entropy = "Shannon",
+  shuffles = 100,
+  type = "quantiles",
+  quantiles = c(5, 95),
+  bins = NULL,
+  limits = NULL,
+  nboot = 300,
+  burn = 50,
+  quiet = NULL,
+  seed = NULL,
+  na.rm = TRUE
+)
 }
 \arguments{
 \item{x}{a vector of numeric values, ordered by time.

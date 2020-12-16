@@ -4,9 +4,17 @@
 \alias{print.transfer_entropy}
 \title{Prints a transfer-entropy result}
 \usage{
-\method{print}{transfer_entropy}(x, digits = 4, boot = TRUE,
-  probs = c(0, 0.25, 0.5, 0.75, 1), tex = FALSE, ref = NA,
-  file = NA, table = TRUE, ...)
+\method{print}{transfer_entropy}(
+  x,
+  digits = 4,
+  boot = TRUE,
+  probs = c(0, 0.25, 0.5, 0.75, 1),
+  tex = FALSE,
+  ref = NA,
+  file = NA,
+  table = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{a transfer_entropy}

@@ -4,10 +4,22 @@
 \alias{calc_te}
 \title{Calculates the Transfer Entropy for two time series}
 \usage{
-calc_te(x, y, lx = 1, ly = 1, q = 0.1, entropy = "Shannon",
-  shuffles = 100, type = "quantiles", quantiles = c(5, 95),
-  bins = NULL, limits = NULL, burn = 50, seed = NULL,
-  na.rm = TRUE)
+calc_te(
+  x,
+  y,
+  lx = 1,
+  ly = 1,
+  q = 0.1,
+  entropy = "Shannon",
+  shuffles = 100,
+  type = "quantiles",
+  quantiles = c(5, 95),
+  bins = NULL,
+  limits = NULL,
+  burn = 50,
+  seed = NULL,
+  na.rm = TRUE
+)
 }
 \arguments{
 \item{x}{a vector of numeric values, ordered by time.
