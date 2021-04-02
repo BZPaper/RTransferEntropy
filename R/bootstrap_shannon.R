@@ -26,8 +26,8 @@ bootstrap_shannon <- function(x,
     ly = lx
   )
 
-  teboot <- c(dteyx, dtexy)
-  names(teboot) <- c("dteyx", "dtexy")
+  teboot <- c(dtexy, dteyx)
+  names(teboot) <- c("dtexy", "dteyx")
 
   return(teboot)
 }

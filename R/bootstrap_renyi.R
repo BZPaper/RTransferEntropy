@@ -29,8 +29,8 @@ bootstrap_renyi <- function(x,
     q = q
   )
 
-  teboot <- c(dteyx, dtexy)
-  names(teboot) <- c("dteyx", "dtexy")
+  teboot <- c(dtexy, dteyx)
+  names(teboot) <- c("dtexy", "dteyx")
 
   return(teboot)
 }
