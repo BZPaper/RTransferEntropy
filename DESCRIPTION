@@ -16,7 +16,7 @@ Encoding: UTF-8
 Depends: 
     R (>= 3.1.2)
 Imports:
-    future,
+    future (>= 1.19.0),
     future.apply,
     Rcpp
 LazyData: true

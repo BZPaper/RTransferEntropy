@@ -1,6 +1,5 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/BZPaper/RTransferEntropy/workflows/R-CMD-check/badge.svg)](https://github.com/BZPaper/RTransferEntropy/actions)
@@ -56,7 +55,7 @@ significant information flow from x to y and none from y to x.
 library(RTransferEntropy)
 library(future)
 # enable parallel processing
-plan(multiprocess)
+plan(multisession)
 
 set.seed(20180108)
 n <- 2000
@@ -122,22 +121,22 @@ shannon_te <- transfer_entropy(x = x, y = y)
 #>   [calculate] X->Y transfer entropy
 #>   [calculate] Y->X transfer entropy
 #>   [bootstrap] 300 times
-#> Done - Total time 3.14 seconds
+#> Done - Total time 4.2 seconds
 
 shannon_te
 #> Shannon Transfer Entropy Results:
 #> -----------------------------------------------------------
 #> Direction        TE   Eff. TE  Std.Err.   p-value    sig
 #> -----------------------------------------------------------
-#>      X->Y    0.1245    0.1210    0.0015    0.0000    ***
-#>      Y->X    0.0020    0.0000    0.0014    0.8167       
+#>      X->Y    0.1245    0.1210    0.0014    0.0000    ***
+#>      Y->X    0.0020    0.0000    0.0014    0.7767       
 #> -----------------------------------------------------------
 #> Bootstrapped TE Quantiles (300 replications):
 #> -----------------------------------------------------------
 #> Direction      0%     25%     50%     75%    100%
 #> -----------------------------------------------------------
-#>      X->Y  0.0009  0.0022  0.0031  0.0040  0.0080
-#>      Y->X  0.0005  0.0022  0.0030  0.0041  0.0088
+#>      X->Y  0.0005  0.0022  0.0029  0.0040  0.0083
+#>      Y->X  0.0008  0.0024  0.0031  0.0041  0.0088
 #> -----------------------------------------------------------
 #> Number of Observations: 2000
 #> -----------------------------------------------------------
@@ -148,15 +147,15 @@ summary(shannon_te)
 #> 
 #> Coefficients:
 #>             te       ete     se p-value    
-#> X->Y 0.1244709 0.1210119 0.0015  <2e-16 ***
-#> Y->X 0.0020383 0.0000000 0.0014  0.8167    
+#> X->Y 0.1244709 0.1210119 0.0014  <2e-16 ***
+#> Y->X 0.0020383 0.0000000 0.0014  0.7767    
 #> ---
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> 
 #> Bootstrapped TE Quantiles (300 replications):
 #> Direction      0%     25%     50%     75%    100%
-#>      X->Y  0.0009  0.0022  0.0031  0.0040  0.0080
-#>      Y->X  0.0005  0.0022  0.0030  0.0041  0.0088 
+#>      X->Y  0.0005  0.0022  0.0029  0.0040  0.0083
+#>      Y->X  0.0008  0.0024  0.0031  0.0041  0.0088 
 #> 
 #> Number of Observations: 2000
 ```
@@ -171,7 +170,7 @@ calc_te(y, x)
 #> [1] 0.002038284
 
 calc_ete(x, y)
-#> [1] 0.1211754
+#> [1] 0.1213265
 calc_ete(y, x)
 #> [1] 0
 ```
@@ -187,22 +186,22 @@ renyi_te <- transfer_entropy(x = x, y = y, entropy = "renyi", q = 0.5)
 #>   [calculate] X->Y transfer entropy
 #>   [calculate] Y->X transfer entropy
 #>   [bootstrap] 300 times
-#> Done - Total time 2.79 seconds
+#> Done - Total time 3.62 seconds
 
 renyi_te
 #> Renyi Transfer Entropy Results:
 #> -----------------------------------------------------------
 #> Direction        TE   Eff. TE  Std.Err.   p-value    sig
 #> -----------------------------------------------------------
-#>      X->Y    0.0852    0.0393    0.0198    0.0167      *
-#>      Y->X    0.0276   -0.0139    0.0225    0.7367       
+#>      X->Y    0.0852    0.0393    0.0226    0.0267      *
+#>      Y->X    0.0276   -0.0139    0.0217    0.7467       
 #> -----------------------------------------------------------
 #> Bootstrapped TE Quantiles (300 replications):
 #> -----------------------------------------------------------
 #> Direction      0%     25%     50%     75%    100%
 #> -----------------------------------------------------------
-#>      X->Y  -0.0116  0.0268  0.0397  0.0533  0.1068
-#>      Y->X  -0.0176  0.0277  0.0404  0.0540  0.1001
+#>      X->Y  -0.0094  0.0273  0.0404  0.0557  0.1132
+#>      Y->X  -0.0358  0.0266  0.0421  0.0576  0.1141
 #> -----------------------------------------------------------
 #> Number of Observations: 2000
 #> Q: 0.5
@@ -215,9 +214,9 @@ calc_te(y, x, entropy = "renyi", q = 0.5)
 #> [1] 0.02758021
 
 calc_ete(x, y, entropy = "renyi", q = 0.5)
-#> [1] 0.04092147
+#> [1] 0.04393078
 calc_ete(y, x, entropy = "renyi", q = 0.5)
-#> [1] -0.01455836
+#> [1] -0.01612456
 ```
 
 # Function Verbosity aka `quiet = TRUE`
@@ -256,7 +255,7 @@ te
 #> -----------------------------------------------------------
 #> Direction        TE   Eff. TE  Std.Err.   p-value    sig
 #> -----------------------------------------------------------
-#>      X->Y    0.1245    0.1212        NA        NA       
+#>      X->Y    0.1245    0.1211        NA        NA       
 #>      Y->X    0.0020    0.0000        NA        NA       
 #> -----------------------------------------------------------
 #> For calculation of standard errors and p-values set nboot > 0
@@ -273,7 +272,7 @@ te <- transfer_entropy(x, y, nboot = 0)
 #>   x and y have length 2000 (0 NAs removed)
 #>   [calculate] X->Y transfer entropy
 #>   [calculate] Y->X transfer entropy
-#> Done - Total time 0.09 seconds
+#> Done - Total time 0.13 seconds
 ```
 
 # Parallel Programming
@@ -283,14 +282,14 @@ computations in parallel like so
 
 ``` r
 library(future)
-plan(multiprocess)
+plan(multisession)
 te <- transfer_entropy(x, y, nboot = 100)
 #> Shannon's entropy on 8 cores with 100 shuffles.
 #>   x and y have length 2000 (0 NAs removed)
 #>   [calculate] X->Y transfer entropy
 #>   [calculate] Y->X transfer entropy
 #>   [bootstrap] 100 times
-#> Done - Total time 1.14 seconds
+#> Done - Total time 1.92 seconds
 
 # revert to sequential mode
 plan(sequential)
@@ -300,5 +299,5 @@ te <- transfer_entropy(x, y, nboot = 100)
 #>   [calculate] X->Y transfer entropy
 #>   [calculate] Y->X transfer entropy
 #>   [bootstrap] 100 times
-#> Done - Total time 3.99 seconds
+#> Done - Total time 4.08 seconds
 ```

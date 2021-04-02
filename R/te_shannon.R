@@ -50,10 +50,8 @@ te_shannon <- function(x,
         nboot, mult_s(nboot)
       ))
     }
-    seeds <- sample(.Machine$integer.max, nboot)
 
-    boot <- future.apply::future_sapply(seeds, function(seed) {
-      set.seed(seed)
+    boot <- future.apply::future_sapply(seq_len(nboot), function(i) {
       bootstrap_shannon(
         x = x,
         lx = lx,
@@ -61,7 +59,7 @@ te_shannon <- function(x,
         ly = ly,
         burn = burn
       )
-    })
+    }, future.seed = TRUE)
   } else {
     boot <- NA
   }
