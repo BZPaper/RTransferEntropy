@@ -247,7 +247,8 @@ We provide more information about the parallel backend later in this vignette.
 ```{r te_1_lib, eval=F}
 library(future)
 # enable parallel processing for all future transfer_entropy calls
-plan(multiprocess)
+# use multicore on unix machines for better performance
+plan(multisession)
 ```
 
 ```{r te_1_lib_actual, echo=F}
@@ -256,7 +257,7 @@ library(future)
 if (Sys.info()[["user"]] == "travis") {
   plan(sequential)
 } else {
-  plan(multiprocess)
+  plan(multisession)
 }
 ```
 
@@ -623,12 +624,12 @@ The red dashed line in the graph represents the Shannon entropy. The last value 
 
 `RTransferEntropy` uses the [`future`](https://cran.r-project.org/package=future) package internally that allows for parallel execution.
 To enable parallel execution, you have to select a plan (see also `?future::plan`).
-The following code uses multiple cores as set by `plan(multiprocess)` then it reverts to sequential execution.
+The following code uses multiple cores as set by `plan(multisession)` then it reverts to sequential execution.
 ```{r future_details, eval = F}
 library(future)
 
 # enable parallelism
-plan(multiprocess)
+plan(multisession)
 te <- transfer_entropy(x, y, nboot = 100)
 
 # execute sequential again
