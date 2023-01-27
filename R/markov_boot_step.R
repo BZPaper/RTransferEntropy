@@ -33,7 +33,6 @@ markov_boot_step <- function(x, lx, burn = 50) {
     }
     val <- val2
 
-    if (length(val2) < 1) print(str(val2))
     draw <- names(val2)[sample.int(length(val2), 1, prob = val2)]
     lb <- strsplit(draw, " ")[[1]][lx + 1]
     bootvec[i] <- lb
