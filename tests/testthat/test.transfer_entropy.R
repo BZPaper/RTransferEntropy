@@ -199,6 +199,7 @@ test_that("Check that transfer_entropy takes zoos and xts", {
   expect_equal(te_raw, te_xts)
 })
 
+
 test_that("Make sure earlier errors are not replicated", {
   # see also https://github.com/BZPaper/RTransferEntropy/issues/58
   x <- c(79652133, 88786612, 95234422, 99336996, 100764257, 105189366, 121472911,
@@ -207,9 +208,15 @@ test_that("Make sure earlier errors are not replicated", {
   y <- c(211363, 217291, 226623, 230039, 239212, 247339, 255805, 264450, 282990,
          304316, 314135, 313509, 331670, 348884)
 
-  te_result <- transfer_entropy(x, y, nboot = 100)
-  te_result
-  # TODO add test here.
+  # set.seed(123)
+  # markov_boot_step(c(1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3), lx = 1, burn = 50)
+
+  # RTransferEntropy:::te_shannon(x, lx = 1, y = y, ly = 1,
+  #                              100, type = "quantiles", quantiles = c(5, 95),
+  #                              bins = NULL,
+  #                              limits = NULL, nboot = 100, burn = 50, quiet = TRUE)
+
+  te_result <- transfer_entropy(x, y, nboot = 100, quiet = TRUE)
   # minimal test is that this doesnt throw an error!
-  expect_equal(1, 1)
+  expect_equal(1, 1) # no note about empty test
 })

@@ -28,6 +28,26 @@ List calculate_transition_probabilities(IntegerVector x, int lx = 1) {
     counts[cluster_id][cluster_val] += 1;
   }
 
+  // check that all value in x are covered; no values between N - lx and N are missed
+  std::vector<int> unique_vals;
+  for (auto it = counts.begin(); it != counts.end(); ++it)
+    unique_vals.push_back(it->first);
+  std::vector<int> miss;
+
+  // check the remaining values so that we dont get an out of bounds error later
+  for (int i = x.size() - lx; i < x.size(); ++i) {
+    cluster_id = x[i];
+    // if the cluster_id is not found in the transition probs; create an empty one
+    if (counts.find(cluster_id) == counts.end()) {
+      unique_vals.push_back(cluster_id);
+      miss.push_back(cluster_id);
+    }
+  }
+
+  // add values that are between N - lx and N to the counts
+  for (int v : miss) {
+    counts[v][unique_vals] = 0;
+  }
 
   // add missing elements, i.e., if there is no 2 in the series,
   // replace the element with an empty map
@@ -37,6 +57,7 @@ List calculate_transition_probabilities(IntegerVector x, int lx = 1) {
       counts[i] = std::map<std::vector<int>, int>();
     }
   }
+
 
 
   // flatten map map to a vector of vectors
@@ -63,7 +84,12 @@ List calculate_transition_probabilities(IntegerVector x, int lx = 1) {
     for (auto val_ptr = id_ptr->second.begin();
          val_ptr != id_ptr->second.end();
          ++val_ptr) {
-      tmp_vec.push_back((double) val_ptr->second / n);
+
+      if (n == 0) {
+        tmp_vec.push_back(0.0);
+      } else {
+        tmp_vec.push_back((double) val_ptr->second / n);
+      }
 
       std::stringstream name_val;
       for (auto it = val_ptr->first.begin();
