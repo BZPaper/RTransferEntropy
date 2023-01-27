@@ -200,6 +200,7 @@ test_that("Check that transfer_entropy takes zoos and xts", {
 })
 
 test_that("Make sure earlier errors are not replicated", {
+  # see also https://github.com/BZPaper/RTransferEntropy/issues/58
   x <- c(79652133, 88786612, 95234422, 99336996, 100764257, 105189366, 121472911,
          119542332, 119862125, 120657508, 124405340, 125345113, 132920670, 137487222)
 

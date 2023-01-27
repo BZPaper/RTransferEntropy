@@ -95,7 +95,7 @@ Rcpp::NumericVector cluster_gen(Rcpp::IntegerVector x, int lx = 1,
     cluster_counts.push_back(it->second);
   }
   Rcpp::NumericVector vec(cluster_names.size());
-  for (int i = 0; i < cluster_names.size(); ++i) {
+  for (unsigned int i = 0; i < cluster_names.size(); ++i) {
     vec[i] = cluster_counts[i] / total;
   }
 

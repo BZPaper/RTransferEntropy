@@ -6,7 +6,7 @@ Rcpp::NumericVector freq_table(std::vector<int> x) {
   std::map<int, int> counts;
 
   // load the values into the count-map
-  for (int i = 0; i < x.size(); ++i) {
+  for (unsigned int i = 0; i < x.size(); ++i) {
     ++counts[x[i]];
   }
 
@@ -26,7 +26,7 @@ Rcpp::NumericVector freq_table(std::vector<int> x) {
     cluster_counts.push_back(it->second);
   }
   Rcpp::NumericVector vec(cluster_names.size());
-  for (int i = 0; i < cluster_names.size(); ++i) {
+  for (unsigned int i = 0; i < cluster_names.size(); ++i) {
     vec[i] = cluster_counts[i] / total;
   }
 
