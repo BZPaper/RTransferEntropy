@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // calculate_transition_probabilities
 List calculate_transition_probabilities(IntegerVector x, int lx);
 RcppExport SEXP _RTransferEntropy_calculate_transition_probabilities(SEXP xSEXP, SEXP lxSEXP) {
