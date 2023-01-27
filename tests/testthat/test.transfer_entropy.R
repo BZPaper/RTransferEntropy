@@ -198,3 +198,17 @@ test_that("Check that transfer_entropy takes zoos and xts", {
   })
   expect_equal(te_raw, te_xts)
 })
+
+test_that("Make sure earlier errors are not replicated", {
+  x <- c(79652133, 88786612, 95234422, 99336996, 100764257, 105189366, 121472911,
+         119542332, 119862125, 120657508, 124405340, 125345113, 132920670, 137487222)
+
+  y <- c(211363, 217291, 226623, 230039, 239212, 247339, 255805, 264450, 282990,
+         304316, 314135, 313509, 331670, 348884)
+
+  te_result <- transfer_entropy(x, y, nboot = 100)
+  te_result
+  # TODO add test here.
+  # minimal test is that this doesnt throw an error!
+  expect_equal(1, 1)
+})
