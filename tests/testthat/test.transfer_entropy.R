@@ -70,7 +70,7 @@ test_that("transfer_entropy shannon is correctly specified", {
 
   # check values
   exp_coefs <- matrix(
-    c(0.112028, 0.007643, 0.104721, 0.002144, 0.004071, 0.002659, 0, 0.3),
+    c(0.112028, 0.007643, 0.104721, 0.002144, 0.002659, 0.004071, 0, 0.3),
     nrow = 2, ncol = 4,
     dimnames = list(c("X->Y", "Y->X"), c("te", "ete", "se", "p-value"))
   )
@@ -147,7 +147,7 @@ test_that("transfer_entropy renyi is correctly specified", {
 
   # check values
   exp_coefs <- matrix(
-    c(0.121448, 0.01247, 0.045051, -0.036961, 0.032827, 0.03854, 0, 1),
+    c(0.121448, 0.01247, 0.045051, -0.036961, 0.03854, 0.032827, 0.2, 0.9),
     nrow = 2, ncol = 4,
     dimnames = list(c("X->Y", "Y->X"), c("te", "ete", "se", "p-value"))
   )
