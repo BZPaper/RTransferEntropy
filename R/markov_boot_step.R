@@ -25,12 +25,8 @@ markov_boot_step <- function(x, lx, burn = 50) {
     val2 <- tprob[[lb]]
 
     # guard against an edge case
-    if (is.null(val2) || val2[[1]] == 0) {
-      # unlikely, therefore not likely / important
-      draw <- sample(names(val2), 1)
-      lb <- setdiff(strsplit(draw, " ")[[1]], lb)[1]
-      val2 <- tprob[[lb]]
-    }
+    # unlikely, therefore not likely nor important in the results in the end
+    if (is.null(val2) || val2[[1]] == 0) val2 <- tprob[[sample(names(pr), 1)]]
     val <- val2
 
     draw <- names(val2)[sample.int(length(val2), 1, prob = val2)]

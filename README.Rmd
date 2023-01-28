@@ -3,7 +3,6 @@ output: github_document
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/BZPaper/RTransferEntropy/workflows/R-CMD-check/badge.svg)](https://github.com/BZPaper/RTransferEntropy/actions)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/RTransferEntropy)](https://cran.r-project.org/package=RTransferEntropy)
