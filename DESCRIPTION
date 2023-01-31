@@ -1,7 +1,7 @@
 Package: RTransferEntropy
 Type: Package
 Title: Measuring Information Flow Between Time Series with Shannon and Renyi Transfer Entropy
-Version: 0.2.19
+Version: 0.2.20
 Description: Measuring information flow between time series with Shannon and Rényi transfer entropy. See also Dimpfl and Peter (2013) <doi:10.1515/snde-2012-0044> and Dimpfl and Peter (2014) <doi:10.1016/j.intfin.2014.03.004> for theory and applications to financial time series. Additional references can be found in the theory part of the vignette.
 Authors@R: c(
     person("David", "Zimmermann", email = "david_j_zimmermann@hotmail.com", role = c("aut", "cre")),
