@@ -175,4 +175,7 @@ te <- transfer_entropy(x, y, nboot = 100)
 # revert to sequential mode
 plan(sequential)
 te <- transfer_entropy(x, y, nboot = 100)
+
+# close multisession, see also ?plan
+plan(sequential)
 ```

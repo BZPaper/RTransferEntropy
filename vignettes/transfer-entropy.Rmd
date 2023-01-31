@@ -645,6 +645,9 @@ te <- transfer_entropy(x, y, nboot = 0)
 
 set_quiet(FALSE)
 te <- transfer_entropy(x, y, nboot = 0)
+
+# close multisession, see also ?plan
+plan(sequential)
 ```
 
 

@@ -300,4 +300,7 @@ te <- transfer_entropy(x, y, nboot = 100)
 #>   [calculate] Y->X transfer entropy
 #>   [bootstrap] 100 times
 #> Done - Total time 4.08 seconds
+
+# close multisession, see also ?plan
+plan(sequential)
 ```

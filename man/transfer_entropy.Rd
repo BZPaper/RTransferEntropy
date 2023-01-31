@@ -134,6 +134,9 @@ summary(te_result)
 
   set_quiet(FALSE)
   a <- transfer_entropy(x, y, nboot = 0)
+
+  # close multisession, see also ?plan
+  plan(sequential)
 }
 }
 \seealso{
