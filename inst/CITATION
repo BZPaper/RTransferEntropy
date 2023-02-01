@@ -1,12 +1,10 @@
-citHeader("To cite RTransferEntropy in publications use:")
-
 bibentry(
-  bibtype    = "Article",
+  bibtype  = "Article",
   title    = "RTransferEntropy — Quantifying information flow between different time series using effective transfer entropy",
   author   = c(person("Behrendt", "Simon"),
-                    person("Dimpfl", "Thomas"),
-                    person("Peter", "Franziska J."),
-                    person("Zimmermann", "David J.")),
+               person("Dimpfl", "Thomas"),
+               person("Peter", "Franziska J."),
+               person("Zimmermann", "David J.")),
   journal  = "SoftwareX",
   year     = "2019",
   volume   = "10",
